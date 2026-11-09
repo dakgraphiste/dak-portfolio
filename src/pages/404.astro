@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Page introuvable" footer={false} description="Cette page n'existe pas.">
+  <section class="nf">
+    <div class="nf-glow" aria-hidden="true"></div>
+    <span class="eyebrow">Erreur 404</span>
+    <h1 class="display nf-num" data-lines><span class="line-mask"><span>4<span class="accent">0</span>4</span></span></h1>
+    <p class="nf-acc">Cette page a pris des <em>« congés »</em>.</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+      <a href="/" class="btn btn-accent">Retour à l'accueil</a>
+      <a href="/projets" class="btn btn-line">Voir les projets</a>
+    </div>
+  </section>
+</Base>
+<style is:global>
+  .nf { position: relative; min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px; text-align: center; padding: 140px 20px 80px; overflow: hidden; }
+  .nf-glow { position: absolute; left: 50%; top: 55%; width: 640px; height: 640px; margin: -320px 0 0 -320px; border-radius: 50%; background: var(--accent); filter: blur(160px); opacity: .25; pointer-events: none; }
+  .nf-num { position: relative; font-size: clamp(140px, 30vw, 420px); font-weight: 800; letter-spacing: -0.07em; }
+  .nf-acc { position: relative; margin: 0; font-family: var(--font-serif); font-size: clamp(28px, 4vw, 52px); }
+  .nf-acc em { color: var(--accent-text); font-weight: 600; }
+</style>

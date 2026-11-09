@@ -1,7 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
-import { PROJECTS } from '../../data/site';
+import { PROJECTS, sm } from '../../data/site';
 const cats = ['Tout', 'Identité', 'Affiches', 'Publicité', 'Réseaux sociaux', 'Retouche'];
 const wheel = Array.from({ length: 24 }, (_, i) => PROJECTS[i % PROJECTS.length]);
 ---
@@ -16,7 +16,7 @@ const wheel = Array.from({ length: 24 }, (_, i) => PROJECTS[i % PROJECTS.length]
       <div class="wheel">
         {wheel.map((p, i) => (
           <div class="wcard" style={`transform:rotate(${i * 15}deg) translateY(-1150px)`}>
-            <a href={`/projets/${p.slug}`} class="inner" aria-label={p.title} data-cursor="Voir"><img src={p.cover} alt="" loading="lazy" /></a>
+            <a href={`/projets/${p.slug}`} class="inner" aria-label={p.title} data-cursor="Voir"><img src={sm(p.cover)} alt="" decoding="async" /></a>
           </div>
         ))}
       </div>

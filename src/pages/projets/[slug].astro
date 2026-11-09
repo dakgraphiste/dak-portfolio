@@ -1,6 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { PROJECTS } from '../../data/site';
+import { PROJECTS, sm, srcset } from '../../data/site';
 export function getStaticPaths() {
   return PROJECTS.map((p, i) => ({ params: { slug: p.slug }, props: { project: p, index: i, next: PROJECTS[(i + 1) % PROJECTS.length] } }));
 }
@@ -10,7 +10,7 @@ const blocks = [['01', 'Le brief', p.brief], ['02', 'Le concept', p.concept], ['
 ---
 <Base title={p.title} description={`${p.title} — ${p.categoryLabel}. Étude de cas par Davy Aymard Kouassi (Dak.graphiste), graphiste à Abidjan.`} image={p.cover}>
   <section class="cs-hero" data-mouse-scope>
-    <div class="cs-bg" data-mouse="-40"><img src={p.cover} alt={p.title} /></div>
+    <div class="cs-bg" data-mouse="-40"><img src={p.cover} alt={p.title} fetchpriority="high" /></div>
     <div class="cs-shade" aria-hidden="true"></div>
     <div class="cs-glow" aria-hidden="true"></div>
     <div class="cs-head">
@@ -25,20 +25,20 @@ const blocks = [['01', 'Le brief', p.brief], ['02', 'Le concept', p.concept], ['
 
   <section class="wrap" style="padding-top:40px;padding-bottom:80px">
     {blocks.map(([n, h, t]) => (
-      <div class="cs-blk" data-reveal><span class="accent" style="font-weight:600">{n}</span><h2>{h}</h2><p class="muted">{t}</p></div>
+      <div class="cs-blk" data-reveal><span style="font-weight:600;color:var(--accent-text)">{n}</span><h2>{h}</h2><p class="muted">{t}</p></div>
     ))}
   </section>
 
   <section class="wrap cs-gallery" data-mouse-scope style="padding-bottom:40px">
     <div class="g1" data-mouse="-14"><img src={p.gallery[0]} alt={`${p.title} — visuel 1`} loading="lazy" /></div>
-    <div class="g2" data-mouse="-24"><img src={p.gallery[1]} alt={`${p.title} — visuel 2`} loading="lazy" /></div>
-    <div class="g3" data-mouse="18"><img src={p.gallery[2]} alt={`${p.title} — visuel 3`} loading="lazy" /></div>
+    <div class="g2" data-mouse="-24"><img src={p.gallery[1]} srcset={srcset(p.gallery[1])} sizes="(max-width: 860px) 100vw, 50vw" alt={`${p.title} — visuel 2`} loading="lazy" /></div>
+    <div class="g3" data-mouse="18"><img src={p.gallery[2]} srcset={srcset(p.gallery[2])} sizes="(max-width: 860px) 100vw, 50vw" alt={`${p.title} — visuel 3`} loading="lazy" /></div>
   </section>
   <p class="wrap" style="padding-bottom:110px"><a href={p.behance} target="_blank" rel="noopener" class="btn btn-line">Voir le projet complet sur Behance ↗</a></p>
 
   <a href={`/projets/${next.slug}`} class="cs-next" data-cursor="Suivant">
     <span style="display:flex;flex-direction:column;gap:14px;position:relative;z-index:2"><span class="eyebrow" style="color:#fff;opacity:.85">Projet suivant</span><span class="display" style="font-size:clamp(40px,6vw,96px)">{next.title}</span></span>
-    <span class="nimg" aria-hidden="true"><img src={next.cover} alt="" loading="lazy" /></span>
+    <span class="nimg" aria-hidden="true"><img src={sm(next.cover)} alt="" loading="lazy" /></span>
     <span class="arr">→</span>
   </a>
 </Base>

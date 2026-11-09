@@ -1,17 +1,18 @@
 ---
 import Base from '../layouts/Base.astro';
-import { PROJECTS } from '../data/site';
+import { PROJECTS, srcset } from '../data/site';
 const P = Object.fromEntries(PROJECTS.map((p) => [p.slug, p]));
 // Remplacer `video` par l'URL d'intégration YouTube/Vimeo (ex. https://www.youtube.com/embed/ID) quand les vidéos sont prêtes
 const SHOWREEL = { video: '', poster: P['kpalo-energie'].cover, duration: '[durée]' };
+// Ajouter `video: 'https://www.youtube.com/embed/ID'` à une ligne quand la vidéo existe
 const vids = [
-  ['KPALO Énergie — spot', 'Publicité', P['kpalo-energie'].cover],
-  ['Freeandize — teaser packaging', 'Motion', P['freeandize'].cover],
-  ['King Fish — annonce', 'Réseaux sociaux', P['king-fish'].cover],
-  ['Poulet à gogo — reel', 'Réseaux sociaux', P['poulet-a-gogo'].cover],
-  ["Chap'n — animation de logo", 'Motion', P['chapn'].cover],
-  ['Placali Chap — reel', 'Réseaux sociaux', P['placali-chap'].cover]
-];
+  ['KPALO Énergie — spot', 'Publicité', 'kpalo-energie'],
+  ['Freeandize — teaser packaging', 'Motion', 'freeandize'],
+  ['King Fish — annonce', 'Réseaux sociaux', 'king-fish'],
+  ['Poulet à gogo — reel', 'Réseaux sociaux', 'poulet-a-gogo'],
+  ["Chap'n — animation de logo", 'Motion', 'chapn'],
+  ['Placali Chap — reel', 'Réseaux sociaux', 'placali-chap']
+].map(([t, c, slug]) => ({ t, c, slug, img: P[slug].cover }));
 ---
 <Base title="Showreel" description="Showreel de Davy Aymard Kouassi (Dak.graphiste) : spots publicitaires, motion design et contenus vidéo pour les réseaux sociaux.">
   <div class="sr-page">
@@ -25,8 +26,17 @@ const vids = [
         <img src={SHOWREEL.poster} alt="" />
         <div class="player-shade" aria-hidden="true"></div>
         <div class="player-ui" data-player-ui>
-          <button type="button" class="playbtn" data-play aria-label="Lire le showreel"><svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4l13 8-13 8z" fill="#0A0A0A" /></svg></button>
-          <span class="display" style="font-size:28px">Showreel 2026 · {SHOWREEL.duration}</span>
+          {SHOWREEL.video ? (
+            <>
+              <button type="button" class="playbtn" data-play aria-label="Lire le showreel"><svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4l13 8-13 8z" fill="#0A0A0A" /></svg></button>
+              <span class="display" style="font-size:28px">Showreel 2026 · {SHOWREEL.duration}</span>
+            </>
+          ) : (
+            <>
+              <span class="display" style="font-size:clamp(28px,4vw,48px)">Showreel 2026 en préparation</span>
+              <a href="/projets" class="btn btn-accent">En attendant, voir mes projets →</a>
+            </>
+          )}
         </div>
       </div>
     </section>
@@ -39,11 +49,11 @@ const vids = [
     </div>
 
     <section class="wrap" style="padding-top:96px;padding-bottom:120px">
-      <div class="section-title"><h2>Réalisations vidéo</h2><span style="color:#B9B9BE">Survole une vidéo</span></div>
+      <div class="section-title"><h2>Bientôt en vidéo</h2><span style="color:#B9B9BE">Les projets qui passent au motion</span></div>
       <div class="vgrid">
-        {vids.map(([t, c, img]) => (
-          <a href="/contact" class="vcard" data-cursor="Lire">
-            <div class="vthumb"><img src={img} alt={t} loading="lazy" /><span class="ov" aria-hidden="true"></span><span class="pb" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z" fill="#0A0A0A" /></svg></span><span class="dur">[0:30]</span></div>
+        {vids.map(({ t, c, slug, img }) => (
+          <a href={`/projets/${slug}`} class="vcard" data-cursor="Voir">
+            <div class="vthumb"><img src={img} srcset={srcset(img)} sizes="(max-width: 860px) 100vw, 460px" alt="" loading="lazy" /><span class="ov" aria-hidden="true"></span><span class="pb" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z" fill="#0A0A0A" /></svg></span></div>
             <div style="display:flex;justify-content:space-between;gap:16px;font-size:16px"><b style="font-weight:600">{t}</b><span style="color:var(--accent-2)">{c}</span></div>
           </a>
         ))}

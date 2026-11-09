@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { SITE, PROJECTS } from '../data/site';
+import { SITE, PROJECTS, sm } from '../data/site';
 const P = Object.fromEntries(PROJECTS.map((p) => [p.slug, p]));
 const expertises = ['Identité visuelle & logo', 'Direction artistique', 'Affiches & print', 'Publicité & packaging', 'Réseaux sociaux', 'Retouche photo'];
 const tools = ['Photoshop', 'Illustrator', 'InDesign', 'Lightroom', 'After Effects', 'Figma'];
@@ -23,7 +23,7 @@ const diplomas = [
       <h1 class="display" data-lines style="font-size:clamp(48px,7vw,104px);font-weight:600"><span class="line-mask"><span>Bonjour, je suis</span></span><span class="line-mask"><span>Davy, alias <span class="accent">Dak.</span></span></span></h1>
       <p class="muted" data-reveal=".3" style="margin:0;max-width:560px;font-size:19px;line-height:1.55">{SITE.name}, graphiste senior basé à {SITE.city}. [2 à 3 phrases : ton parcours, ta spécialité, le type de projets que tu aimes concevoir et pour qui.]</p>
       <div data-reveal=".45" style="display:flex;gap:12px;flex-wrap:wrap">
-        <a href="/cv-davy-aymard-kouassi.pdf" class="btn btn-fg" download>Télécharger le CV (PDF) ↓</a>
+        {SITE.cv && <a href={SITE.cv} class="btn btn-fg" download>Télécharger le CV (PDF) ↓</a>}
         <a href="/contact" class="btn btn-line">Me contacter</a>
       </div>
       <div class="ab-stats" data-reveal=".6">
@@ -35,7 +35,7 @@ const diplomas = [
     <div class="ab-portrait" aria-hidden="true">
       <div class="l1" data-mouse="-36"></div>
       <div class="l2" data-mouse="20"><span>[Ton portrait]</span></div>
-      <div class="l3" data-mouse="70"><img src={P['pakinou'].cover} alt="" /></div>
+      <div class="l3" data-mouse="70"><img src={sm(P['pakinou'].cover)} alt="" loading="lazy" /></div>
     </div>
   </section>
 

@@ -17,15 +17,16 @@ Tout le contenu se trouve dans `src/data/site.ts` :
 
 - **Coordonnées et réseaux** : objet `SITE`.
 - **Projets** : liste `PROJECTS`. Pour chaque projet, remplir `year`, `role`, `brief`, `concept`, `challenge`, et mettre 3 visuels dans `gallery`.
-- **Ajouter un projet** : déposer l'image dans `public/images/projets/`, puis ajouter une ligne `p(...)` dans `PROJECTS`. La page de l'étude de cas est créée automatiquement.
+- **Ajouter un projet** : déposer l'image d'origine (jpg/png) dans `images-src/`, puis ajouter une ligne `p(...)` dans `PROJECTS`. Les versions WebP optimisées sont générées automatiquement au build (`npm run images` pour les créer à la main). La page de l'étude de cas est créée automatiquement.
 - **Formations** : liste `COURSES`.
 - **Clients** : liste `CLIENTS`.
 
 ## À compléter
 
 - Formulaire de contact : créer un formulaire gratuit sur https://formspree.io et remplacer `VOTRE_ID` dans `SITE.formAction`. En attendant, le formulaire ouvre un email vers dakgraphiste@gmail.com.
-- Showreel : mettre le lien d'intégration YouTube/Vimeo dans `src/pages/showreel.astro` (`SHOWREEL.video`).
-- CV : déposer `cv-davy-aymard-kouassi.pdf` dans `public/`.
+- Showreel : mettre le lien d'intégration YouTube/Vimeo dans `src/pages/showreel.astro` (`SHOWREEL.video`) : le bouton lecture apparaît alors.
+- Statistiques : activer **Analytics** dans le projet Vercel (onglet Analytics → Enable).
+- CV : déposer le PDF dans `public/` et renseigner son chemin dans `SITE.cv` : le bouton apparaît alors sur la page À propos.
 - Portrait : remplacer le bloc « [Ton portrait] » dans `src/pages/a-propos.astro`.
 - Textes entre crochets `[...]` dans les pages.
 

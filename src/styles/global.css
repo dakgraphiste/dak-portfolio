@@ -7,6 +7,9 @@
   --card: #FFFFFF;
   --accent: #FF5A1F;
   --accent-2: #FF7A3D;
+  --accent-text: #C2410C; /* orange lisible pour le petit texte sur fond clair */
+  --accent-inv: #FF7A3D;
+  --accent-large: #E8490F; /* orange des grands titres : contraste ≥ 3:1 sur fond clair */
   --grad: linear-gradient(120deg, #FF5A1F 0%, #B8380F 30%, #2A0E05 68%, #0A0A0A 100%);
   --ease: cubic-bezier(.2, .8, .2, 1);
   --spring: cubic-bezier(.2, .9, .25, 1.3);
@@ -22,6 +25,9 @@
   --muted: #A6A6AC;
   --line: rgba(255, 255, 255, .18);
   --card: #16161A;
+  --accent-text: #FF7A3D;
+  --accent-inv: #C2410C;
+  --accent-large: #FF5A1F;
   color-scheme: dark;
 }
 
@@ -44,9 +50,12 @@ button { font: inherit; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .wrap { max-width: 1344px; margin: 0 auto; padding-left: var(--gutter); padding-right: var(--gutter); }
 .display { font-family: var(--font-display); letter-spacing: -0.045em; line-height: .95; font-weight: 700; margin: 0; }
-.eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+.eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-text); }
+.bino .eyebrow, .logos .eyebrow, .sr-page .eyebrow, .cs-hero .eyebrow { color: #FF7A3D; }
+.manifesto .eyebrow { color: var(--accent-inv); }
 .muted { color: var(--muted); }
-.accent { color: var(--accent); }
+.accent { color: var(--accent-large); }
+.sr-page .accent { color: var(--accent); }
 
 /* ----- curseur personnalisé (souris uniquement) ----- */
 @media (hover: hover) and (pointer: fine) {

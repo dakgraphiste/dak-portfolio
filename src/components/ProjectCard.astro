@@ -1,12 +1,12 @@
 ---
-import type { Project } from '../data/site';
+import { sm, srcset, type Project } from '../data/site';
 interface Props { project: Project; }
 const { project } = Astro.props;
 ---
 <a href={`/projets/${project.slug}`} class="pcard" data-cat={project.category} data-cursor="Voir">
-  {project.gallery.slice(0, 3).map((g) => <span class="casc" aria-hidden="true"><img src={g} alt="" loading="lazy" /></span>)}
+  {project.gallery.slice(0, 3).map((g) => <span class="casc" aria-hidden="true"><img src={sm(g)} alt="" loading="lazy" /></span>)}
   <div class="vis">
-    <img src={project.cover} alt={project.title} loading="lazy" />
+    <img src={project.cover} srcset={srcset(project.cover)} sizes="(max-width: 860px) 100vw, 420px" alt="" loading="lazy" />
     <span class="pill">Voir le projet →</span>
   </div>
   <div class="meta"><b>{project.title}</b><span class="muted">{project.categoryLabel}</span></div>
