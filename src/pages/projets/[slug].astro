@@ -34,7 +34,7 @@ const blocks = [['01', 'Le brief', p.brief], ['02', 'Le concept', p.concept], ['
     <div class="g2" data-mouse="-24"><img src={p.gallery[1]} srcset={srcset(p.gallery[1])} sizes="(max-width: 860px) 100vw, 50vw" alt={`${p.title} — visuel 2`} loading="lazy" /></div>
     <div class="g3" data-mouse="18"><img src={p.gallery[2]} srcset={srcset(p.gallery[2])} sizes="(max-width: 860px) 100vw, 50vw" alt={`${p.title} — visuel 3`} loading="lazy" /></div>
   </section>
-  <p class="wrap" style="padding-bottom:110px"><a href={p.behance} target="_blank" rel="noopener" class="btn btn-line">Voir le projet complet sur Behance ↗</a></p>
+  <p class="wrap" style="padding-bottom:110px"><a href={p.behance} target="_blank" rel="noopener noreferrer" class="btn btn-line">Voir le projet complet sur Behance ↗</a></p>
 
   <a href={`/projets/${next.slug}`} class="cs-next" data-cursor="Suivant">
     <span style="display:flex;flex-direction:column;gap:14px;position:relative;z-index:2"><span class="eyebrow" style="color:#fff;opacity:.85">Projet suivant</span><span class="display" style="font-size:clamp(40px,6vw,96px)">{next.title}</span></span>

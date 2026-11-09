@@ -16,7 +16,6 @@ import '@fontsource/playfair-display/600-italic.css';
 import '@fontsource/playfair-display/700-italic.css';
 import '@fontsource/pacifico/400.css';
 import '../styles/global.css';
-import Analytics from '@vercel/analytics/astro';
 import { SITE, NAV } from '../data/site';
 
 interface Props {
@@ -45,10 +44,7 @@ const ogImage = new URL(image, Astro.site).toString();
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="theme-color" content="#0A0A0A" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <script is:inline>
-    try { var t = localStorage.getItem('dak-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
-    try { if (sessionStorage.getItem('dak-intro')) document.documentElement.classList.add('no-intro'); else sessionStorage.setItem('dak-intro', '1'); } catch (e) {}
-  </script>
+  <script is:inline src="/theme.js"></script>
   <script type="application/ld+json" set:html={JSON.stringify({
     '@context': 'https://schema.org', '@type': 'Person', name: SITE.name, alternateName: 'Dak', jobTitle: SITE.role,
     email: SITE.email, telephone: SITE.phone, address: { '@type': 'PostalAddress', addressLocality: 'Abidjan', addressCountry: 'CI' },
@@ -94,16 +90,15 @@ const ogImage = new URL(image, Astro.site).toString();
         <nav aria-label="Coordonnées et réseaux">
           <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
           <a href={SITE.phoneHref}>{SITE.phone}</a>
-          <a href={SITE.behance} target="_blank" rel="noopener">Behance ↗</a>
-          <a href={SITE.linkedin} target="_blank" rel="noopener">LinkedIn ↗</a>
-          <a href={SITE.facebook} target="_blank" rel="noopener">Facebook ↗</a>
+          <a href={SITE.behance} target="_blank" rel="noopener noreferrer">Behance ↗</a>
+          <a href={SITE.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+          <a href={SITE.facebook} target="_blank" rel="noopener noreferrer">Facebook ↗</a>
         </nav>
       </div>
     </footer>
   )}
 
   <div class="cursor" aria-hidden="true"></div>
-  <Analytics />
   <script>
     import '../scripts/core';
   </script>

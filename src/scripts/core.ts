@@ -1,6 +1,10 @@
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
+import { inject } from '@vercel/analytics';
+
+// statistiques de visites Vercel (sans cookies)
+inject();
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -167,5 +171,22 @@ document.querySelectorAll<HTMLElement>('[data-filter-scope]').forEach((scope) =>
     })
   );
 });
+
+/* ---------- lecteur du showreel ---------- */
+{
+  const player = document.querySelector<HTMLElement>('[data-tilt].player');
+  player?.querySelector('[data-play]')?.addEventListener('click', () => {
+    const src = player.dataset.video;
+    const ui = player.querySelector<HTMLElement>('[data-player-ui]')!;
+    if (src) {
+      const f = document.createElement('iframe');
+      f.src = src + (src.includes('?') ? '&' : '?') + 'autoplay=1';
+      f.allow = 'autoplay; fullscreen; picture-in-picture'; f.title = 'Showreel Dak.graphiste';
+      player.appendChild(f); ui.remove();
+    } else {
+      ui.querySelector('.display')!.textContent = 'Showreel bientôt disponible';
+    }
+  });
+}
 
 export { gsap, ScrollTrigger, lenis, reduced, finePointer };

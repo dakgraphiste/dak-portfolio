@@ -91,18 +91,3 @@ const vids = [
   .vthumb .dur { position: absolute; right: 14px; bottom: 14px; padding: 6px 10px; border-radius: 8px; background: rgba(10,10,10,.75); font-size: 13px; font-weight: 600; }
 </style>
 
-<script>
-  const player = document.querySelector<HTMLElement>('[data-tilt].player')!;
-  player.querySelector('[data-play]')?.addEventListener('click', () => {
-    const src = player.dataset.video;
-    const ui = player.querySelector<HTMLElement>('[data-player-ui]')!;
-    if (src) {
-      const f = document.createElement('iframe');
-      f.src = src + (src.includes('?') ? '&' : '?') + 'autoplay=1';
-      f.allow = 'autoplay; fullscreen; picture-in-picture'; f.title = 'Showreel Dak.graphiste';
-      player.appendChild(f); ui.remove();
-    } else {
-      ui.querySelector('.display')!.textContent = 'Showreel bientôt disponible';
-    }
-  });
-</script>

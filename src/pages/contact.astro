@@ -11,19 +11,21 @@ import { SITE } from '../data/site';
       <p data-reveal=".3" style="margin:0;max-width:520px;font-size:19px;line-height:1.5;opacity:.75;text-align:center">Écris-moi : je te réponds avec quelques questions pour cadrer ton projet ou ta formation.</p>
 
       <form class="ct-form" action={SITE.formAction} method="POST" data-form>
+        <!-- piège anti-spam : champ invisible que seuls les robots remplissent -->
+        <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" />
         <div class="glass">
           <label for="email" class="sr-only">Ton adresse email</label>
-          <input id="email" name="email" type="email" required placeholder="ton@email.com" autocomplete="email" />
+          <input id="email" name="email" type="email" required maxlength="120" placeholder="ton@email.com" autocomplete="email" />
           <button type="submit" class="gbtn">Envoyer</button>
         </div>
         <details class="more">
           <summary>Ou remplir le formulaire détaillé</summary>
           <div class="fields">
-            <label>Nom<input name="nom" type="text" autocomplete="name" /></label>
+            <label>Nom<input name="nom" type="text" autocomplete="name" maxlength="100" /></label>
             <label>Type de projet<select name="type"><option>Identité visuelle</option><option>Affiche / print</option><option>Publicité / packaging</option><option>Réseaux sociaux</option><option>Retouche photo</option><option>Formation</option><option>Autre</option></select></label>
             <label>Budget<select name="budget"><option>[fourchette 1]</option><option>[fourchette 2]</option><option>[fourchette 3]</option></select></label>
-            <label>Délai souhaité<input name="delai" type="text" placeholder="ex. mars 2027" /></label>
-            <label class="full">Message<textarea name="message" rows="4"></textarea></label>
+            <label>Délai souhaité<input name="delai" type="text" placeholder="ex. mars 2027" maxlength="60" /></label>
+            <label class="full">Message<textarea name="message" rows="4" maxlength="3000"></textarea></label>
           </div>
         </details>
         <p class="status" role="status" data-status></p>
@@ -32,10 +34,10 @@ import { SITE } from '../data/site';
       <div class="ct-links">
         <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
         <a href={SITE.phoneHref}>{SITE.phone}</a>
-        <a href={SITE.whatsapp} target="_blank" rel="noopener">WhatsApp ↗</a>
-        <a href={SITE.behance} target="_blank" rel="noopener">Behance ↗</a>
-        <a href={SITE.linkedin} target="_blank" rel="noopener">LinkedIn ↗</a>
-        <a href={SITE.facebook} target="_blank" rel="noopener">Facebook ↗</a>
+        <a href={SITE.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp ↗</a>
+        <a href={SITE.behance} target="_blank" rel="noopener noreferrer">Behance ↗</a>
+        <a href={SITE.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+        <a href={SITE.facebook} target="_blank" rel="noopener noreferrer">Facebook ↗</a>
       </div>
     </div>
   </section>
@@ -83,8 +85,13 @@ import { SITE } from '../data/site';
 
   const form = document.querySelector<HTMLFormElement>('[data-form]')!;
   const status = form.querySelector<HTMLElement>('[data-status]')!;
+  let lastSend = 0;
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    const trap = form.querySelector<HTMLInputElement>('[name="_gotcha"]');
+    if (trap && trap.value) return; // robot détecté : on ignore
+    if (Date.now() - lastSend < 15000) { status.textContent = 'Message déjà envoyé, merci de patienter quelques secondes.'; return; }
+    lastSend = Date.now();
     if (form.action.includes('VOTRE_ID')) {
       const d = new FormData(form);
       const body = [...d.entries()].map(([k, v]) => `${k} : ${v}`).join('\n');
