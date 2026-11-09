@@ -1,6 +1,6 @@
 # dak.graphiste — portfolio de Davy Aymard Kouassi
 
-Site portfolio animé (Astro + GSAP + Lenis), hébergé sur Vercel.
+Site portfolio animé (Astro + GSAP + Lenis), en ligne sur https://dak-portfolio-gray.vercel.app (Vercel).
 
 ## Lancer le site en local
 
