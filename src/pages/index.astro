@@ -1,0 +1,419 @@
+---
+import Base from '../layouts/Base.astro';
+import { PROJECTS, CLIENTS } from '../data/site';
+
+const fan = PROJECTS.map((p, i) => ({ img: p.cover, a: -6 - i * 15, d: i * 0.07, z: 30 - i }));
+const P = Object.fromEntries(PROJECTS.map((p) => [p.slug, p]));
+
+const IC = {
+  Ps: ['Ps', '#001E36', '#31A8FF', 'Photoshop'], Ai: ['Ai', '#330000', '#FF9A00', 'Illustrator'], Id: ['Id', '#49021F', '#FF3366', 'InDesign'],
+  Ae: ['Ae', '#00005B', '#9999FF', 'After Effects'], Lr: ['Lr', '#001D34', '#74BFFF', 'Lightroom'], Fg: ['Fg', '#1E1E1E', '#A259FF', 'Figma'],
+  Fb: ['f', '#1877F2', '#FFFFFF', 'Facebook'], Ig: ['Ig', '#E1306C', '#FFFFFF', 'Instagram'], Be: ['Bē', '#1769FF', '#FFFFFF', 'Behance'], In: ['in', '#0A66C2', '#FFFFFF', 'LinkedIn']
+} as Record<string, string[]>;
+const KW: Record<string, string[]> = { 'Dak.': ['Be', 'In'], images: ['Ps', 'Lr'], 'identités,': ['Ai', 'Id'], 'affiches,': ['Ps', 'Ai'], 'packagings,': ['Ai', 'Ps'], 'réseaux': ['Fb', 'Ig'], sociaux: ['Ig', 'Fb'], formations: ['Ae', 'Fg'] };
+const FADED = new Set(['Je', "m'appelle", 'On', 'à', 'je', 'les', 'en', 'qui', 'et', 'pour', 'celles', 'ceux', 'veulent', "qu'on", 'se', "d'eux.", 'transforme', ':', 'marquent']);
+const words = "Je m'appelle Davy Aymard Kouassi. On m'appelle Dak. Graphiste senior à Abidjan, je transforme les idées en images qui marquent : identités, affiches, packagings, réseaux sociaux et formations pour celles et ceux qui veulent qu'on se souvienne d'eux.".split(' ');
+const tools = ['Ps', 'Ai', 'Id', 'Ae', 'Lr', 'Fg', 'Fb', 'Ig', 'Be', 'In'];
+
+const services = [
+  ['01', 'Identité visuelle', P['chapn'].cover, '/projets'],
+  ['02', 'Affiches & print', P['king-fish'].cover, '/projets'],
+  ['03', 'Publicité & packaging', P['kpalo-energie'].cover, '/projets'],
+  ['04', 'Réseaux sociaux', P['placali-chap'].cover, '/projets'],
+  ['05', 'Formations', P['pakinou'].cover, '/formations']
+];
+const recent = ['chapn', 'kpalo-energie', 'placali-chap', 'lumora', 'king-fish', 'freeandize', 'finance', 'pakinou'].map((s) => P[s]);
+const acc1 = [
+  { p: P['chapn'], cap: "Chap'n · identité", pos: 'left:4%;top:12%', rot: -8, w: 300, k: -40, stk: 'Identité complète' },
+  { p: P['lumora'], cap: 'Lumora · logo', pos: 'left:8%;bottom:9%', rot: 6, w: 240, k: -20 },
+  { p: P['pakinou'], cap: 'Pakinou · univers', pos: 'right:5%;top:16%', rot: 7, w: 270, k: 30, stk: 'Logo + charte' },
+  { p: P['freeandize'], cap: 'Freeandize · packaging', pos: 'right:9%;bottom:8%', rot: -5, w: 230, k: 18 }
+];
+const acc2 = [
+  { p: P['king-fish'], cap: 'King Fish · posters', pos: 'left:5%;top:14%', rot: -7, w: 290, k: -36, stk: 'Grand format' },
+  { p: P['deborah-djaouri'], cap: 'Deborah Djaouri · poster', pos: 'left:10%;bottom:8%', rot: 5, w: 230, k: -18 },
+  { p: P['kpalo-energie'], cap: 'KPALO · campagne', pos: 'right:4%;top:12%', rot: 8, w: 300, k: 32, stk: 'Print & digital' },
+  { p: P['poulet-a-gogo'], cap: 'Poulet à gogo · affiche', pos: 'right:10%;bottom:9%', rot: -6, w: 230, k: 16 }
+];
+const logoStyles = [
+  "font-family:var(--font-display);font-weight:800;font-size:40px;letter-spacing:-0.04em",
+  "font-family:var(--font-body);font-weight:400;font-size:36px;letter-spacing:.02em",
+  "font-family:var(--font-display);font-weight:800;font-size:34px;letter-spacing:.04em;text-transform:uppercase",
+  "font-family:var(--font-body);font-style:italic;font-weight:800;font-size:40px;letter-spacing:-0.03em;text-transform:uppercase",
+  "font-family:'Pacifico',cursive;font-size:32px",
+  "font-family:var(--font-serif);font-style:italic;font-weight:600;font-size:34px",
+  "font-family:var(--font-display);font-weight:700;font-size:30px;letter-spacing:.18em;text-transform:uppercase",
+  "font-family:'Pacifico',cursive;font-size:30px",
+  "font-family:var(--font-body);font-weight:800;font-size:32px;letter-spacing:-0.04em"
+];
+const logos = CLIENTS.map((n, i) => ({ n, st: logoStyles[i % logoStyles.length] }));
+const row2 = logos.slice(4).concat(logos.slice(0, 4));
+const brand = 'dak.graphiste'.split('');
+const stages = [
+  ["L'idée s'éveille", 'Un hologramme jaillit de la main : chaque projet commence par une intuition.'],
+  ['Pensé pour le monde', 'Des identités qui voyagent et se reconnaissent partout.'],
+  ["Cap sur la Côte d'Ivoire", "Le globe éclate et se recompose : c'est ici que tout se crée."],
+  ['Abidjan', 'Le studio de Dak. · 5°21′ N, 4°01′ O'],
+  ['Des projets pilotés', 'Briefs, maquettes, livrables : chaque projet devient un tableau de bord clair.']
+];
+---
+<Base title="Accueil">
+  <!-- Intro -->
+  <div class="loader" aria-hidden="true">
+    <span class="eyebrow" style="color:#A6A6AC">Davy Aymard Kouassi — portfolio</span>
+    <div class="loader-word">{brand.map((c, i) => <span style={`animation-delay:${0.1 + i * 0.05}s${c === '.' ? ';color:var(--accent)' : ''}`}>{c}</span>)}</div>
+    <div class="loader-foot"><span>Chargement de l'univers</span><span class="counter"><span>000</span><span>025</span><span>050</span><span>075</span><span>100</span></span></div>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero" data-hero data-cursor-hide>
+    <div class="fan-scene" aria-hidden="true">
+      <div class="fan" data-fan>
+        {fan.map((c) => <div class="fan-card" style={`--a:${c.a}deg;animation-delay:${c.d}s;z-index:${c.z}`}><img src={c.img} alt="" /></div>)}
+      </div>
+    </div>
+    <h1 class="hero-title" aria-label="Dak, graphiste"><span style="animation-delay:2.5s">D</span><span style="animation-delay:2.58s">a</span><span style="animation-delay:2.66s">k</span><span style="animation-delay:2.74s">.</span></h1>
+    <div class="hero-id appear"><b>Davy Aymard Kouassi</b><span class="muted">Graphiste senior · Abidjan, Côte d'Ivoire</span></div>
+    <div class="badge" aria-hidden="true">
+      <svg width="132" height="132" viewBox="0 0 132 132"><defs><path id="circ" d="M66 66m-50 0a50 50 0 1 1 100 0a50 50 0 1 1 -100 0" /></defs><text style="font:600 12.5px Inter,sans-serif;letter-spacing:3px;fill:currentColor;text-transform:uppercase"><textPath href="#circ">Disponible pour vos projets — 2026 — </textPath></text><circle cx="66" cy="66" r="7" fill="#FF5A1F" /></svg>
+    </div>
+    <div class="hero-foot appear">
+      <p>Je conçois des <span class="rot-wrap"><span class="rot"><span>identités.</span><span>affiches.</span><span>logos.</span><span>univers.</span><span>identités.</span></span></span></p>
+      <span class="muted">Survole l'écran ↗</span>
+    </div>
+    <div class="spot" aria-hidden="true" data-spot>
+      <span>Créons<br />l'inoubliable.</span>
+      <b>Davy Aymard Kouassi — dak.graphiste</b>
+    </div>
+  </section>
+
+  <!-- Immersion 3D -->
+  <section class="immersion" data-immersion data-cursor-hide>
+    <div class="imm-pin">
+      <canvas aria-hidden="true"></canvas>
+      <div class="scan" aria-hidden="true"></div>
+      <div class="imm-text" aria-live="polite">
+        <span class="eyebrow" style="color:#7FD8FF">Immersion · <span data-stage-num>01</span> / 05</span>
+        <span class="imm-title display" data-stage-title>{stages[0][0]}</span>
+        <span class="imm-sub" data-stage-text>{stages[0][1]}</span>
+      </div>
+      <div class="imm-foot">
+        <div class="dots">{stages.map((_, i) => <span class={i === 0 ? 'on' : ''}></span>)}</div>
+        <span>Défile ou déplace la souris · hologramme → globe → Côte d'Ivoire → Abidjan → projets</span>
+      </div>
+    </div>
+    <script type="application/json" data-stages set:html={JSON.stringify(stages)} />
+  </section>
+
+  <!-- Manifeste -->
+  <section class="manifesto">
+    <div class="wrap mf-grid">
+      <div class="mf-side"><span class="eyebrow">Manifeste</span><span style="opacity:.6;font-size:15px">Survole les mots soulignés</span></div>
+      <p class="mf-text" data-reveal>
+        {words.map((w) => KW[w]
+          ? <span class="kw">{w}<span class="u"></span>{KW[w].map((n, j) => <span class="ico" style={`--ix:${j ? 38 : -38}px;--ir:${j ? 10 : -10}deg;--id:${j * 0.08}s`}><span class="tile" style={`background:${IC[n][1]};color:${IC[n][2]}`}>{IC[n][0]}</span></span>)}</span>
+          : <span style={FADED.has(w) ? 'opacity:.45' : undefined}>{w}</span>)}
+      </p>
+    </div>
+    <div class="wrap tools">
+      <span style="opacity:.6;font-size:15px">Ma boîte à outils</span>
+      <div class="tools-row">{tools.map((n) => <span class="tool3d" title={IC[n][3]}><span class="tile" style={`background:${IC[n][1]};color:${IC[n][2]}`}>{IC[n][0]}</span></span>)}</div>
+    </div>
+  </section>
+
+  <!-- Accroche 1 -->
+  <section class="hook hook-light" data-mouse-scope>
+    {acc1.map((f) => (
+      <div class="frm" style={f.pos} data-mouse={f.k}>
+        <a href={`/projets/${f.p.slug}`} class="fr" style={`--rot:${f.rot}deg;width:${f.w}px`} data-cursor="Voir">
+          <img src={f.p.cover} alt={f.cap} loading="lazy" /><span class="cap">{f.cap}</span>
+          {f.stk && <span class="stk">{f.stk}</span>}
+        </a>
+      </div>
+    ))}
+    <div class="hook-inner">
+      <span class="handle">@dak.graphiste</span>
+      <p class="acc" data-reveal>Ta marque<br /><span class="bx">« mérite »</span>plus<br />qu’un <span class="it">« simple</span><br /><span class="it">logo »</span>.</p>
+      <a href="/contact" class="cta-o">Je veux une vraie identité →</a>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="services wrap" data-preview-scope>
+    <div class="section-title"><h2>Ce que je fais</h2><span class="muted">Survole une ligne</span></div>
+    {services.map((s) => (
+      <a href={s[3]} class="srow" data-preview-src={s[2]}>
+        <span class="fill"></span>
+        <span class="txt"><span class="num">{s[0]}</span><span class="name">{s[1]}</span></span>
+        <span class="arr">→</span>
+      </a>
+    ))}
+    <div class="srow-end"></div>
+    <div class="preview" data-preview aria-hidden="true"><img src={services[0][2]} alt="" /></div>
+  </section>
+
+  <!-- Projets récents -->
+  <section class="recent" data-strip>
+    <div class="wrap section-title"><h2>Projets récents</h2><a href="/projets" style="font-weight:600;text-decoration:underline;text-underline-offset:6px">Tous les projets →</a></div>
+    <div class="strip" data-strip-track>
+      {recent.map((p) => (
+        <a href={`/projets/${p.slug}`} class="tcard" data-cursor="Voir">
+          <img class="tc-img" src={p.cover} alt={p.title} loading="lazy" />
+          {p.gallery.slice(0, 3).map((g) => <span class="casc" aria-hidden="true"><img src={g} alt="" loading="lazy" /></span>)}
+          <span class="cap">{p.title}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- Jumelles : projet à la une -->
+  <section class="bino" data-bino data-cursor-hide>
+    <img class="bino-img" src={P['chapn'].cover} alt="Projet à la une : Chap'n" loading="lazy" />
+    <svg class="bino-view" viewBox="0 0 3200 2200" aria-hidden="true">
+      <defs>
+        <mask id="binoMask"><rect width="3200" height="2200" fill="#fff" /><circle cx="1390" cy="1100" r="260" fill="#000" /><circle cx="1810" cy="1100" r="260" fill="#000" /></mask>
+        <radialGradient id="binoVig" cx="50%" cy="50%" r="50%"><stop offset="0.78" stop-color="#000" stop-opacity="0" /><stop offset="1" stop-color="#000" stop-opacity=".85" /></radialGradient>
+      </defs>
+      <rect width="3200" height="2200" fill="#050505" mask="url(#binoMask)" />
+      <circle cx="1390" cy="1100" r="262" fill="url(#binoVig)" /><circle cx="1810" cy="1100" r="262" fill="url(#binoVig)" />
+      <g stroke="#fff" stroke-width="2.5" fill="none" opacity=".9">
+        <path d="M1440 980h-40v40 M1760 980h40v40 M1440 1220h-40v-40 M1760 1220h40v-40" />
+        <path d="M1588 990l12 12l12 -12 M1588 1232l12 -12l12 12 M1588 1244l12 -12l12 12" />
+        <path d="M1600 1085v30 M1585 1100h30 M1300 1100h250 M1650 1100h250" />
+        <path d="M1320 1092v16 M1350 1095v10 M1380 1092v16 M1410 1095v10 M1440 1092v16 M1470 1095v10 M1500 1092v16 M1530 1095v10 M1670 1095v10 M1700 1092v16 M1730 1095v10 M1760 1092v16 M1790 1095v10 M1820 1092v16 M1850 1095v10 M1880 1092v16" />
+        <path d="M1520 1180h160 M1520 1180v12 M1540 1180v7 M1560 1180v7 M1580 1180v7 M1600 1180v14 M1620 1180v7 M1640 1180v7 M1660 1180v7 M1680 1180v12" />
+        <path d="M1170 1030h14 M1170 1065h14 M1170 1100h22 M1170 1135h14 M1170 1170h14 M2016 1030h14 M2016 1065h14 M2008 1100h22 M2016 1135h14 M2016 1170h14" />
+      </g>
+      <g style="font:600 22px Inter,sans-serif" fill="#fff" opacity=".85"><text x="1110" y="1037">100</text><text x="1110" y="1072">150</text><text x="1110" y="1107" fill="#FF5A1F">200</text><text x="1110" y="1142">250</text><text x="1110" y="1177">300</text></g>
+    </svg>
+    <div class="bino-hud tl"><span class="eyebrow">● Projet à la une</span><span class="display" style="font-size:clamp(36px,4.6vw,68px)">Chap'n</span><span style="color:#D9D9DE">Brand guidelines · Identité visuelle</span></div>
+    <div class="bino-hud tr">Zoom 2,5× · cible <span data-bino-xy>0720 / 0450</span></div>
+    <div class="bino-hud bt"><span style="color:#D9D9DE">Bouge la souris pour explorer le projet</span><a href="/projets/chapn" class="btn btn-accent">Voir l'étude de cas →</a></div>
+  </section>
+
+  <!-- Clients -->
+  <section class="logos marquee">
+    <div class="logos-head">
+      <span class="eyebrow">Ils m'ont fait confiance</span>
+      <span class="display" style="font-size:clamp(30px,3.6vw,52px);font-weight:600">Marques, restaurants, artistes et entreprises.</span>
+      <span style="color:#A6A6AC;font-size:17px">Identité, campagne, réseaux sociaux… Un projet ? <a href="/contact" style="color:#F4F4F2;text-decoration:underline;text-underline-offset:4px">Contactez-moi.</a></span>
+    </div>
+    <div class="marquee-track pausable logo-row">{[...logos, ...logos].map((l) => <span class="lpill"><span style={l.st}>{l.n}</span></span>)}</div>
+    <div class="marquee-track rev pausable logo-row">{[...row2, ...row2].map((l) => <span class="lpill"><span style={l.st}>{l.n}</span></span>)}</div>
+  </section>
+
+  <!-- Accroche 2 -->
+  <section class="hook hook-dark" data-mouse-scope>
+    {acc2.map((f) => (
+      <div class="frm" style={f.pos} data-mouse={f.k}>
+        <a href={`/projets/${f.p.slug}`} class="fr" style={`--rot:${f.rot}deg;width:${f.w}px`} data-cursor="Voir">
+          <img src={f.p.cover} alt={f.cap} loading="lazy" /><span class="cap">{f.cap}</span>
+          {f.stk && <span class="stk">{f.stk}</span>}
+        </a>
+      </div>
+    ))}
+    <div class="hook-inner">
+      <span class="handle">@dak.graphiste</span>
+      <p class="acc" data-reveal>Une affiche<br />qui <span class="bx">« arrête »</span><br />les <span class="it">passants.</span><br />Net.</p>
+      <a href="/contact" class="cta-o">Créer mon affiche →</a>
+    </div>
+  </section>
+
+  <div class="band-accent marquee" aria-hidden="true">
+    <div class="marquee-track"><span style="padding-right:32px">IDENTITÉ — AFFICHE — LOGO — PACKAGING — FORMATION — DAK.GRAPHISTE — </span><span style="padding-right:32px">IDENTITÉ — AFFICHE — LOGO — PACKAGING — FORMATION — DAK.GRAPHISTE — </span></div>
+  </div>
+</Base>
+
+<style is:global>
+  /* intro */
+  .loader { position: fixed; inset: 0; z-index: 100; background: #0A0A0A; color: #F4F4F2; display: flex; flex-direction: column; justify-content: space-between; padding: 40px var(--gutter); animation: lift 1.1s cubic-bezier(.8,0,.2,1) 2.2s forwards; pointer-events: none; }
+  .loader-word { font-family: var(--font-display); font-weight: 800; font-size: clamp(56px, 11vw, 170px); letter-spacing: -0.05em; line-height: 1; overflow: hidden; padding-bottom: .08em; }
+  .loader-word span { display: inline-block; animation: rise .9s cubic-bezier(.2,.8,.1,1) both; }
+  .loader-foot { display: flex; justify-content: space-between; align-items: flex-end; color: #A6A6AC; font-size: 15px; }
+  .counter { display: block; height: 1em; overflow: hidden; font-family: var(--font-display); font-weight: 700; font-size: 64px; line-height: 1; color: #F4F4F2; }
+  .counter span { display: block; height: 1em; animation: count 1.9s steps(4) .1s forwards; }
+  @keyframes lift { to { transform: translateY(-101%); } }
+  @keyframes rise { from { transform: translateY(110%); } to { transform: translateY(0); } }
+  @keyframes count { to { transform: translateY(-400%); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+  .appear { animation: fadeUp .9s ease 2.9s both; }
+
+  /* hero */
+  .hero { position: relative; height: 100svh; min-height: 680px; overflow: hidden; }
+  .fan-scene { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; perspective: 1400px; }
+  .fan { position: relative; width: 280px; height: 380px; transform-style: preserve-3d; transition: transform .9s var(--ease); transform: translateX(140px) rotateZ(-26deg) rotateX(14deg) rotateY(-22deg); }
+  .fan-card { position: absolute; inset: 0; border-radius: 30px; overflow: hidden; transform-origin: 0 50%; animation: fan 5s cubic-bezier(.65,0,.25,1) infinite alternate; box-shadow: 0 0 0 1px rgba(0,0,0,.08); }
+  .fan-card img { width: 100%; height: 100%; object-fit: cover; }
+  @keyframes fan { from { transform: rotateY(calc(var(--a) * .12)); } to { transform: rotateY(var(--a)); } }
+  .hero-title { position: absolute; left: 0; right: 0; top: 50%; margin: -.5em 0 0; z-index: 4; text-align: center; pointer-events: none; mix-blend-mode: difference; color: #fff; font-family: var(--font-display); font-weight: 800; font-size: clamp(150px, 29vw, 440px); line-height: 1; letter-spacing: -0.07em; overflow: hidden; padding-bottom: .05em; }
+  .hero-title span { display: inline-block; animation: rise 1.2s cubic-bezier(.2,.8,.1,1) both; }
+  @media (max-width: 700px) { .hero-title { font-size: 36vw; white-space: nowrap; } }
+  .hero-id { position: absolute; left: var(--gutter); top: 110px; z-index: 6; display: flex; flex-direction: column; gap: 4px; font-size: 15px; }
+  .badge { position: absolute; right: clamp(20px, 5vw, 72px); top: 110px; z-index: 6; width: 132px; height: 132px; animation: spin 14s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .hero-foot { position: absolute; left: 0; right: 0; bottom: 0; z-index: 6; display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; padding: 32px var(--gutter); }
+  .hero-foot p { margin: 0; display: flex; align-items: baseline; gap: .3em; font-family: var(--font-display); font-weight: 600; font-size: clamp(22px, 3vw, 40px); letter-spacing: -0.03em; line-height: 1.15; }
+  .rot-wrap { display: inline-block; height: 1.15em; overflow: hidden; vertical-align: bottom; color: var(--accent); }
+  .rot { display: flex; flex-direction: column; animation: words 8s cubic-bezier(.7,0,.2,1) 3s infinite; }
+  .rot span { height: 1.15em; }
+  @keyframes words { 0%,18% { transform: translateY(0); } 25%,43% { transform: translateY(-1.15em); } 50%,68% { transform: translateY(-2.3em); } 75%,93% { transform: translateY(-3.45em); } 100% { transform: translateY(-4.6em); } }
+  .spot { position: absolute; inset: 0; z-index: 5; background: var(--accent); color: #0A0A0A; pointer-events: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; text-align: center; clip-path: circle(0px at 50% 50%); }
+  .spot span { font-family: var(--font-display); font-weight: 800; font-size: clamp(64px, 11vw, 170px); line-height: .9; letter-spacing: -0.06em; }
+  @media (max-width: 700px) { .badge { display: none; } .fan { transform: translate(90px, 70px) rotateZ(-26deg) rotateX(14deg) rotateY(-22deg) scale(.5); } }
+
+  /* immersion */
+  .immersion { position: relative; height: 300vh; background: #04070D; color: #EAF6FF; }
+  .imm-pin { position: sticky; top: 0; height: 100vh; overflow: hidden; background: radial-gradient(ellipse at 58% 55%, #0A1828 0%, #04070D 60%); }
+  .imm-pin canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .scan { position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(120,220,255,.06) 0, rgba(120,220,255,.06) 1px, transparent 1px, transparent 4px); animation: scan 1s linear infinite; }
+  @keyframes scan { to { background-position: 0 8px; } }
+  .imm-text { position: absolute; left: var(--gutter); top: 110px; display: flex; flex-direction: column; gap: 14px; max-width: 400px; }
+  .imm-title { font-size: clamp(34px, 4.4vw, 64px); }
+  .imm-sub { font-size: 17px; line-height: 1.5; color: #A9C3D6; }
+  .imm-foot { position: absolute; left: var(--gutter); right: var(--gutter); bottom: 40px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 14px; color: #A9C3D6; }
+  .dots { display: flex; gap: 10px; }
+  .dots span { height: 8px; width: 8px; border-radius: 8px; background: rgba(234,246,255,.35); transition: width .4s var(--ease), background-color .4s; }
+  .dots span.on { width: 48px; background: var(--accent); }
+  @media (max-width: 700px) { .imm-text { top: 96px; right: var(--gutter); } }
+
+  /* manifeste */
+  .manifesto { background: var(--fg); color: var(--bg); padding: 150px 0 120px; }
+  .mf-grid { display: flex; flex-wrap: wrap; gap: 48px 80px; }
+  .mf-side { flex: 0 0 200px; display: flex; flex-direction: column; gap: 12px; }
+  .mf-text { flex: 1 1 640px; min-width: 0; margin: 0; font-weight: 400; font-size: clamp(26px, 3.1vw, 44px); line-height: 1.35; letter-spacing: -0.02em; display: flex; flex-wrap: wrap; column-gap: .26em; }
+  .kw { position: relative; display: inline-block; }
+  .kw .u { position: absolute; left: 0; right: 0; bottom: .06em; height: 2px; background: var(--accent); transform: scaleX(.25); transform-origin: 0 50%; transition: transform .45s var(--ease); }
+  .kw:hover .u { transform: scaleX(1); }
+  .kw .ico { position: absolute; left: 50%; bottom: 100%; width: 66px; height: 66px; margin-left: -33px; perspective: 500px; pointer-events: none; opacity: 0; transform: translate(var(--ix), 20px) scale(.3) rotate(var(--ir)); transition: opacity .25s, transform .55s cubic-bezier(.2,.9,.25,1.35); transition-delay: var(--id); }
+  .kw:hover .ico { opacity: 1; transform: translate(var(--ix), -18px) scale(1) rotate(var(--ir)); }
+  .tile { width: 66px; height: 66px; border-radius: 17px; display: flex; align-items: center; justify-content: center; font: 700 25px var(--font-body); letter-spacing: -.02em; transform: rotateX(18deg) rotateY(-20deg); box-shadow: inset 0 2px 0 rgba(255,255,255,.28), inset 0 -3px 0 rgba(0,0,0,.35), 0 2px 0 rgba(0,0,0,.35), 0 4px 0 rgba(0,0,0,.3), 0 7px 0 rgba(0,0,0,.25), 0 22px 30px -10px rgba(0,0,0,.55); }
+  .tools { margin-top: 96px; display: flex; justify-content: space-between; align-items: center; gap: 32px; flex-wrap: wrap; padding-top: 40px; border-top: 1px solid color-mix(in srgb, var(--bg) 20%, transparent); }
+  .tools-row { display: flex; gap: 22px; flex-wrap: wrap; perspective: 600px; }
+  .tool3d { display: inline-block; transition: transform .5s cubic-bezier(.2,.9,.25,1.3); }
+  .tool3d:hover { transform: translateY(-14px) rotate(-6deg) scale(1.12); }
+
+  /* accroches */
+  .hook { position: relative; min-height: 920px; overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 140px 20px; }
+  .hook-light { background: #F1ECE6; color: #141010; }
+  .hook-dark { background: radial-gradient(ellipse at 50% 120%, #4A1606 0%, #0A0A0A 60%); color: #FFF4EE; }
+  .hook-inner { position: relative; z-index: 2; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 40px; }
+  .handle { font: 500 16px var(--font-body); opacity: .8; }
+  .acc { font-family: var(--font-serif); font-weight: 400; font-size: clamp(54px, 7.4vw, 116px); line-height: .98; letter-spacing: -0.025em; margin: 0; }
+  .acc .it { font-style: italic; font-weight: 600; color: var(--accent); }
+  .acc .bx { display: inline-block; font-style: italic; font-weight: 600; background: var(--accent); color: #FFF4EE; padding: 0 .14em .04em; margin-right: .12em; transform: rotate(-1.5deg); transition: transform .5s cubic-bezier(.2,.9,.25,1.3); }
+  .acc:hover .bx { transform: rotate(1.5deg) scale(1.04); }
+  .cta-o { display: inline-flex; align-items: center; min-height: 52px; padding: 0 28px; border: 1.5px solid currentColor; font: 500 17px var(--font-body); transition: background-color .3s, color .3s, border-color .3s; }
+  .cta-o:hover { background: var(--accent); border-color: var(--accent); color: #0A0A0A; }
+  .frm { position: absolute; transition: translate 1s var(--ease); }
+  .fr { position: relative; display: block; background: #fff; padding: 10px 10px 40px; box-shadow: 0 30px 60px -25px rgba(0,0,0,.45); transform: rotate(var(--rot)); transition: transform .55s cubic-bezier(.2,.9,.25,1.3); }
+  .fr:hover { transform: rotate(0deg) scale(1.08); }
+  .fr img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+  .fr .cap { position: absolute; left: 12px; bottom: 12px; font: 500 13px var(--font-body); color: #141010; }
+  .fr .stk { position: absolute; right: -18px; top: -18px; padding: 10px 14px; border-radius: 999px; background: var(--accent); color: #0A0A0A; font: 700 13px var(--font-body); transform: rotate(8deg); box-shadow: 0 8px 20px -8px rgba(0,0,0,.4); }
+  @media (max-width: 900px) { .frm { display: none; } .hook { min-height: 0; } }
+
+  /* services */
+  .services { position: relative; padding-top: 120px; padding-bottom: 120px; }
+  .srow { position: relative; overflow: hidden; display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 34px 16px; border-top: 1px solid var(--line); }
+  .srow-end { border-top: 1px solid var(--line); }
+  .srow .fill { position: absolute; inset: 0; background: var(--accent); transform: scaleY(0); transform-origin: 50% 100%; transition: transform .55s cubic-bezier(.7,0,.2,1); }
+  .srow:hover .fill { transform: scaleY(1); }
+  .srow .txt { position: relative; display: flex; align-items: baseline; gap: 32px; transition: transform .5s var(--ease), color .3s; }
+  .srow:hover .txt, .srow:hover .arr { color: #0A0A0A; }
+  .srow:hover .txt { transform: translateX(24px); }
+  .srow .num { font-size: 15px; opacity: .7; }
+  .srow .name { font-family: var(--font-display); font-weight: 700; font-size: clamp(32px, 5.4vw, 84px); letter-spacing: -0.045em; line-height: 1; }
+  .srow .arr { position: relative; font-size: 44px; line-height: 1; transition: transform .5s var(--ease), color .3s; }
+  .srow:hover .arr { transform: rotate(-45deg); }
+  .preview { position: absolute; left: 0; top: 0; z-index: 4; width: 360px; height: 282px; margin: -141px 0 0 -180px; border-radius: 22px; overflow: hidden; pointer-events: none; transform: scale(0); box-shadow: 0 30px 60px -30px rgba(0,0,0,.6); }
+  .preview img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* projets récents */
+  .recent { padding: 40px 0 120px; overflow: hidden; }
+  .strip { display: flex; gap: 24px; width: max-content; padding: 230px var(--gutter) 0; }
+  .tcard { position: relative; display: block; width: 340px; height: 440px; transition: transform .5s var(--ease); flex: 0 0 auto; }
+  .tcard:hover { transform: translateY(-24px) rotate(-2deg) scale(1.04); z-index: 5; }
+  .tc-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 26px; }
+  .tcard .cap { position: absolute; left: 20px; top: 20px; padding: 10px 16px; border-radius: 999px; background: #fff; color: #0A0A0A; font-size: 14px; font-weight: 600; opacity: 0; transform: translateY(12px); transition: all .4s ease; }
+  .tcard:hover .cap { opacity: 1; transform: none; }
+  @media (hover: none) { .recent .strip { overflow-x: auto; width: auto; padding-top: 40px; scroll-snap-type: x mandatory; } .tcard { scroll-snap-align: start; width: 78vw; height: 100vw; max-height: 480px; } }
+
+  /* jumelles */
+  .bino { position: relative; height: 100vh; min-height: 640px; overflow: hidden; background: #000; color: #fff; }
+  .bino-img { position: absolute; left: -10%; top: -10%; width: 120%; height: 120%; object-fit: cover; transform: scale(1.15); }
+  .bino-view { position: absolute; left: 50%; top: 50%; width: 3200px; height: 2200px; margin: -1100px 0 0 -1600px; pointer-events: none; }
+  .bino-hud { position: absolute; text-shadow: 0 2px 20px rgba(0,0,0,.6); }
+  .bino-hud.tl { left: var(--gutter); top: 110px; display: flex; flex-direction: column; gap: 10px; }
+  .bino-hud.tr { right: var(--gutter); top: 116px; font: 600 13px var(--font-body); letter-spacing: .12em; text-transform: uppercase; color: #D9D9DE; }
+  .bino-hud.bt { left: var(--gutter); right: var(--gutter); bottom: 48px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+  @media (max-width: 700px) { .bino-hud.tr { display: none; } }
+
+  /* clients */
+  .logos { background: #0B0B0C; color: #F4F4F2; padding: 120px 0 130px; display: flex; flex-direction: column; gap: 28px; }
+  .logos-head { text-align: center; padding: 0 20px 36px; display: flex; flex-direction: column; gap: 10px; align-items: center; }
+  .logo-row { gap: 0; animation-duration: 38s; }
+  .logo-row.rev { animation-duration: 44s; }
+  .lpill { flex: 0 0 auto; height: 104px; padding: 0 64px; border-radius: 999px; background: #262628; color: #F4F4F2; display: flex; align-items: center; justify-content: center; white-space: nowrap; transition: transform .45s cubic-bezier(.2,.9,.25,1.3), background-color .3s, color .3s; margin-right: 28px; }
+  .lpill:hover { transform: translateY(-8px) scale(1.06); background: var(--accent); color: #0A0A0A; }
+</style>
+
+<script>
+  import { gsap, ScrollTrigger, reduced, finePointer } from '../scripts/core';
+  import { initImmersion } from '../scripts/immersion';
+
+  /* hero : éventail + projecteur orange */
+  const hero = document.querySelector<HTMLElement>('[data-hero]')!;
+  const fan = hero.querySelector<HTMLElement>('[data-fan]')!;
+  const spot = hero.querySelector<HTMLElement>('[data-spot]')!;
+  if (finePointer && !reduced) {
+    const sp = { x: 0, y: 0, r: 0 }, tg = { x: 0, y: 0, r: 0 };
+    hero.addEventListener('mousemove', (e) => {
+      const r = hero.getBoundingClientRect(), mx = (e.clientX - r.left) / r.width * 2 - 1, my = (e.clientY - r.top) / r.height * 2 - 1;
+      fan.style.transform = `translateX(140px) rotateZ(-26deg) rotateX(${14 - my * 14}deg) rotateY(${-22 + mx * 26}deg)`;
+      tg.x = e.clientX - r.left; tg.y = e.clientY - r.top; tg.r = 150;
+    });
+    hero.addEventListener('mouseleave', () => { tg.r = 0; fan.style.transform = ''; });
+    gsap.ticker.add(() => {
+      sp.x += (tg.x - sp.x) * 0.18; sp.y += (tg.y - sp.y) * 0.18; sp.r += (tg.r - sp.r) * 0.15;
+      spot.style.clipPath = `circle(${sp.r.toFixed(1)}px at ${sp.x.toFixed(1)}px ${sp.y.toFixed(1)}px)`;
+    });
+  }
+
+  /* immersion : épinglée au défilement + souris */
+  const imm = document.querySelector<HTMLElement>('[data-immersion]')!;
+  const stages: string[][] = JSON.parse(imm.querySelector('[data-stages]')!.textContent || '[]');
+  const num = imm.querySelector('[data-stage-num]')!, title = imm.querySelector('[data-stage-title]')!, text = imm.querySelector('[data-stage-text]')!;
+  const dots = imm.querySelectorAll('.dots span');
+  const scene = initImmersion(imm.querySelector('.imm-pin')!, imm.querySelector('canvas')!, (s) => {
+    num.textContent = '0' + (s + 1); title.textContent = stages[s][0]; text.textContent = stages[s][1];
+    dots.forEach((d, i) => d.classList.toggle('on', i === s));
+    if (!reduced) gsap.fromTo([title, text], { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: .6, stagger: .06, ease: 'power3.out' });
+  });
+  ScrollTrigger.create({ trigger: imm, start: 'top top', end: 'bottom bottom', onUpdate: (st) => scene.setScroll(st.progress) });
+
+  /* bande des projets récents : glisse avec la souris */
+  const strip = document.querySelector<HTMLElement>('[data-strip]')!;
+  const track = strip.querySelector<HTMLElement>('[data-strip-track]')!;
+  if (finePointer && !reduced) {
+    strip.addEventListener('mousemove', (e) => {
+      const r = strip.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
+      const max = Math.max(0, track.scrollWidth - r.width);
+      gsap.to(track, { x: -x * max, duration: 1, ease: 'power3.out' });
+    });
+  }
+
+  /* jumelles */
+  const bino = document.querySelector<HTMLElement>('[data-bino]')!;
+  const view = bino.querySelector<SVGElement>('.bino-view')!, img = bino.querySelector<HTMLElement>('.bino-img')!, xy = bino.querySelector('[data-bino-xy]')!;
+  const moveBino = (x: number, y: number, w: number, h: number) => {
+    gsap.to(view, { left: x, top: y, duration: .5, ease: 'power3.out' });
+    gsap.to(img, { x: (w / 2 - x) * 0.12, y: (h / 2 - y) * 0.12, duration: 1.1, ease: 'power3.out' });
+    xy.textContent = `${String(Math.round(x)).padStart(4, '0')} / ${String(Math.round(y)).padStart(4, '0')}`;
+  };
+  bino.addEventListener('mousemove', (e) => { const r = bino.getBoundingClientRect(); moveBino(e.clientX - r.left, e.clientY - r.top, r.width, r.height); });
+  bino.addEventListener('mouseleave', () => { const r = bino.getBoundingClientRect(); moveBino(r.width / 2, r.height / 2, r.width, r.height); });
+  view.style.left = '50%'; view.style.top = '50%';
+  if (!finePointer && !reduced) {
+    gsap.to(view, { left: '30%', duration: 4, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+  }
+</script>

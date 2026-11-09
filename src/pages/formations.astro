@@ -1,0 +1,101 @@
+---
+import Base from '../layouts/Base.astro';
+import { COURSES, PROJECTS } from '../data/site';
+const P = Object.fromEntries(PROJECTS.map((p) => [p.slug, p]));
+const formats = ['Toutes', 'En ligne', 'Présentiel', 'Atelier'];
+const modules = [
+  ['01', 'Analyser un brief', P['chapn'].cover],
+  ['02', 'Recherches et moodboard', P['lumora'].cover],
+  ['03', 'Construire le logo', P['pakinou'].cover],
+  ['04', 'Décliner la charte graphique', P['freeandize'].cover],
+  ['05', 'Présenter au client', P['kpalo-energie'].cover]
+];
+const steps = [
+  ['01', 'Choisis ta formation', 'Selon ton niveau et le format qui te convient.'],
+  ['02', 'Réserve ta place', 'Inscription en ligne, places limitées par session.'],
+  ['03', 'Apprends en faisant', 'Exercices concrets et retours personnalisés.'],
+  ['04', 'Repars avec un projet', 'Un travail fini à mettre dans ton portfolio.']
+];
+---
+<Base title="Formations" description="Formations en design graphique par Dak.graphiste à Abidjan et en ligne : brand identity, retouche photo, affiches, réseaux sociaux, packaging.">
+  <section class="wrap" style="padding-top:150px;padding-bottom:80px;display:flex;flex-wrap:wrap;gap:48px;align-items:flex-end;justify-content:space-between">
+    <div style="flex:1 1 640px;min-width:0;display:flex;flex-direction:column;gap:28px">
+      <span class="eyebrow" data-reveal>Formations · en ligne et à Abidjan</span>
+      <h1 class="display" data-lines style="font-size:clamp(52px,8.5vw,132px);font-weight:600"><span class="line-mask"><span>Apprends le</span></span><span class="line-mask"><span>design avec <span class="accent">moi.</span></span></span></h1>
+      <p class="muted" data-reveal=".3" style="margin:0;max-width:560px;font-size:19px;line-height:1.55">Brand identity, retouche photo, affiches et bien d'autres : des formations concrètes avec Davy Aymard Kouassi, basées sur de vrais projets clients.</p>
+    </div>
+    <div data-reveal=".45" style="display:flex;gap:16px;flex-wrap:wrap">
+      <span class="magnetic"><a href="#catalogue" class="btn btn-fg">Voir les formations ↓</a></span>
+      <span class="magnetic"><a href="/contact" class="btn btn-line">Formation sur mesure</a></span>
+    </div>
+  </section>
+
+  <section id="catalogue" class="wrap" data-filter-scope style="padding-top:40px;padding-bottom:96px">
+    <div class="section-title">
+      <h2>Catalogue <span class="muted" data-count>({COURSES.length})</span></h2>
+      <div class="chips" role="group" aria-label="Filtrer par format">{formats.map((f, i) => <button type="button" class="chip" data-filter={f === 'Toutes' ? 'Tout' : f} aria-pressed={i === 0 ? 'true' : 'false'}>{f}</button>)}</div>
+    </div>
+    <div class="fgrid">
+      {COURSES.map((c) => (
+        <a href="/contact" class="fcard tilt" data-tilt data-cat={c.format} data-cursor="Découvrir">
+          <div class="fvis">
+            <img src={c.img} alt="" data-depth="40" loading="lazy" />
+            <span class="lvl" data-depth="-14">{c.level}</span>
+            <span class="glare" data-glare aria-hidden="true"></span>
+          </div>
+          <div class="fbody">
+            <b>{c.title}</b>
+            <span class="muted">{c.format} · [X] h · [X] places</span>
+            <span class="fprice"><span>[Prix] FCFA</span><span>Voir le programme →</span></span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="wrap prog" data-preview-scope style="padding-bottom:96px">
+    <div class="section-title"><h2>Programme type</h2><span class="muted">Exemple : Brand identity · survole un module</span></div>
+    {modules.map(([n, t, img]) => <div class="mod" data-preview-src={img}><span class="muted">Module {n}</span><span class="t">{t}</span><span class="arr">→</span></div>)}
+    <div style="border-top:1px solid var(--line)"></div>
+    <div class="preview" data-preview aria-hidden="true"><img src={modules[0][2]} alt="" /></div>
+  </section>
+
+  <section class="wrap" style="padding-bottom:112px">
+    <div class="section-title"><h2>Comment ça se passe</h2></div>
+    <div class="steps">{steps.map(([n, t, d]) => <div class="step"><span class="fill"></span><span class="num">{n}</span><span class="st"><b>{t}</b><span>{d}</span></span></div>)}</div>
+  </section>
+
+  <div class="cta-band"><p>Prochaine session : [date]</p><span class="magnetic"><a href="/contact" class="btn" style="background:#0A0A0A;color:#fff">Réserver ma place →</a></span></div>
+</Base>
+
+<style is:global>
+  .fgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 32px; }
+  .fcard[hidden], .pcard[hidden] { display: none; }
+  .fcard { position: relative; display: flex; flex-direction: column; border-radius: 28px; overflow: hidden; background: var(--card); box-shadow: 0 0 0 1px var(--line), 0 30px 60px -40px rgba(0,0,0,.5); }
+  .fvis { position: relative; height: 280px; overflow: hidden; }
+  .fvis img { position: absolute; left: -24px; top: -24px; width: calc(100% + 48px); height: calc(100% + 48px); max-width: none; object-fit: cover; transition: transform .5s var(--ease); }
+  .fvis .lvl { position: absolute; left: 20px; top: 20px; padding: 8px 14px; border-radius: 999px; background: rgba(255,255,255,.92); color: #0A0A0A; font-size: 13px; font-weight: 600; transition: transform .5s var(--ease); }
+  .fvis .glare { position: absolute; inset: 0; pointer-events: none; }
+  .fbody { display: flex; flex-direction: column; gap: 14px; padding: 24px 24px 28px; }
+  .fbody b { font-family: var(--font-display); font-size: 26px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; }
+  .fprice { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 8px; padding-top: 18px; border-top: 1px solid var(--line); font-weight: 600; }
+  .fprice span:first-child { font-size: 20px; color: var(--accent); }
+  .prog { position: relative; }
+  .mod { display: grid; grid-template-columns: 110px minmax(0, 1fr) auto; gap: 24px; align-items: center; padding: 30px 0; border-top: 1px solid var(--line); transition: padding-left .45s var(--ease), color .3s; }
+  .mod .t { font-family: var(--font-display); font-size: clamp(24px, 3.4vw, 44px); font-weight: 600; letter-spacing: -0.03em; }
+  .mod .arr { font-size: 28px; opacity: 0; transform: translateX(-12px); transition: all .4s var(--ease); }
+  .mod:hover { padding-left: 20px; color: var(--accent); }
+  .mod:hover .arr { opacity: 1; transform: none; }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 16px; }
+  .step { position: relative; overflow: hidden; min-height: 260px; padding: 28px; border-radius: 24px; border: 1px solid var(--line); display: flex; flex-direction: column; justify-content: space-between; gap: 24px; transition: color .45s ease; }
+  .step .fill { position: absolute; inset: 0; background: var(--grad); transform: translateY(101%); transition: transform .55s cubic-bezier(.7,0,.2,1); }
+  .step:hover .fill { transform: translateY(0); }
+  .step:hover { color: #fff; }
+  .step .num, .step .st { position: relative; }
+  .step .num { color: var(--accent); font-weight: 600; }
+  .step:hover .num { color: #fff; }
+  .step .st { display: flex; flex-direction: column; gap: 10px; font-size: 16px; line-height: 1.5; }
+  .step .st b { font-family: var(--font-display); font-size: 26px; font-weight: 600; letter-spacing: -0.02em; }
+  .preview { position: absolute; left: 0; top: 0; z-index: 4; width: 300px; height: 234px; margin: -117px 0 0 -150px; border-radius: 22px; overflow: hidden; pointer-events: none; transform: scale(0); box-shadow: 0 30px 60px -30px rgba(0,0,0,.6); }
+  .preview img { width: 100%; height: 100%; object-fit: cover; }
+</style>

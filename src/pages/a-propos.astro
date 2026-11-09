@@ -1,0 +1,101 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE, PROJECTS } from '../data/site';
+const P = Object.fromEntries(PROJECTS.map((p) => [p.slug, p]));
+const expertises = ['Identité visuelle & logo', 'Direction artistique', 'Affiches & print', 'Publicité & packaging', 'Réseaux sociaux', 'Retouche photo'];
+const tools = ['Photoshop', 'Illustrator', 'InDesign', 'Lightroom', 'After Effects', 'Figma'];
+const marq = ['Identité visuelle', 'Logo', 'Charte graphique', 'Affiche', 'Packaging', 'Social media', 'Retouche', 'Formation'];
+const jobs = [
+  ['[2024 — aujourd’hui]', 'Graphiste senior', 'Freelance · Dak.graphiste, Abidjan'],
+  ['[années]', '[Poste]', '[Entreprise / studio]'],
+  ['[années]', '[Poste ou stage]', '[Entreprise / studio]']
+];
+const diplomas = [
+  ['[Année]', '[Diplôme]', '[École, ville]', '[Ce que tu y as appris, ta spécialisation, ton projet de fin d’études.]'],
+  ['[Année]', '[Diplôme]', '[École, ville]', '[Matières clés, projets marquants, prix.]'],
+  ['[Année]', '[Certification ou formation courte]', '[Organisme]', '[Ce que cette formation t’a apporté.]']
+];
+---
+<Base title="À propos" description="Davy Aymard Kouassi, alias Dak : graphiste senior à Abidjan. Parcours, expertises, outils et diplômes.">
+  <section class="wrap ab-hero" data-mouse-scope>
+    <div class="ab-text">
+      <span class="eyebrow" data-reveal>À propos · CV · Abidjan</span>
+      <h1 class="display" data-lines style="font-size:clamp(48px,7vw,104px);font-weight:600"><span class="line-mask"><span>Bonjour, je suis</span></span><span class="line-mask"><span>Davy, alias <span class="accent">Dak.</span></span></span></h1>
+      <p class="muted" data-reveal=".3" style="margin:0;max-width:560px;font-size:19px;line-height:1.55">{SITE.name}, graphiste senior basé à {SITE.city}. [2 à 3 phrases : ton parcours, ta spécialité, le type de projets que tu aimes concevoir et pour qui.]</p>
+      <div data-reveal=".45" style="display:flex;gap:12px;flex-wrap:wrap">
+        <a href="/cv-davy-aymard-kouassi.pdf" class="btn btn-fg" download>Télécharger le CV (PDF) ↓</a>
+        <a href="/contact" class="btn btn-line">Me contacter</a>
+      </div>
+      <div class="ab-stats" data-reveal=".6">
+        <div><span class="display">[X] ans</span><span class="muted">d'expérience</span></div>
+        <div><span class="display">12</span><span class="muted">projets sur Behance</span></div>
+        <div><span class="display">670</span><span class="muted">appréciations Behance</span></div>
+      </div>
+    </div>
+    <div class="ab-portrait" aria-hidden="true">
+      <div class="l1" data-mouse="-36"></div>
+      <div class="l2" data-mouse="20"><span>[Ton portrait]</span></div>
+      <div class="l3" data-mouse="70"><img src={P['pakinou'].cover} alt="" /></div>
+    </div>
+  </section>
+
+  <div class="marquee" aria-hidden="true" style="border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:20px 0">
+    <div class="marquee-track">{[...marq, ...marq].map((m) => <span class="ab-pill">{m}</span>)}</div>
+  </div>
+
+  <section class="wrap ab-two">
+    <div><h2 class="display ab-h2">Expertises</h2>{expertises.map((e, i) => <div class="ab-row"><span>{e}</span><span class="muted">{String(i + 1).padStart(2, '0')}</span></div>)}</div>
+    <div><h2 class="display ab-h2">Outils</h2><div style="display:flex;flex-wrap:wrap;gap:10px">{tools.map((t) => <span class="ab-tool">{t}</span>)}</div></div>
+  </section>
+
+  <section class="wrap" style="padding-bottom:72px">
+    <h2 class="display ab-h2">Expériences</h2>
+    {jobs.map(([w, r, p]) => <div class="ab-job ab-row"><span class="muted">{w}</span><span class="r">{r}</span><span class="muted">{p}</span></div>)}
+  </section>
+
+  <section class="wrap" style="padding-bottom:110px">
+    <div class="section-title"><h2>Diplômes</h2><span class="muted">Clique pour déplier</span></div>
+    {diplomas.map(([y, t, s, d], i) => (
+      <details class="dip" open={i === 0}>
+        <summary><span class="muted">{y}</span><span class="dt"><b>{t}</b><span class="muted">{s}</span></span><span class="plus" aria-hidden="true">+</span></summary>
+        <p class="muted">{d}</p>
+      </details>
+    ))}
+  </section>
+
+  <div class="cta-band"><p>Travaillons ensemble.</p><a href="/contact" class="btn btn-fg">Me contacter →</a></div>
+</Base>
+
+<style is:global>
+  .ab-hero { padding-top: 150px; padding-bottom: 96px; display: flex; flex-wrap: wrap; gap: 64px; align-items: center; justify-content: space-between; }
+  .ab-text { flex: 1 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 28px; }
+  .ab-stats { display: flex; gap: 48px; flex-wrap: wrap; margin-top: 12px; }
+  .ab-stats > div { display: flex; flex-direction: column; gap: 4px; }
+  .ab-stats .display { font-size: 44px; font-weight: 500; }
+  .ab-portrait { position: relative; flex: 0 1 460px; height: 580px; min-width: 300px; }
+  .ab-portrait > div { position: absolute; transition: translate 1s var(--ease); }
+  .ab-portrait .l1 { left: 40px; top: 0; width: 360px; height: 480px; border-radius: 32px; background: var(--grad); transform: rotate(-6deg); }
+  .ab-portrait .l2 { left: 60px; top: 50px; width: 360px; height: 480px; border-radius: 32px; background: var(--card); box-shadow: 0 0 0 1px var(--line); display: flex; align-items: center; justify-content: center; color: var(--muted); font-weight: 600; }
+  .ab-portrait .l3 { left: 0; bottom: 0; width: 180px; height: 220px; border-radius: 24px; overflow: hidden; transform: rotate(-10deg); box-shadow: 0 30px 50px -20px rgba(0,0,0,.5); }
+  .ab-portrait .l3 img { width: 100%; height: 100%; object-fit: cover; }
+  .ab-pill { padding: 12px 22px; border-radius: 999px; border: 1px solid var(--line); font-size: 18px; font-weight: 500; white-space: nowrap; margin-right: 12px; }
+  .ab-two { display: flex; flex-wrap: wrap; gap: 64px; padding-top: 96px; padding-bottom: 72px; }
+  .ab-two > div { flex: 1 1 420px; min-width: 0; }
+  .ab-h2 { font-size: 48px; font-weight: 600; margin: 0 0 32px; }
+  .ab-row { display: flex; justify-content: space-between; padding: 22px 0; border-top: 1px solid var(--line); font-size: 22px; transition: padding-left .4s var(--ease), color .3s; }
+  .ab-row:hover { padding-left: 16px; color: var(--accent); }
+  .ab-tool { padding: 14px 22px; border-radius: 999px; background: var(--card); box-shadow: 0 0 0 1px var(--line); font-size: 17px; font-weight: 500; transition: transform .35s var(--spring), background-color .3s, color .3s; }
+  .ab-tool:hover { transform: translateY(-4px) scale(1.06); background: var(--accent); color: #0A0A0A; }
+  .ab-job { display: grid; grid-template-columns: minmax(140px, 220px) minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: baseline; }
+  .ab-job .r { font-weight: 500; }
+  @media (max-width: 700px) { .ab-job { grid-template-columns: 1fr; gap: 6px; } }
+  .dip { border-top: 1px solid var(--line); }
+  .dip:last-of-type { border-bottom: 1px solid var(--line); }
+  .dip summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: minmax(100px, 220px) minmax(0, 1fr) 48px; gap: 24px; align-items: center; padding: 24px 0; }
+  .dip summary::-webkit-details-marker { display: none; }
+  .dip .dt { display: flex; flex-direction: column; gap: 6px; }
+  .dip .dt b { font-size: 26px; font-weight: 500; }
+  .dip .plus { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-size: 22px; transition: transform .45s var(--ease), background-color .3s; }
+  .dip[open] .plus { transform: rotate(45deg); background: var(--accent); color: #0A0A0A; border-color: var(--accent); }
+  .dip p { margin: 0 0 28px; padding-left: calc(min(220px, 30%) + 24px); font-size: 17px; line-height: 1.6; max-width: 900px; }
+</style>

@@ -1,0 +1,98 @@
+---
+import Base from '../layouts/Base.astro';
+import { PROJECTS } from '../data/site';
+const P = Object.fromEntries(PROJECTS.map((p) => [p.slug, p]));
+// Remplacer `video` par l'URL d'intégration YouTube/Vimeo (ex. https://www.youtube.com/embed/ID) quand les vidéos sont prêtes
+const SHOWREEL = { video: '', poster: P['kpalo-energie'].cover, duration: '[durée]' };
+const vids = [
+  ['KPALO Énergie — spot', 'Publicité', P['kpalo-energie'].cover],
+  ['Freeandize — teaser packaging', 'Motion', P['freeandize'].cover],
+  ['King Fish — annonce', 'Réseaux sociaux', P['king-fish'].cover],
+  ['Poulet à gogo — reel', 'Réseaux sociaux', P['poulet-a-gogo'].cover],
+  ["Chap'n — animation de logo", 'Motion', P['chapn'].cover],
+  ['Placali Chap — reel', 'Réseaux sociaux', P['placali-chap'].cover]
+];
+---
+<Base title="Showreel" description="Showreel de Davy Aymard Kouassi (Dak.graphiste) : spots publicitaires, motion design et contenus vidéo pour les réseaux sociaux.">
+  <div class="sr-page">
+    <section class="wrap sr-top">
+      <div class="sr-blob b1" aria-hidden="true"></div><div class="sr-blob b2" aria-hidden="true"></div>
+      <div class="sr-head">
+        <h1 class="display" data-lines style="font-size:clamp(64px,12vw,190px);font-weight:800"><span class="line-mask"><span>Show<span class="accent">reel</span></span></span></h1>
+        <p data-reveal=".3" style="margin:0;max-width:380px;font-size:18px;line-height:1.55;color:#B9B9BE">Mes réalisations vidéo : spots publicitaires, motion design, contenus pour les réseaux sociaux.</p>
+      </div>
+      <div class="player tilt" data-tilt data-cursor-hide data-video={SHOWREEL.video}>
+        <img src={SHOWREEL.poster} alt="" />
+        <div class="player-shade" aria-hidden="true"></div>
+        <div class="player-ui" data-player-ui>
+          <button type="button" class="playbtn" data-play aria-label="Lire le showreel"><svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4l13 8-13 8z" fill="#0A0A0A" /></svg></button>
+          <span class="display" style="font-size:28px">Showreel 2026 · {SHOWREEL.duration}</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="marquee" aria-hidden="true" style="padding:24px 0;border-top:1px solid rgba(255,90,31,.3);border-bottom:1px solid rgba(255,90,31,.3);margin-top:80px">
+      <div class="marquee-track" style="font-family:var(--font-display);font-weight:800;font-size:60px;letter-spacing:-0.03em;white-space:nowrap">
+        <span style="padding-right:40px">MOTION — <span class="outline" style="-webkit-text-stroke-color:var(--accent)">SPOT PUB</span> — REELS — <span class="outline" style="-webkit-text-stroke-color:var(--accent)">ANIMATION DE LOGO</span> — TEASER — </span>
+        <span style="padding-right:40px">MOTION — <span class="outline" style="-webkit-text-stroke-color:var(--accent)">SPOT PUB</span> — REELS — <span class="outline" style="-webkit-text-stroke-color:var(--accent)">ANIMATION DE LOGO</span> — TEASER — </span>
+      </div>
+    </div>
+
+    <section class="wrap" style="padding-top:96px;padding-bottom:120px">
+      <div class="section-title"><h2>Réalisations vidéo</h2><span style="color:#B9B9BE">Survole une vidéo</span></div>
+      <div class="vgrid">
+        {vids.map(([t, c, img]) => (
+          <a href="/contact" class="vcard" data-cursor="Lire">
+            <div class="vthumb"><img src={img} alt={t} loading="lazy" /><span class="ov" aria-hidden="true"></span><span class="pb" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z" fill="#0A0A0A" /></svg></span><span class="dur">[0:30]</span></div>
+            <div style="display:flex;justify-content:space-between;gap:16px;font-size:16px"><b style="font-weight:600">{t}</b><span style="color:var(--accent-2)">{c}</span></div>
+          </a>
+        ))}
+      </div>
+    </section>
+  </div>
+  <div class="cta-band"><p>Une vidéo pour ta marque ?</p><a href="/contact" class="btn" style="background:#0A0A0A;color:#fff">Parlons-en →</a></div>
+</Base>
+
+<style is:global>
+  .sr-page { background: #0A0A0A; color: #F4F4F2; overflow: hidden; }
+  .sr-top { position: relative; padding-top: 150px; }
+  .sr-blob { position: absolute; border-radius: 50%; pointer-events: none; animation: drift 16s ease-in-out infinite; }
+  .sr-blob.b1 { left: -10%; top: 10%; width: 640px; height: 640px; background: var(--accent); filter: blur(160px); opacity: .35; }
+  .sr-blob.b2 { right: -8%; top: 40%; width: 520px; height: 520px; background: #7A2208; filter: blur(150px); opacity: .5; animation-delay: -6s; }
+  @keyframes drift { 50% { transform: translate(80px, -40px); } }
+  .sr-head { position: relative; display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; flex-wrap: wrap; margin-bottom: 48px; }
+  .player { position: relative; aspect-ratio: 16 / 9; border-radius: 32px; overflow: hidden; background: #140806; box-shadow: 0 60px 120px -40px rgba(255,90,31,.45), 0 0 0 1px rgba(255,90,31,.35); }
+  .player > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .55; }
+  .player iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .player-shade { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,90,31,.55) 0%, rgba(122,34,8,.35) 40%, rgba(10,10,10,.85) 100%); }
+  .player-ui { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; text-align: center; padding: 24px; }
+  .playbtn { width: 120px; height: 120px; border-radius: 50%; border: 0; background: var(--accent); display: flex; align-items: center; justify-content: center; cursor: pointer; animation: pulse 2s ease-in-out infinite; transition: transform .4s var(--spring); }
+  .playbtn:hover { transform: scale(1.12); }
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(255,90,31,.6); } 50% { box-shadow: 0 0 0 26px rgba(255,90,31,0); } }
+  .vgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); gap: 40px 28px; }
+  .vcard { display: flex; flex-direction: column; gap: 16px; }
+  .vthumb { position: relative; aspect-ratio: 16 / 9; border-radius: 22px; overflow: hidden; background: #1A0B06; }
+  .vthumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .7s var(--ease), filter .5s; }
+  .vcard:hover .vthumb img { transform: scale(1.08); filter: saturate(1.2); }
+  .vthumb .ov { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,90,31,.7) 0%, rgba(10,10,10,.75) 100%); opacity: 0; transition: opacity .4s; }
+  .vcard:hover .ov { opacity: 1; }
+  .vthumb .pb { position: absolute; left: 50%; top: 50%; margin: -36px 0 0 -36px; width: 72px; height: 72px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; transform: scale(.6); opacity: 0; transition: all .45s var(--spring); }
+  .vcard:hover .pb { transform: scale(1); opacity: 1; }
+  .vthumb .dur { position: absolute; right: 14px; bottom: 14px; padding: 6px 10px; border-radius: 8px; background: rgba(10,10,10,.75); font-size: 13px; font-weight: 600; }
+</style>
+
+<script>
+  const player = document.querySelector<HTMLElement>('[data-tilt].player')!;
+  player.querySelector('[data-play]')?.addEventListener('click', () => {
+    const src = player.dataset.video;
+    const ui = player.querySelector<HTMLElement>('[data-player-ui]')!;
+    if (src) {
+      const f = document.createElement('iframe');
+      f.src = src + (src.includes('?') ? '&' : '?') + 'autoplay=1';
+      f.allow = 'autoplay; fullscreen; picture-in-picture'; f.title = 'Showreel Dak.graphiste';
+      player.appendChild(f); ui.remove();
+    } else {
+      ui.querySelector('.display')!.textContent = 'Showreel bientôt disponible';
+    }
+  });
+</script>

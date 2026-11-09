@@ -1,0 +1,95 @@
+---
+import '../styles/global.css';
+import { SITE, NAV } from '../data/site';
+
+interface Props {
+  title: string;
+  description?: string;
+  footer?: boolean;
+  image?: string;
+}
+const { title, description = `${SITE.name} — ${SITE.role} à ${SITE.city}. Identité visuelle, affiches, packaging, réseaux sociaux et formations.`, footer = true, image = '/images/projets/chapn.png' } = Astro.props;
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const fullTitle = title === 'Accueil' ? `${SITE.brand} — ${SITE.name}, graphiste à Abidjan` : `${title} — ${SITE.brand}`;
+const letters = SITE.brand.split('');
+const ogImage = new URL(image, Astro.site).toString();
+---
+<!doctype html>
+<html lang="fr" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{fullTitle}</title>
+  <meta name="description" content={description} />
+  <meta property="og:title" content={fullTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#0A0A0A" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,800&family=Playfair+Display:ital,wght@0,400;0,500;1,500;1,600;1,700&family=Pacifico&display=swap" rel="stylesheet" />
+  <script is:inline>
+    try { var t = localStorage.getItem('dak-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org', '@type': 'Person', name: SITE.name, alternateName: 'Dak', jobTitle: SITE.role,
+    email: SITE.email, telephone: SITE.phone, address: { '@type': 'PostalAddress', addressLocality: 'Abidjan', addressCountry: 'CI' },
+    sameAs: [SITE.behance, SITE.linkedin, SITE.facebook]
+  })} />
+</head>
+<body>
+  <a class="sr-only" href="#contenu">Aller au contenu</a>
+  <header class="site-header">
+    <a class="logo" href="/" aria-label="Accueil dak.graphiste">dak<span>.</span>graphiste</a>
+    <nav class="nav" aria-label="Menu principal">
+      {NAV.map((n) => <a href={n.href} aria-current={path.startsWith(n.href) ? 'page' : undefined}>{n.label}</a>)}
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Basculer le thème clair ou sombre">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="8.5" /><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor" /></svg>
+      </button>
+      <button class="icon-btn menu-btn" type="button" data-menu aria-expanded="false" aria-controls="mobile-nav" aria-label="Ouvrir le menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 8h16M4 16h16" /></svg>
+      </button>
+    </div>
+  </header>
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Menu mobile">
+    <a href="/">Accueil</a>
+    {NAV.map((n) => <a href={n.href}>{n.label}</a>)}
+  </nav>
+
+  <main id="contenu">
+    <slot />
+  </main>
+
+  {footer && (
+    <footer class="site-footer">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:32px;flex-wrap:wrap">
+        <p class="display" style="font-size:clamp(40px,6vw,92px);margin:0">Un projet ?<br />Une formation ?</p>
+        <span class="magnetic"><a href="/contact" class="btn-round" data-cursor="Écrire" style="width:180px;height:180px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;background:var(--accent);color:#0A0A0A;font-weight:700;font-size:18px;line-height:1.2">Écrire<br />à Dak →</a></span>
+      </div>
+      <div class="wordmark" aria-label={SITE.brand}>
+        {letters.map((l) => <span style={l === '.' ? 'color:var(--accent)' : undefined}>{l}</span>)}
+      </div>
+      <div class="footer-links">
+        <span>© {new Date().getFullYear()} {SITE.name} · {SITE.city}</span>
+        <nav aria-label="Coordonnées et réseaux">
+          <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+          <a href={SITE.phoneHref}>{SITE.phone}</a>
+          <a href={SITE.behance} target="_blank" rel="noopener">Behance ↗</a>
+          <a href={SITE.linkedin} target="_blank" rel="noopener">LinkedIn ↗</a>
+          <a href={SITE.facebook} target="_blank" rel="noopener">Facebook ↗</a>
+        </nav>
+      </div>
+    </footer>
+  )}
+
+  <div class="cursor" aria-hidden="true"></div>
+  <script>
+    import '../scripts/core';
+  </script>
+</body>
+</html>
