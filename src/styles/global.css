@@ -212,3 +212,6 @@ main { overflow-x: clip; }
 /* textes d'aide adaptés : souris ou écran tactile */
 .only-touch { display: none; }
 @media (hover: none) { .only-hover { display: none; } .only-touch { display: inline; } }
+
+/* un élément masqué (filtres, lightbox…) reste masqué, quel que soit son style d affichage */
+[hidden] { display: none !important; }
