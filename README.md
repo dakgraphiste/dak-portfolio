@@ -41,7 +41,7 @@ Tout se fait depuis le navigateur, sur GitHub. Chaque modification enregistrée 
 Les produits sont dans `src/data/shop.ts`. Pour chaque produit : nom, type (`Mockups`, `Extensions`, `Templates`, `Packs`), prix, description, contenu, images d'aperçu (à déposer dans `public/images/boutique/`).
 
 - `buyUrl` : lien de paiement (Chariow, Selar, Gumroad…). Sans lien, le bouton ouvre une commande WhatsApp pré-remplie.
-- `published: true` pour mettre le produit en ligne. Les 3 produits d'exemple sont en `published: false` : à remplacer.
+- `published: true` pour mettre le produit en ligne (`false` pour le masquer).
 - Le menu « Boutique » et l'encart de l'accueil apparaissent automatiquement dès qu'un produit est publié.
 - Aperçu en local avec les produits non publiés : `PREVIEW_DRAFTS=1 npm run build`.
 

@@ -19,28 +19,40 @@ export type Product = {
   published: boolean;
 };
 
-// Exemples à remplacer : ils restent masqués (published: false)
+// Pour ajouter un produit : copier un bloc ci-dessous. Lien Chariow à mettre dans `buyUrl`.
 const ALL: Product[] = [
   {
-    slug: 'mockup-boites-de-luxe', name: 'Mockup boîtes de luxe', type: 'Mockups', price: '[prix]',
-    short: 'Trois boîtes premium à personnaliser en un clic, pour présenter un packaging haut de gamme.',
-    description: "Un mockup PSD réaliste pour présenter vos packagings de luxe : remplacez le design par objet dynamique, changez les couleurs et l'arrière-plan.",
-    includes: ['Fichier PSD haute définition', 'Objets dynamiques', 'Ombres et reflets séparés', 'Fond modifiable'],
-    images: ['/images/projets/bronze.webp', '/images/projets/bronze-poster.webp'], published: false
+    slug: 'brandforge', name: 'BrandForge V8', type: 'Extensions', price: '10 000 FCFA',
+    short: "L'extension Illustrator qui génère ta charte graphique complète, de 20 à 109 pages, et tout l'écosystème de la marque.",
+    description: "BrandForge est une extension Adobe Illustrator qui génère des chartes graphiques de 20 à 109 pages à partir de 21 modèles, et tout l'écosystème autour : stratégie, propositions de logos, kits de logos, réseaux sociaux, papeterie, site web, contrats, devis, factures, mockups 3D et logo animé. Tu gagnes des jours de mise en page sur chaque projet d'identité.",
+    includes: [
+      'Extension Adobe Illustrator (Windows et Mac)',
+      '21 modèles de chartes graphiques, de 20 à 109 pages',
+      'Stratégie, propositions et kits de logos',
+      'Réseaux sociaux, papeterie et site web de la marque',
+      'Contrats, devis et factures',
+      'Studio de mockups 3D et logo animé',
+      'Interface en français, licence à vie'
+    ],
+    images: ['/images/boutique/brandforge-1.webp', '/images/boutique/brandforge-2.webp', '/images/boutique/brandforge-3.webp', '/images/boutique/brandforge-4.webp'],
+    published: true
   },
   {
-    slug: 'mockup-sachet-alimentaire', name: 'Mockup sachet alimentaire', type: 'Mockups', price: '[prix]',
-    short: 'Un sachet souple posé dans une cuisine lumineuse, idéal pour les produits locaux.',
-    description: 'Mettez en scène vos emballages alimentaires dans un décor naturel et chaleureux.',
-    includes: ['Fichier PSD haute définition', 'Objet dynamique', 'Scène modifiable'],
-    images: ['/images/projets/abodjama.webp', '/images/projets/abodjama-poster.webp'], published: false
-  },
-  {
-    slug: 'mockup-boite-jouet', name: 'Mockup boîte de jouet', type: 'Mockups', price: '[prix]',
-    short: 'Une boîte vitrine pour jouets et poupées, prête pour vos présentations clients.',
-    description: 'Présentez un packaging de jouet avec fenêtre transparente, de face et de trois quarts.',
-    includes: ['Fichier PSD haute définition', '2 angles de vue', 'Objets dynamiques'],
-    images: ['/images/projets/trajolou.webp', '/images/projets/trajolou-poster.webp'], published: false
+    slug: 'packforge', name: 'PackForge 1.2', type: 'Extensions', price: '10 000 FCFA',
+    short: "L'extension Illustrator des designers packaging : 41 modèles de dielines, pliage 3D et contrôle avant impression.",
+    description: "PackForge est une extension Adobe Illustrator pensée pour les designers packaging, une alternative à Pacdora et Esko directement dans Illustrator. Choisis un modèle ou pars des dimensions de ton produit, génère la dieline (coupe, rainage, fond perdu, zones de colle), vois le montage en 3D de l'aplat au produit fermé, puis contrôle et corrige ton fichier avant l'impression.",
+    includes: [
+      'Extension Adobe Illustrator 2022 et plus (Windows et Mac)',
+      '41 modèles : étuis, boîtes, sachets, étiquettes, PLV…',
+      '« Partir du produit » : cotes et modèles conseillés',
+      'Pliage 3D animé et vue éclatée',
+      'Contrôle avant impression, corrections en un clic',
+      'QR code, code-barres EAN-13, tableau nutritionnel',
+      'Exports PDF/X-4, DXF, SVG, fiche technique, vidéo',
+      'Interface en français, thèmes clair et sombre'
+    ],
+    images: ['/images/boutique/packforge-1.webp', '/images/boutique/packforge-2.webp', '/images/boutique/packforge-3.webp', '/images/boutique/packforge-4.webp'],
+    published: true
   }
 ];
 
