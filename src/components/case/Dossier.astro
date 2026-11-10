@@ -80,17 +80,13 @@ const isLast = (k: number) => k === items.length - 1;
           </article>
         )}
         {it.kind === 'map' && (
-          <article class="card-map">
-            <svg viewBox="0 0 320 220" aria-hidden="true">
-              <rect width="320" height="220" fill="#DCE7EE" />
-              <path d="M0 150 C60 140 90 160 140 150 S230 130 320 145 V220 H0 Z" fill="#9EC4DB" />
-              <path d="M40 120 C90 110 120 128 170 118 S250 104 300 112" fill="none" stroke="#9EC4DB" stroke-width="10" stroke-linecap="round" />
-              <g stroke="#FFFFFF" stroke-width="3" fill="none" opacity=".9"><path d="M20 40 L300 70" /><path d="M60 0 L110 220" /><path d="M200 0 L180 220" /><path d="M0 95 L320 90" /></g>
-              <circle cx="168" cy="104" r="26" fill="none" stroke="#D7261E" stroke-width="3" stroke-dasharray="6 5" />
-              <circle cx="168" cy="104" r="6" fill="#D7261E" />
-            </svg>
-            <p class="tw">Lieu de l'opération : Abidjan, Côte d'Ivoire · 5°21′ N, 4°01′ O</p>
-          </article>
+          <a class="card-map" href="https://www.google.com/maps/place/Abidjan" target="_blank" rel="noopener noreferrer" data-cursor="Ouvrir">
+            <div class="map-frame">
+              <iframe src="https://maps.google.com/maps?q=Abidjan%2C%20C%C3%B4te%20d%27Ivoire&t=&z=12&ie=UTF8&output=embed" title="Carte d'Abidjan, Côte d'Ivoire" loading="lazy" referrerpolicy="no-referrer-when-downgrade" tabindex="-1"></iframe>
+              <span class="map-target" aria-hidden="true"></span>
+            </div>
+            <p class="tw">Lieu de l'opération : Abidjan, Côte d'Ivoire · 5°21′ N, 4°01′ O ↗</p>
+          </a>
         )}
         {it.kind === 'end' && isLast(k) && (
           <div class="card-end">
