@@ -1,0 +1,78 @@
+---
+// Tableau d'enquête façon film d'espion : pièces épinglées en parallaxe, fil rouge qui se tend
+// de punaise en punaise au défilement, punaise voyageuse qui met chaque pièce en lumière.
+import '@fontsource/special-elite/400.css';
+import { filled, sm, type Project } from '../../data/site';
+interface Props { p: Project; num: string }
+const { p, num } = Astro.props;
+
+const notes = [['Le contexte', p.brief], [p.conceptLabel || 'Le concept', p.concept], ['Le challenge', p.challenge]].filter(([, t]) => filled(t));
+if (!notes.length) notes.push(['Le projet', `${p.categoryLabel}${filled(p.client) ? ` pour ${p.client}` : ''}. Livrables : ${p.deliverables.toLowerCase()}.`]);
+// photos épinglées : visuels du projet différents de celui de la fiche
+const photos = [...new Set([...p.gallery.slice(1), p.gallery[0], p.cover])].slice(0, 3);
+const fiche = [['Client', p.client], ['Catégorie', p.categoryLabel], ['Année', p.year], ['Rôle', p.role], ['Livrables', p.deliverables]].filter(([, v]) => filled(v));
+
+type Item = { kind: 'id' | 'note' | 'photo' | 'end'; i: number };
+const order: Item[] = [{ kind: 'id', i: 0 }];
+const n = Math.max(notes.length, photos.length);
+for (let k = 0; k < n; k++) {
+  if (notes[k]) order.push({ kind: 'note', i: k });
+  if (photos[k]) order.push({ kind: 'photo', i: k });
+}
+order.push({ kind: 'end', i: 0 });
+
+// disposition en zigzag : gauche / droite, inclinaisons et profondeurs variées
+const X = [5, 52, 10, 56, 4, 50, 12, 54, 30];
+const ROT = [-2.5, 2, -1.5, 3, -3, 1.5, -2, 2.5, -1];
+const SPEED = [-70, 50, -40, 80, -60, 40, -50, 60, -30];
+const STEP = 330;
+const items = order.map((it, k) => ({ ...it, x: X[k % X.length], y: 60 + k * STEP, rot: ROT[k % ROT.length], speed: SPEED[k % SPEED.length], piece: String(k + 1).padStart(2, '0') }));
+const height = 60 + order.length * STEP + 220;
+const isLast = (k: number) => k === items.length - 1;
+---
+<section class="dossier" data-board style={`--bh:${height}px`}>
+  <div class="dossier-head wrap">
+    <span class="tw">Dossier n° {num} — Opération {p.client}</span>
+    <span class="tw dim">Pièces à conviction : {items.length}</span>
+  </div>
+  <div class="board">
+    <svg class="board-svg" aria-hidden="true"><path class="string-shadow" d="" /><path class="string" d="" /></svg>
+    <span class="traveler" aria-hidden="true"><span class="pin pin-big"></span></span>
+
+    {items.map((it, k) => (
+      <div class={`piece piece-${it.kind}`} style={`--x:${it.x}%;--y:${it.y}px;--r:${it.rot}deg`} data-speed={it.speed} data-piece>
+        <span class="pin" data-pin aria-hidden="true"></span>
+        {it.kind === 'id' && (
+          <article class="card-id">
+            <header><span class="tw">Fiche · pièce {it.piece}</span><span class="stamp stamp-red">Classifié</span></header>
+            <div class="id-body">
+              <img src={sm(p.poster)} alt="" loading="lazy" />
+              <dl>{fiche.map(([k2, v]) => <><dt>{k2}</dt><dd>{v}</dd></>)}</dl>
+            </div>
+          </article>
+        )}
+        {it.kind === 'note' && (
+          <article class="card-note">
+            <span class="tape" aria-hidden="true"></span>
+            <span class="tw dim">Pièce {it.piece}</span>
+            <h3 class="tw">{notes[it.i][0]}</h3>
+            <p>{notes[it.i][1]}</p>
+            {notes[it.i][0] === 'Le challenge' && <span class="stamp stamp-green">Résolu</span>}
+          </article>
+        )}
+        {it.kind === 'photo' && (
+          <figure class="card-photo">
+            <img src={photos[it.i]} alt={`${p.title} — pièce ${it.piece}`} loading="lazy" />
+            <figcaption class="tw">Pièce {it.piece} · {p.client}</figcaption>
+          </figure>
+        )}
+        {it.kind === 'end' && isLast(k) && (
+          <div class="card-end">
+            <span class="stamp stamp-big">Mission accomplie</span>
+            <span class="tw dim">Dak.graphiste · Abidjan</span>
+          </div>
+        )}
+      </div>
+    ))}
+  </div>
+</section>

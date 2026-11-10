@@ -73,3 +73,54 @@ if (lb) {
   lb.addEventListener('click', close);
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !lb.hidden) close(); });
 }
+
+/* ---- bande-annonce : texte tapé à la machine ---- */
+document.querySelectorAll<HTMLElement>('[data-typewriter]').forEach((el) => {
+  const text = el.dataset.typewriter || '';
+  if (reduced) { el.textContent = text; return; }
+  el.textContent = ''; let i = 0;
+  setTimeout(function type() { el.textContent = text.slice(0, ++i); if (i < text.length) setTimeout(type, 38 + Math.random() * 50); }, 900);
+});
+
+/* ---- tableau d'enquête : parallaxe, fil rouge, punaise voyageuse ---- */
+document.querySelectorAll<HTMLElement>('[data-board]').forEach((sec) => {
+  const board = sec.querySelector<HTMLElement>('.board')!;
+  const svg = board.querySelector<SVGSVGElement>('.board-svg')!;
+  const str = board.querySelector<SVGPathElement>('.string')!, sh = board.querySelector<SVGPathElement>('.string-shadow')!;
+  const trav = board.querySelector<HTMLElement>('.traveler')!;
+  const pieces = [...board.querySelectorAll<HTMLElement>('[data-piece]')];
+  const pins = pieces.map((p) => p.querySelector<HTMLElement>('[data-pin]')!);
+  const desktop = window.matchMedia('(min-width: 861px)').matches;
+  let prog = reduced ? 1 : 0, visible = false;
+  if (!reduced) {
+    if (desktop) pieces.forEach((pc) => gsap.to(pc, { y: Number(pc.dataset.speed || 0), ease: 'none', scrollTrigger: { trigger: board, start: 'top bottom', end: 'bottom top', scrub: true } }));
+    ScrollTrigger.create({ trigger: board, start: 'top 70%', end: 'bottom 95%', scrub: 0.6, onUpdate: (st) => { prog = st.progress; } });
+  }
+  new IntersectionObserver(([e]) => { visible = e.isIntersecting; }, { rootMargin: '300px' }).observe(sec);
+  const draw = () => {
+    if (!visible) return;
+    const r = board.getBoundingClientRect();
+    svg.setAttribute('viewBox', `0 0 ${r.width} ${r.height}`);
+    const pts = pins.map((p) => { const b = p.getBoundingClientRect(); return [b.left - r.left + b.width / 2, b.top - r.top + b.height / 2]; });
+    let d = `M${pts[0][0]},${pts[0][1]}`; const seg = [0];
+    for (let i = 1; i < pts.length; i++) {
+      const [x0, y0] = pts[i - 1], [x1, y1] = pts[i];
+      // le fil pend entre deux punaises mais arrive par le haut (il ne passe pas sur le texte)
+      const sag = 40 + Math.min(90, Math.abs(x1 - x0) * 0.18);
+      const cy = Math.min((y0 + y1) / 2 + sag, Math.max(y0, y1) - 30);
+      d += ` Q${(x0 + x1) / 2},${cy} ${x1},${y1}`;
+      seg.push(seg[i - 1] + Math.hypot(x1 - x0, y1 - y0));
+    }
+    str.setAttribute('d', d); sh.setAttribute('d', d);
+    const L = str.getTotalLength(), l = L * prog;
+    for (const pth of [str, sh]) { pth.style.strokeDasharray = `${L}`; pth.style.strokeDashoffset = `${L - l}`; }
+    const pt = str.getPointAtLength(Math.max(0.01, l));
+    trav.style.transform = `translate(${pt.x}px, ${pt.y}px)`;
+    // la pièce sur laquelle la punaise s'est arrêtée passe au premier plan
+    const reached = seg.filter((s) => s / seg[seg.length - 1] <= prog + 0.02).length - 1;
+    pieces.forEach((pc, i) => { pc.classList.toggle('focus', i === reached); if (i <= reached) pc.classList.add('stamped'); });
+  };
+  if (reduced) { visible = true; requestAnimationFrame(draw); pieces.forEach((pc) => pc.classList.add('stamped', 'focus')); }
+  else gsap.ticker.add(draw);
+  window.addEventListener('resize', () => { visible = true; draw(); });
+});

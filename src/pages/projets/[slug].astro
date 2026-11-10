@@ -5,6 +5,7 @@ import BrandStage from '../../components/case/BrandStage.astro';
 import Palette from '../../components/case/Palette.astro';
 import Values from '../../components/case/Values.astro';
 import PostsWall from '../../components/case/PostsWall.astro';
+import Dossier from '../../components/case/Dossier.astro';
 import '../../styles/case.css';
 export function getStaticPaths() {
   return PROJECTS.map((p, i) => ({ params: { slug: p.slug }, props: { project: p, index: i, next: PROJECTS[(i + 1) % PROJECTS.length] } }));
@@ -24,21 +25,16 @@ const themeVars = p.theme ? `--p1:${p.theme.p1};--p2:${p.theme.p2}` : '';
     <div class="cs-bg" data-mouse="-40"><img src={p.cover} alt={p.title} fetchpriority="high" /></div>
     <div class="cs-shade" aria-hidden="true"></div>
     <div class="cs-glow" aria-hidden="true"></div>
+    <span class="letterbox top" aria-hidden="true"></span><span class="letterbox bot" aria-hidden="true"></span>
+    <span class="case-tw tw" data-typewriter={`Dossier n° ${String(index + 1).padStart(2, '0')} · Opération ${p.client} · ${p.categoryLabel}`} aria-hidden="true"></span>
+    <span class="stamp hero-stamp" aria-hidden="true">Classifié</span>
     <div class="cs-head">
       <div class="chips" data-reveal=".2"><span class="tag tag-accent">{p.categoryLabel}</span><span class="tag">Étude de cas {String(index + 1).padStart(2, '0')} / {PROJECTS.length}</span></div>
       <h1 class="display" data-lines style="font-size:clamp(48px,8vw,128px)"><span class="line-mask"><span>{p.title}</span></span></h1>
     </div>
   </section>
 
-  <section class="wrap" style="padding-top:56px">
-    <div class="cs-meta">{meta.map(([k, v]) => <div><span class="eyebrow">{k}</span><span class="v">{v}</span></div>)}</div>
-  </section>
-
-  <section class="wrap" style="padding-top:40px;padding-bottom:80px">
-    {numbered.map(([n, h, t]) => (
-      <div class="cs-blk" data-reveal><span style="font-weight:700;color:var(--p1)">{n}</span><h2>{h}</h2><p class="muted">{t}</p></div>
-    ))}
-  </section>
+  <Dossier p={p} num={String(index + 1).padStart(2, '0')} />
 
   {p.brand && (
     <>
@@ -50,10 +46,7 @@ const themeVars = p.theme ? `--p1:${p.theme.p1};--p2:${p.theme.p2}` : '';
 
   {p.posts && <PostsWall posts={p.posts} client={p.client} category={p.category} />}
 
-  {!p.posts && <section class="wrap cs-gallery" data-mouse-scope style="padding-bottom:40px">
-    <div class="g1" data-mouse="-14"><img src={gallery[0]} alt={`${p.title} — visuel principal`} loading="lazy" /></div>
-    {gallery.slice(1, 3).map((g, i) => <div class={i ? 'g3' : 'g2'} data-mouse={i ? 18 : -24}><img src={g} srcset={srcset(g)} sizes="(max-width: 860px) 100vw, 50vw" alt={`${p.title} — visuel ${i + 2}`} loading="lazy" /></div>)}
-  </section>}
+
   <p class="wrap" style="padding-top:40px;padding-bottom:110px">{p.behance ? <a href={p.behance} target="_blank" rel="noopener noreferrer" class="btn btn-line">Voir le projet complet sur Behance ↗</a> : <a href="/contact" class="btn btn-line">Un projet similaire ? Parlons-en →</a>}</p>
 
   <a href={`/projets/${next.slug}`} class="cs-next" data-cursor="Suivant">
