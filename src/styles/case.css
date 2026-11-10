@@ -166,3 +166,34 @@
 .sh-panel img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover; filter: brightness(1.1) saturate(1.08); }
 .sh-post { position: absolute; right: -14px; top: 0; bottom: -60px; width: 8px; background: #2A2C32; }
 @media (max-width: 760px) { .street { height: 560px; } .billboard { width: 86%; left: 7%; } .shelter { width: 40%; right: 4%; bottom: 6%; } }
+
+/* ---------- extraits Behance : bande horizontale ---------- */
+.reel { position: relative; padding: 100px 0 60px; overflow: hidden; }
+.reel-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 24px; margin-bottom: 36px; }
+.reel-head .tw.dim { width: 100%; }
+.reel-head h2 { margin: 0; font-family: var(--font-display); font-size: clamp(36px, 5vw, 72px); letter-spacing: -0.04em; flex: 1; }
+.reel-count { font-size: 18px; }
+.reel-count b { color: var(--p1, var(--accent)); font-weight: 400; font-size: 32px; }
+.reel-view { overflow: hidden; }
+.reel-track { display: flex; gap: 3vw; padding: 0 var(--gutter); width: max-content; will-change: transform; }
+.reel-slide { margin: 0; flex: none; max-width: 80vw; }
+.reel-img { display: block; width: 100%; padding: 0; border: 0; background: none; border-radius: 22px; overflow: hidden; cursor: zoom-in; box-shadow: 0 40px 80px -40px rgba(0,0,0,.6); }
+.reel-img { width: auto; }
+.reel-img img { display: block; height: min(62vh, 640px); width: auto; max-width: 80vw; object-fit: cover; transform: scale(1.12); transition: transform .8s var(--ease); }
+.reel-slide.is-on .reel-img img { transform: scale(1); }
+.reel-slide figcaption { margin-top: 16px; font-size: 16px; color: var(--muted, #8a8a8a); }
+.reel-slide figcaption .tw { color: var(--p1, var(--accent)); margin-right: 8px; }
+.reel-more { flex: none; width: min(34vw, 420px); height: min(62vh, 640px); align-self: flex-start; border-radius: 22px; background: var(--p1, var(--accent)); color: #fff; display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; padding: 32px; text-decoration: none; transition: transform .4s var(--ease); }
+.reel-more .display { font-size: clamp(26px, 2.6vw, 40px); line-height: 1; }
+.reel-more:hover { transform: rotate(-2deg) scale(1.03); }
+.reel-bar { margin: 40px var(--gutter) 0; height: 3px; background: var(--line); border-radius: 3px; overflow: hidden; }
+.reel-bar span { display: block; height: 100%; width: 100%; background: var(--p1, var(--accent)); transform-origin: left; transform: scaleX(0); }
+@media (max-width: 860px) {
+  .reel-track { flex-direction: column; width: auto; gap: 34px; }
+  .reel-slide, .reel-more { width: 100%; max-width: none; }
+  .reel-img { width: 100%; }
+  .reel-img img { width: 100%; height: auto; max-width: none; }
+  .reel-more { height: auto; min-height: 200px; }
+  .reel-bar, .reel-count { display: none; }
+}
+html.reduced .reel-img img { transform: none; }

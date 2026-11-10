@@ -59,7 +59,7 @@ const lb = document.querySelector<HTMLElement>('[data-lightbox]');
 if (lb) {
   const img = lb.querySelector('img')!;
   const close = () => { lb.hidden = true; (window as any).__lenis?.start(); };
-  document.querySelectorAll<HTMLElement>('.post[data-full]').forEach((p) => p.addEventListener('click', () => {
+  document.querySelectorAll<HTMLElement>('[data-full]').forEach((p) => p.addEventListener('click', () => {
     img.src = p.dataset.full!; lb.hidden = false; (window as any).__lenis?.stop();
     if (!reduced) gsap.fromTo(img, { scale: .85, opacity: 0 }, { scale: 1, opacity: 1, duration: .45, ease: 'back.out(1.4)' });
   }));
@@ -116,4 +116,31 @@ document.querySelectorAll<HTMLElement>('[data-board]').forEach((sec) => {
   if (reduced) { visible = true; requestAnimationFrame(draw); pieces.forEach((pc) => pc.classList.add('stamped', 'focus')); }
   else gsap.ticker.add(draw);
   window.addEventListener('resize', () => { visible = true; draw(); });
+});
+
+/* ---- extraits Behance : la bande défile à l'horizontale pendant que la section reste épinglée ---- */
+document.querySelectorAll<HTMLElement>('[data-reel]').forEach((sec) => {
+  const track = sec.querySelector<HTMLElement>('[data-reel-track]')!;
+  const slides = [...sec.querySelectorAll<HTMLElement>('[data-reel-slide]')];
+  const n = sec.querySelector('[data-reel-n]');
+  const bar = sec.querySelector<HTMLElement>('[data-reel-bar]');
+  const desktop = window.matchMedia('(min-width: 861px)').matches;
+  if (reduced || !desktop) {
+    slides.forEach((s) => ScrollTrigger.create({ trigger: s, start: 'top 80%', once: true, onEnter: () => s.classList.add('is-on') }));
+    return;
+  }
+  const dist = () => Math.max(0, track.scrollWidth - window.innerWidth);
+  gsap.to(track, {
+    x: () => -dist(), ease: 'none',
+    scrollTrigger: {
+      trigger: sec, start: 'top top', end: () => `+=${dist()}`, pin: true, scrub: 0.8, invalidateOnRefresh: true,
+      onUpdate: (st) => {
+        if (bar) bar.style.transform = `scaleX(${st.progress})`;
+        const k = Math.min(slides.length - 1, Math.round(st.progress * (slides.length - 1)));
+        if (n) n.textContent = String(k + 1).padStart(2, '0');
+        slides.forEach((s, i) => s.classList.toggle('is-on', Math.abs(i - st.progress * (slides.length - 1)) < 0.75));
+      },
+    },
+  });
+  slides[0]?.classList.add('is-on');
 });

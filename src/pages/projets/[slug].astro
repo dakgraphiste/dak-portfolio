@@ -7,6 +7,7 @@ import Values from '../../components/case/Values.astro';
 import PostsWall from '../../components/case/PostsWall.astro';
 import Dossier from '../../components/case/Dossier.astro';
 import InSitu from '../../components/case/InSitu.astro';
+import BehanceReel from '../../components/case/BehanceReel.astro';
 import '../../styles/case.css';
 export function getStaticPaths() {
   return PROJECTS.map((p, i) => ({ params: { slug: p.slug }, props: { project: p, index: i, next: PROJECTS[(i + 1) % PROJECTS.length], prev: PROJECTS[(i - 1 + PROJECTS.length) % PROJECTS.length] } }));
@@ -45,6 +46,8 @@ const themeVars = p.theme ? `--p1:${p.theme.p1};--p2:${p.theme.p2}` : '';
     </>
   )}
 
+  {p.slides && <BehanceReel slides={p.slides} client={p.client} behance={p.behance} />}
+
   {p.category === 'Campagnes' && <InSitu cover={p.cover} poster={p.poster} client={p.client} />}
 
   {p.posts && <PostsWall posts={p.posts} client={p.client} category={p.category} />}
@@ -64,6 +67,7 @@ const themeVars = p.theme ? `--p1:${p.theme.p1};--p2:${p.theme.p2}` : '';
     <span class="arr">→</span>
   </a>
   </div>
+  <div class="lightbox" data-lightbox hidden><button type="button" class="lb-close" aria-label="Fermer">×</button><img alt="" /></div>
 </Base>
 
 <script>

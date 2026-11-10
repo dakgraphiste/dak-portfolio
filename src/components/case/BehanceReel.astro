@@ -1,0 +1,36 @@
+---
+// Extraits du dossier Behance : bande horizontale épinglée qui défile au scroll (verticale sur mobile)
+import sharp from 'sharp';
+import { sm } from '../../data/site';
+interface Props { slides: { src: string; caption: string }[]; client: string; behance: string }
+const { slides, client, behance } = Astro.props;
+// dimensions réelles de chaque planche (formats variés : paysage, carré, portrait)
+const dims = await Promise.all(slides.map(async (s) => {
+  try { const m = await sharp(`public${s.src.split('?')[0]}`).metadata(); return [m.width || 1600, m.height || 914]; } catch { return [1600, 914]; }
+}));
+---
+<section class="reel" data-reel>
+  <div class="reel-head wrap">
+    <span class="tw dim">Extraits du dossier · {client}</span>
+    <h2>Le projet <span class="muted">en {slides.length} planches</span></h2>
+    <span class="reel-count tw" aria-hidden="true"><b data-reel-n>01</b> / {String(slides.length).padStart(2, '0')}</span>
+  </div>
+  <div class="reel-view">
+    <div class="reel-track" data-reel-track>
+      {slides.map((s, i) => (
+        <figure class="reel-slide" data-reel-slide>
+          <button type="button" class="reel-img" data-full={s.src} aria-label={`Agrandir : ${s.caption}`}>
+            <img width={dims[i][0]} height={dims[i][1]} src={s.src} srcset={`${sm(s.src)} 480w, ${s.src} 1600w`} sizes="(max-width: 860px) 92vw, 72vw" alt={`${client} — ${s.caption}`} loading="lazy" />
+          </button>
+          <figcaption><span class="tw">{String(i + 1).padStart(2, '0')}</span> {s.caption}</figcaption>
+        </figure>
+      ))}
+      {behance && (
+        <a class="reel-more" href={behance} target="_blank" rel="noopener noreferrer" data-cursor="Behance">
+          <span class="display">Voir toutes les planches</span><span>sur Behance ↗</span>
+        </a>
+      )}
+    </div>
+  </div>
+  <div class="reel-bar" aria-hidden="true"><span data-reel-bar></span></div>
+</section>

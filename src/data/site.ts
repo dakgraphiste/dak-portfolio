@@ -58,6 +58,7 @@ export type Project = {
   theme?: { p1: string; p2: string; ink?: string }; // couleurs de la page du projet
   brand?: { logo: string; symbol?: string; palette: { name: string; hex: string }[]; values: string[] }; // identités visuelles
   posts?: string[]; // publications regroupées (réseaux sociaux, affiches, campagnes)
+  slides?: { src: string; caption: string }[]; // extraits du dossier Behance (images 16:9 + légende)
   secret?: [string, string][]; // note « Top secret » du dossier : infos propres au projet
 };
 
@@ -237,7 +238,27 @@ const posts = (image: string, n: number) => Array.from({ length: n }, (_, i) => 
 const STAGE: Record<string, Partial<Project>> = {
   orika: { theme: { p1: '#CE3754', p2: '#FAF1F2' }, brand: { logo: 'orika-logo', symbol: 'orika-symbole', values: ['Délicatesse', 'Premium', 'Sensoriel', 'Fait ici', 'Pensé pour le monde'],
     palette: [{ name: 'Magenta Bloom', hex: '#CE3754' }, { name: 'Dusty Rose', hex: '#CB7D79' }, { name: 'Snow', hex: '#FAF1F2' }] } },
-  chapn: { theme: { p1: '#5E2BBF', p2: '#C9F35B' }, brand: { logo: 'chapn-logo', symbol: 'chapn-symbole', values: ['Vitesse', 'Mouvement', 'Envoie', 'Reçois', "Chap'n"],
+  'kpalo-energie': {
+    slides: [
+      { src: img('kpalo-bh-01'), caption: 'Affichage en station : « Joue chaque instant à fond »' },
+      { src: img('kpalo-bh-02'), caption: 'Déclinaisons réseaux sociaux' },
+      { src: img('kpalo-bh-03'), caption: 'Grand format : « 4h du matin, serrez lêkê »' },
+      { src: img('kpalo-bh-04'), caption: 'Abribus' },
+      { src: img('kpalo-bh-05'), caption: 'Écran géant en façade' },
+      { src: img('kpalo-bh-06'), caption: "L'affiche, format carré" },
+      { src: img('kpalo-bh-07'), caption: 'Packaging, version noire' },
+      { src: img('kpalo-bh-08'), caption: 'Packaging, version orange' },
+    ],
+  },
+  chapn: { theme: { p1: '#5E2BBF', p2: '#C9F35B' },
+    slides: [
+      { src: img('chapn-bh-01'), caption: 'Couverture du guide de marque' },
+      { src: img('chapn-bh-02'), caption: '« Le portefeuille de tous les entrepreneurs »' },
+      { src: img('chapn-bh-03'), caption: 'Le logo sur Chartreuse' },
+      { src: img('chapn-bh-04'), caption: 'Déclinaisons : notification, affiche, story' },
+      { src: img('chapn-bh-05'), caption: 'La palette : Indigo Bloom, Noir, Chartreuse, Porcelain' },
+    ],
+    brand: { logo: 'chapn-logo', symbol: 'chapn-symbole', values: ['Vitesse', 'Mouvement', 'Envoie', 'Reçois', "Chap'n"],
     palette: [{ name: 'Indigo Bloom', hex: '#5E2BBF' }, { name: 'Chartreuse', hex: '#C9F35B' }, { name: 'Noir', hex: '#000000' }, { name: 'Porcelain', hex: '#F7F7EF' }] } },
   lumora: { theme: { p1: '#8E2222', p2: '#FD5F54' }, brand: { logo: 'lumora-logo', values: ['Lumière', 'Diversité', 'Confiance', 'Stabilité', 'Authenticité'],
     palette: [{ name: 'Bordeaux profond', hex: '#380E0F' }, { name: 'Rouge brique', hex: '#8E2222' }, { name: 'Corail', hex: '#FD5F54' }, { name: 'Rose poudré', hex: '#FACAC6' }, { name: 'Blanc lumière', hex: '#F7F7FF' }] } },
