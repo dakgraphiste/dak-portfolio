@@ -1,12 +1,16 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { PROJECTS, sm, srcset } from '../../data/site';
+import { PROJECTS, sm, srcset, filled } from '../../data/site';
 export function getStaticPaths() {
   return PROJECTS.map((p, i) => ({ params: { slug: p.slug }, props: { project: p, index: i, next: PROJECTS[(i + 1) % PROJECTS.length] } }));
 }
 const { project: p, index, next } = Astro.props;
-const meta = [['Client', p.client], ['Année', p.year], ['Catégorie', p.categoryLabel], ['Mon rôle', p.role], ['Livrables', p.deliverables]];
-const blocks = [['01', 'Le brief', p.brief], ['02', 'Le concept', p.concept], ['03', 'Le challenge', p.challenge]];
+const meta = [['Client', p.client], ['Année', p.year], ['Catégorie', p.categoryLabel], ['Mon rôle', p.role], ['Livrables', p.deliverables]].filter(([, v]) => filled(v));
+// seuls les textes remplis s'affichent ; sinon un résumé du projet
+let blocks = [['Le brief', p.brief], ['Le concept', p.concept], ['Le challenge', p.challenge]].filter(([, t]) => filled(t));
+if (!blocks.length) blocks = [['Le projet', `${p.categoryLabel} ${filled(p.client) ? `pour ${p.client}` : ''}. Livrables : ${p.deliverables.toLowerCase()}. Retrouve le projet complet, avec toutes ses déclinaisons, sur Behance.`.replace(' .', '.')]];
+const numbered = blocks.map(([h, t], i) => [String(i + 1).padStart(2, '0'), h, t]);
+const gallery = [...new Set(p.gallery)];
 ---
 <Base title={p.title} description={`${p.title} — ${p.categoryLabel}. Étude de cas par Davy Aymard Kouassi (Dak.graphiste), graphiste à Abidjan.`} image={p.cover}>
   <section class="cs-hero" data-mouse-scope>
@@ -24,15 +28,14 @@ const blocks = [['01', 'Le brief', p.brief], ['02', 'Le concept', p.concept], ['
   </section>
 
   <section class="wrap" style="padding-top:40px;padding-bottom:80px">
-    {blocks.map(([n, h, t]) => (
+    {numbered.map(([n, h, t]) => (
       <div class="cs-blk" data-reveal><span style="font-weight:600;color:var(--accent-text)">{n}</span><h2>{h}</h2><p class="muted">{t}</p></div>
     ))}
   </section>
 
   <section class="wrap cs-gallery" data-mouse-scope style="padding-bottom:40px">
-    <div class="g1" data-mouse="-14"><img src={p.gallery[0]} alt={`${p.title} — visuel 1`} loading="lazy" /></div>
-    <div class="g2" data-mouse="-24"><img src={p.gallery[1]} srcset={srcset(p.gallery[1])} sizes="(max-width: 860px) 100vw, 50vw" alt={`${p.title} — visuel 2`} loading="lazy" /></div>
-    <div class="g3" data-mouse="18"><img src={p.gallery[2]} srcset={srcset(p.gallery[2])} sizes="(max-width: 860px) 100vw, 50vw" alt={`${p.title} — visuel 3`} loading="lazy" /></div>
+    <div class="g1" data-mouse="-14"><img src={gallery[0]} alt={`${p.title} — visuel principal`} loading="lazy" /></div>
+    {gallery.slice(1, 3).map((g, i) => <div class={i ? 'g3' : 'g2'} data-mouse={i ? 18 : -24}><img src={g} srcset={srcset(g)} sizes="(max-width: 860px) 100vw, 50vw" alt={`${p.title} — visuel ${i + 2}`} loading="lazy" /></div>)}
   </section>
   <p class="wrap" style="padding-bottom:110px"><a href={p.behance} target="_blank" rel="noopener noreferrer" class="btn btn-line">Voir le projet complet sur Behance ↗</a></p>
 

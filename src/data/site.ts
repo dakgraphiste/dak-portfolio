@@ -17,6 +17,9 @@ export const SITE = {
   cv: ''
 };
 
+/** Vrai si le texte est rempli (pas vide et sans texte provisoire entre crochets). */
+export const filled = (s?: string) => !!s && !/\[[^\]]*\]/.test(s);
+
 /** Version 480 px d'une image (vignettes). */
 export const sm = (src: string) => src.replace(/\.webp$/, '-480.webp');
 /** srcset pour laisser le navigateur choisir la bonne taille. */

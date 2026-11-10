@@ -1,40 +1,39 @@
 ---
 import Base from '../layouts/Base.astro';
-import { SITE, PROJECTS, sm } from '../data/site';
+import { SITE, PROJECTS, sm, srcset, filled } from '../data/site';
 const P = Object.fromEntries(PROJECTS.map((p) => [p.slug, p]));
 const expertises = ['Identité visuelle & logo', 'Direction artistique', 'Affiches & print', 'Publicité & packaging', 'Réseaux sociaux', 'Retouche photo'];
 const tools = ['Photoshop', 'Illustrator', 'InDesign', 'Lightroom', 'After Effects', 'Figma'];
 const marq = ['Identité visuelle', 'Logo', 'Charte graphique', 'Affiche', 'Packaging', 'Social media', 'Retouche', 'Formation'];
 const jobs = [
-  ['[2024 — aujourd’hui]', 'Graphiste senior', 'Freelance · Dak.graphiste, Abidjan'],
+  ['Aujourd’hui', 'Graphiste senior', 'Freelance · Dak.graphiste, Abidjan'],
   ['[années]', '[Poste]', '[Entreprise / studio]'],
   ['[années]', '[Poste ou stage]', '[Entreprise / studio]']
-];
+].filter((j) => j.every(filled));
 const diplomas = [
   ['[Année]', '[Diplôme]', '[École, ville]', '[Ce que tu y as appris, ta spécialisation, ton projet de fin d’études.]'],
   ['[Année]', '[Diplôme]', '[École, ville]', '[Matières clés, projets marquants, prix.]'],
   ['[Année]', '[Certification ou formation courte]', '[Organisme]', '[Ce que cette formation t’a apporté.]']
-];
+].filter((d) => d.slice(0, 3).every(filled)); // la section n'apparaît que si un diplôme est rempli
 ---
 <Base title="À propos" description="Davy Aymard Kouassi, alias Dak : graphiste senior à Abidjan. Parcours, expertises, outils et diplômes.">
   <section class="wrap ab-hero" data-mouse-scope>
     <div class="ab-text">
       <span class="eyebrow" data-reveal>À propos · CV · Abidjan</span>
       <h1 class="display" data-lines style="font-size:clamp(48px,7vw,104px);font-weight:600"><span class="line-mask"><span>Bonjour, je suis</span></span><span class="line-mask"><span>Davy, alias <span class="accent">Dak.</span></span></span></h1>
-      <p class="muted" data-reveal=".3" style="margin:0;max-width:560px;font-size:19px;line-height:1.55">{SITE.name}, graphiste senior basé à {SITE.city}. [2 à 3 phrases : ton parcours, ta spécialité, le type de projets que tu aimes concevoir et pour qui.]</p>
+      <p class="muted" data-reveal=".3" style="margin:0;max-width:560px;font-size:19px;line-height:1.55">Graphiste senior basé à Abidjan, je conçois des identités visuelles, des affiches, des campagnes publicitaires, des packagings et des visuels pour les réseaux sociaux. J’accompagne marques, restaurants, artistes et entreprises, du brief au fichier final, et je transmets mon savoir-faire en formation.</p>
       <div data-reveal=".45" style="display:flex;gap:12px;flex-wrap:wrap">
         {SITE.cv && <a href={SITE.cv} class="btn btn-fg" download>Télécharger le CV (PDF) ↓</a>}
         <a href="/contact" class="btn btn-line">Me contacter</a>
       </div>
       <div class="ab-stats" data-reveal=".6">
-        <div><span class="display">[X] ans</span><span class="muted">d'expérience</span></div>
         <div><span class="display">12</span><span class="muted">projets sur Behance</span></div>
         <div><span class="display">670</span><span class="muted">appréciations Behance</span></div>
       </div>
     </div>
     <div class="ab-portrait" aria-hidden="true">
       <div class="l1" data-mouse="-36"></div>
-      <div class="l2" data-mouse="20"><span>[Ton portrait]</span></div>
+      <div class="l2" data-mouse="20"><img src={P['lumora'].cover} srcset={srcset(P['lumora'].cover)} sizes="360px" alt="" /></div>
       <div class="l3" data-mouse="70"><img src={sm(P['pakinou'].cover)} alt="" loading="lazy" /></div>
     </div>
   </section>
@@ -48,11 +47,12 @@ const diplomas = [
     <div><h2 class="display ab-h2">Outils</h2><div style="display:flex;flex-wrap:wrap;gap:10px">{tools.map((t) => <span class="ab-tool">{t}</span>)}</div></div>
   </section>
 
-  <section class="wrap" style="padding-bottom:72px">
-    <h2 class="display ab-h2">Expériences</h2>
+  <section class="wrap" style="padding-bottom:110px">
+    <h2 class="display ab-h2">Expérience</h2>
     {jobs.map(([w, r, p]) => <div class="ab-job ab-row"><span class="muted">{w}</span><span class="r">{r}</span><span class="muted">{p}</span></div>)}
   </section>
 
+  {diplomas.length > 0 && (
   <section class="wrap" style="padding-bottom:110px">
     <div class="section-title"><h2>Diplômes</h2><span class="muted">Clique pour déplier</span></div>
     {diplomas.map(([y, t, s, d], i) => (
@@ -62,6 +62,7 @@ const diplomas = [
       </details>
     ))}
   </section>
+  )}
 
   <div class="cta-band"><p>Travaillons ensemble.</p><a href="/contact" class="btn btn-fg">Me contacter →</a></div>
 </Base>
@@ -75,6 +76,7 @@ const diplomas = [
   .ab-portrait { position: relative; flex: 0 1 460px; height: 580px; min-width: 300px; }
   .ab-portrait > div { position: absolute; transition: translate 1s var(--ease); }
   .ab-portrait .l1 { left: 40px; top: 0; width: 360px; height: 480px; border-radius: 32px; background: var(--grad); transform: rotate(-6deg); }
+  .ab-portrait .l2 img { width: 100%; height: 100%; object-fit: cover; border-radius: 32px; }
   .ab-portrait .l2 { left: 60px; top: 50px; width: 360px; height: 480px; border-radius: 32px; background: var(--card); box-shadow: 0 0 0 1px var(--line); display: flex; align-items: center; justify-content: center; color: var(--muted); font-weight: 600; }
   .ab-portrait .l3 { left: 0; bottom: 0; width: 180px; height: 220px; border-radius: 24px; overflow: hidden; transform: rotate(-10deg); box-shadow: 0 30px 50px -20px rgba(0,0,0,.5); }
   .ab-portrait .l3 img { width: 100%; height: 100%; object-fit: cover; }

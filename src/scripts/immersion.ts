@@ -86,7 +86,7 @@ export function initImmersion(section: HTMLElement, cv: HTMLCanvasElement, onSta
       const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
       const im = state.im, target = (im.on && now - im.t < 2500) ? Math.max(0, Math.min(1, (im.x - 0.08) / 0.84)) : state.scroll;
       cur += (target - cur) * 0.045;
-      const sv = Math.max(0, Math.min(3.999, cur * 4)), k = Math.floor(sv), f = smooth((sv - k - 0.15) / 0.7);
+      const sv = Math.max(0, Math.min(3.999, cur * 4)), k = Math.floor(sv), f = smooth((sv - k - 0.32) / 0.36);
       const stage = Math.min(4, Math.floor(sv + 0.5));
       if (state.stage !== stage) { state.stage = stage; onStage(stage); }
       const [SA, FA] = SH[k], [SB, FB] = SH[k + 1], ca = COL[k], cb = COL[k + 1];

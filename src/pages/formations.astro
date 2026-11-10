@@ -45,8 +45,8 @@ const steps = [
           </div>
           <div class="fbody">
             <b>{c.title}</b>
-            <span class="muted">{c.format} · [X] h · [X] places</span>
-            <span class="fprice"><span>[Prix] FCFA</span><span>Voir le programme →</span></span>
+            <span class="muted">{c.format} · {c.level}</span>
+            <span class="fprice"><span>Tarif sur demande</span><span>Je m'inscris →</span></span>
           </div>
         </a>
       ))}
@@ -65,7 +65,7 @@ const steps = [
     <div class="steps">{steps.map(([n, t, d]) => <div class="step"><span class="fill"></span><span class="num">{n}</span><span class="st"><b>{t}</b><span>{d}</span></span></div>)}</div>
   </section>
 
-  <div class="cta-band"><p>Prochaine session : [date]</p><span class="magnetic"><a href="/contact" class="btn" style="background:#0A0A0A;color:#fff">Réserver ma place →</a></span></div>
+  <div class="cta-band"><p>Inscriptions ouvertes</p><span class="magnetic"><a href="/contact" class="btn" style="background:#0A0A0A;color:#fff">Réserver ma place →</a></span></div>
 </Base>
 
 <style is:global>

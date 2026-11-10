@@ -78,10 +78,6 @@ const ogImage = new URL(image, Astro.site).toString();
 
   {footer && (
     <footer class="site-footer">
-      <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:32px;flex-wrap:wrap">
-        <p class="display" style="font-size:clamp(40px,6vw,92px);margin:0">Un projet ?<br />Une formation ?</p>
-        <span class="magnetic"><a href="/contact" class="btn-round" data-cursor="Écrire" style="width:180px;height:180px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;background:var(--accent);color:#0A0A0A;font-weight:700;font-size:18px;line-height:1.2">Écrire<br />à Dak →</a></span>
-      </div>
       <div class="wordmark" aria-label={SITE.brand}>
         {letters.map((l) => <span style={l === '.' ? 'color:var(--accent)' : undefined}>{l}</span>)}
       </div>

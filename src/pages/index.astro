@@ -79,7 +79,7 @@ const stages = [
     </div>
     <div class="hero-foot appear">
       <p>Je conçois des <span class="rot-wrap"><span class="rot"><span>identités.</span><span>affiches.</span><span>logos.</span><span>univers.</span><span>identités.</span></span></span></p>
-      <span class="muted">Survole l'écran ↗</span>
+      <span class="muted only-hover">Survole l'écran ↗</span><span class="muted only-touch">Fais défiler ↓</span>
     </div>
     <div class="spot" aria-hidden="true" data-spot>
       <span>Créons<br />l'inoubliable.</span>
@@ -168,7 +168,7 @@ const stages = [
 
   <!-- Jumelles : projet à la une -->
   <section class="bino" data-bino data-cursor-hide>
-    <img class="bino-img" src={P['chapn'].cover} alt="Projet à la une : Chap'n" loading="lazy" />
+    <img class="bino-img" src={P['kpalo-energie'].cover} alt="Projet à la une : KPALO Énergie" loading="lazy" />
     <svg class="bino-view" viewBox="0 0 3200 2200" aria-hidden="true">
       <defs>
         <mask id="binoMask"><rect width="3200" height="2200" fill="#fff" /><circle cx="1390" cy="1100" r="260" fill="#000" /><circle cx="1810" cy="1100" r="260" fill="#000" /></mask>
@@ -186,9 +186,9 @@ const stages = [
       </g>
       <g style="font:600 22px Inter,sans-serif" fill="#fff" opacity=".85"><text x="1110" y="1037">100</text><text x="1110" y="1072">150</text><text x="1110" y="1107" fill="#FF5A1F">200</text><text x="1110" y="1142">250</text><text x="1110" y="1177">300</text></g>
     </svg>
-    <div class="bino-hud tl"><span class="eyebrow">● Projet à la une</span><span class="display" style="font-size:clamp(36px,4.6vw,68px)">Chap'n</span><span style="color:#D9D9DE">Brand guidelines · Identité visuelle</span></div>
+    <div class="bino-hud tl"><span class="eyebrow">● Projet à la une</span><span class="display" style="font-size:clamp(36px,4.6vw,68px)">KPALO Énergie</span><span style="color:#D9D9DE">Campagne publicitaire · affichage</span></div>
     <div class="bino-hud tr">Zoom 2,5× · cible <span data-bino-xy>0720 / 0450</span></div>
-    <div class="bino-hud bt"><span style="color:#D9D9DE">Bouge la souris pour explorer le projet</span><a href="/projets/chapn" class="btn btn-accent">Voir l'étude de cas →</a></div>
+    <div class="bino-hud bt"><span style="color:#D9D9DE"><span class="only-hover">Bouge la souris pour explorer le projet</span><span class="only-touch">Le viseur balaie le projet</span></span><a href="/projets/kpalo-energie" class="btn btn-accent">Voir l'étude de cas →</a></div>
   </section>
 
   <!-- Clients -->
@@ -249,7 +249,7 @@ const stages = [
   @keyframes fan { from { transform: rotateY(calc(var(--a) * .12)); } to { transform: rotateY(var(--a)); } }
   .hero-title { position: absolute; left: 0; right: 0; top: 50%; margin: -.5em 0 0; z-index: 4; text-align: center; pointer-events: none; mix-blend-mode: difference; color: #fff; font-family: var(--font-display); font-weight: 800; font-size: clamp(150px, 29vw, 440px); line-height: 1; letter-spacing: -0.07em; overflow: hidden; padding-bottom: .05em; }
   .hero-title span { display: inline-block; animation: rise 1.2s cubic-bezier(.2,.8,.1,1) both; }
-  @media (max-width: 700px) { .hero-title { font-size: 36vw; white-space: nowrap; } }
+  @media (max-width: 700px) { .hero-title { font-size: 29vw; white-space: nowrap; } }
   .hero-id { position: absolute; left: var(--gutter); top: 110px; z-index: 6; display: flex; flex-direction: column; gap: 4px; font-size: 15px; }
   .badge { position: absolute; right: clamp(20px, 5vw, 72px); top: 110px; z-index: 6; width: 132px; height: 132px; animation: spin 14s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
@@ -261,10 +261,10 @@ const stages = [
   @keyframes words { 0%,18% { transform: translateY(0); } 25%,43% { transform: translateY(-1.15em); } 50%,68% { transform: translateY(-2.3em); } 75%,93% { transform: translateY(-3.45em); } 100% { transform: translateY(-4.6em); } }
   .spot { position: absolute; inset: 0; z-index: 5; background: var(--accent); color: #0A0A0A; pointer-events: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; text-align: center; clip-path: circle(0px at 50% 50%); }
   .spot span { font-family: var(--font-display); font-weight: 800; font-size: clamp(64px, 11vw, 170px); line-height: .9; letter-spacing: -0.06em; }
-  @media (max-width: 700px) { .badge { display: none; } .fan { transform: translate(90px, 70px) rotateZ(-26deg) rotateX(14deg) rotateY(-22deg) scale(.5); } }
+  @media (max-width: 700px) { .badge { display: none; } .fan { transform: translate(80px, -30px) rotateZ(-26deg) rotateX(14deg) rotateY(-22deg) scale(.42); } }
 
   /* immersion */
-  .immersion { position: relative; height: 300vh; background: #04070D; color: #EAF6FF; }
+  .immersion { position: relative; height: 230vh; background: #04070D; color: #EAF6FF; }
   .imm-pin { position: sticky; top: 0; height: 100vh; overflow: hidden; background: radial-gradient(ellipse at 58% 55%, #0A1828 0%, #04070D 60%); }
   .imm-pin canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
   .scan { position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(120,220,255,.06) 0, rgba(120,220,255,.06) 1px, transparent 1px, transparent 4px); animation: scan 1s linear infinite; }
@@ -331,14 +331,14 @@ const stages = [
   .preview img { width: 100%; height: 100%; object-fit: cover; }
 
   /* projets récents */
-  .recent { padding: 40px 0 120px; overflow: hidden; }
-  .strip { display: flex; gap: 24px; width: max-content; padding: 230px var(--gutter) 0; }
+  .recent { padding: 24px 0 100px; overflow: hidden; }
+  .strip { display: flex; gap: 24px; width: max-content; padding: 170px var(--gutter) 0; }
   .tcard { position: relative; display: block; width: 340px; height: 440px; transition: transform .5s var(--ease); flex: 0 0 auto; }
   .tcard:hover { transform: translateY(-24px) rotate(-2deg) scale(1.04); z-index: 5; }
   .tc-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 26px; }
   .tcard .cap { position: absolute; left: 20px; top: 20px; padding: 10px 16px; border-radius: 999px; background: #fff; color: #0A0A0A; font-size: 14px; font-weight: 600; opacity: 0; transform: translateY(12px); transition: all .4s ease; }
   .tcard:hover .cap { opacity: 1; transform: none; }
-  @media (hover: none) { .recent .strip { overflow-x: auto; width: auto; padding-top: 40px; scroll-snap-type: x mandatory; } .tcard { scroll-snap-align: start; width: 78vw; height: 100vw; max-height: 480px; } }
+  @media (hover: none) { .recent .strip { overflow-x: auto; width: auto; padding-top: 8px; scroll-snap-type: x mandatory; } .tcard { scroll-snap-align: start; width: 78vw; height: 100vw; max-height: 480px; } }
 
   /* jumelles */
   .bino { position: relative; height: 100vh; min-height: 640px; overflow: hidden; background: #000; color: #fff; }
