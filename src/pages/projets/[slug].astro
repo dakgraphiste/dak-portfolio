@@ -6,11 +6,12 @@ import Palette from '../../components/case/Palette.astro';
 import Values from '../../components/case/Values.astro';
 import PostsWall from '../../components/case/PostsWall.astro';
 import Dossier from '../../components/case/Dossier.astro';
+import InSitu from '../../components/case/InSitu.astro';
 import '../../styles/case.css';
 export function getStaticPaths() {
-  return PROJECTS.map((p, i) => ({ params: { slug: p.slug }, props: { project: p, index: i, next: PROJECTS[(i + 1) % PROJECTS.length] } }));
+  return PROJECTS.map((p, i) => ({ params: { slug: p.slug }, props: { project: p, index: i, next: PROJECTS[(i + 1) % PROJECTS.length], prev: PROJECTS[(i - 1 + PROJECTS.length) % PROJECTS.length] } }));
 }
-const { project: p, index, next } = Astro.props;
+const { project: p, index, next, prev } = Astro.props;
 const meta = [['Client', p.client], ['Année', p.year], ['Catégorie', p.categoryLabel], ['Mon rôle', p.role], ['Livrables', p.deliverables]].filter(([, v]) => filled(v));
 // seuls les textes remplis s'affichent ; sinon un résumé du projet
 let blocks = [['Le contexte', p.brief], [p.conceptLabel || 'Le concept', p.concept], ['Le challenge', p.challenge]].filter(([, t]) => filled(t));
@@ -44,10 +45,18 @@ const themeVars = p.theme ? `--p1:${p.theme.p1};--p2:${p.theme.p2}` : '';
     </>
   )}
 
+  {p.category === 'Campagnes' && <InSitu cover={p.cover} poster={p.poster} client={p.client} />}
+
   {p.posts && <PostsWall posts={p.posts} client={p.client} category={p.category} />}
 
 
   <p class="wrap" style="padding-top:40px;padding-bottom:110px">{p.behance ? <a href={p.behance} target="_blank" rel="noopener noreferrer" class="btn btn-line">Voir le projet complet sur Behance ↗</a> : <a href="/contact" class="btn btn-line">Un projet similaire ? Parlons-en →</a>}</p>
+
+  <nav class="cs-nav" aria-label="Autres projets">
+    <a href={`/projets/${prev.slug}`} title={prev.title} aria-label={`Projet précédent : ${prev.title}`}>←</a>
+    <a href="/projets" title="Tous les projets" aria-label="Tous les projets">▦</a>
+    <a href={`/projets/${next.slug}`} title={next.title} aria-label={`Projet suivant : ${next.title}`}>→</a>
+  </nav>
 
   <a href={`/projets/${next.slug}`} class="cs-next" data-cursor="Suivant">
     <span style="display:flex;flex-direction:column;gap:14px;position:relative;z-index:2"><span class="eyebrow" style="color:#fff;opacity:.85">Projet suivant</span><span class="display" style="font-size:clamp(40px,6vw,96px)">{next.title}</span></span>
@@ -62,6 +71,9 @@ const themeVars = p.theme ? `--p1:${p.theme.p1};--p2:${p.theme.p2}` : '';
 </script>
 
 <style is:global>
+  .cs-nav { position: fixed; left: 18px; bottom: 18px; z-index: 44; display: flex; gap: 6px; padding: 6px; border-radius: 999px; background: rgba(14,10,8,.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,120,60,.3); }
+  .cs-nav a { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px; transition: background-color .3s, transform .3s; }
+  .cs-nav a:hover { background: var(--p1, var(--accent)); transform: scale(1.08); }
   .cs-hero { position: relative; height: 92vh; min-height: 620px; overflow: hidden; background: #0A0A0A; color: #fff; }
   .cs-bg { position: absolute; inset: -40px; transition: translate 1s var(--ease); }
   .cs-bg img { width: 100%; height: 100%; object-fit: cover; animation: cs-zoom 2.4s var(--ease) both; }

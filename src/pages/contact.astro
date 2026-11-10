@@ -3,14 +3,14 @@ import Base from '../layouts/Base.astro';
 import { SITE } from '../data/site';
 import Mascot from '../components/Mascot.astro';
 ---
-<Base title="Contact" footer={false} description="Contacter Davy Aymard Kouassi (Dak.graphiste), graphiste à Abidjan : identité visuelle, affiches, réseaux sociaux, formations.">
+<Base title="Contact" footer={false} whatsapp={false} description="Contacter Davy Aymard Kouassi (Dak.graphiste), graphiste à Abidjan : identité visuelle, affiches, réseaux sociaux, formations." image="/images/og/contact.jpg">
   <section class="ct" data-ct>
     <div class="ct-blob c1" aria-hidden="true"></div><div class="ct-blob c2" aria-hidden="true"></div><div class="ct-blob c3" aria-hidden="true" data-follow></div>
     <Mascot pose={2} bubble="Je t'écoute !" class="ct-masc" />
     <div class="ct-inner">
       <span class="eyebrow" data-reveal>Contact · {SITE.city}</span>
       <h1 class="display" data-lines style="font-size:clamp(52px,8.5vw,128px);font-weight:600;text-align:center"><span class="line-mask"><span>Un projet</span></span><span class="line-mask"><span>en tête ?</span></span></h1>
-      <p data-reveal=".3" style="margin:0;max-width:520px;font-size:19px;line-height:1.5;opacity:.75;text-align:center">Écris-moi : je te réponds avec quelques questions pour cadrer ton projet ou ta formation.</p>
+      <p data-reveal=".3" style="margin:0;max-width:520px;font-size:19px;line-height:1.5;opacity:.75;text-align:center">Écris-moi : je te réponds avec quelques questions pour cadrer ton projet ou ta formation. Le plus rapide : <a href={SITE.whatsapp} target="_blank" rel="noopener noreferrer" style="text-decoration:underline;text-underline-offset:4px">WhatsApp</a>.</p>
 
       <form class="ct-form" action={SITE.formAction} method="POST" data-form>
         <!-- piège anti-spam : champ invisible que seuls les robots remplissent -->

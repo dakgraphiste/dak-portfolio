@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { PRODUCTS, orderLink } from '../../data/shop';
+import ShopFaq from '../../components/ShopFaq.astro';
 import { filled } from '../../data/site';
 export function getStaticPaths() {
   return PRODUCTS.map((p) => ({ params: { slug: p.slug }, props: { p, others: PRODUCTS.filter((o) => o.slug !== p.slug).slice(0, 3) } }));
@@ -23,6 +24,8 @@ const { p, others } = Astro.props;
       <p class="muted" style="margin:0;font-size:14px">{p.buyUrl ? 'Paiement sécurisé, fichier envoyé automatiquement après achat.' : 'Paiement par Wave, Orange Money, MTN ou carte. Fichier envoyé après paiement.'}</p>
     </div>
   </section>
+  <ShopFaq />
+
   {others.length > 0 && (
     <section class="wrap" style="padding-bottom:110px">
       <div class="section-title"><h2>Tu aimeras aussi</h2><a href="/boutique" style="font-weight:600;text-decoration:underline;text-underline-offset:6px">Toute la boutique →</a></div>

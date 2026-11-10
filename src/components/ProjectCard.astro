@@ -1,5 +1,5 @@
 ---
-import { sm, srcset, type Project } from '../data/site';
+import { sm, srcset, isAgency, type Project } from '../data/site';
 interface Props { project: Project; }
 const { project } = Astro.props;
 ---
@@ -8,6 +8,7 @@ const { project } = Astro.props;
   <div class="vis">
     <img src={project.cover} srcset={srcset(project.cover)} sizes="(max-width: 860px) 100vw, 420px" alt="" loading="lazy" />
     <span class="pill">Voir le projet →</span>
+    {isAgency(project) && <span class="agency">En agence</span>}
   </div>
   <div class="meta"><b>{project.title}</b><span class="muted">{project.categoryLabel}</span></div>
 </a>

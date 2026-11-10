@@ -18,7 +18,7 @@ const diplomas = [
   ['[Année]', '[Certification ou formation courte]', '[Organisme]', '[Ce que cette formation t’a apporté.]']
 ].filter((d) => d.slice(0, 3).every(filled)); // la section n'apparaît que si un diplôme est rempli
 ---
-<Base title="À propos" description="Davy Aymard Kouassi, alias Dak : graphiste senior à Abidjan. Parcours, expertises, outils et diplômes.">
+<Base title="À propos" description="Davy Aymard Kouassi, alias Dak : graphiste senior à Abidjan. Parcours, expertises, outils et diplômes." image="/images/og/a-propos.jpg">
   <section class="wrap ab-hero" data-mouse-scope>
     <div class="ab-text">
       <span class="eyebrow" data-reveal>À propos · CV · Abidjan</span>
@@ -50,6 +50,16 @@ const diplomas = [
     <div><h2 class="display ab-h2">Outils</h2><div style="display:flex;flex-wrap:wrap;gap:10px">{tools.map((t) => <span class="ab-tool">{t}</span>)}</div></div>
   </section>
 
+  <section class="wrap method">
+    <div class="section-title"><h2>Ma méthode</h2><span class="muted">Du brief au fichier final</span></div>
+    <div class="method-row">
+      <div class="mstep" data-reveal><span class="mnum">01</span><b>Écouter</b><span>Brief, objectifs, cible et contraintes : on pose les bases ensemble.</span></div>
+      <div class="mstep" data-reveal=".12"><span class="mnum">02</span><b>Explorer</b><span>Recherches, moodboard et pistes créatives pour trouver la bonne direction.</span></div>
+      <div class="mstep" data-reveal=".24"><span class="mnum">03</span><b>Créer</b><span>Design, déclinaisons et allers-retours jusqu’au résultat juste.</span></div>
+      <div class="mstep" data-reveal=".36"><span class="mnum">04</span><b>Livrer</b><span>Fichiers prêts à l’emploi, charte et accompagnement pour la suite.</span></div>
+    </div>
+  </section>
+
   <section class="wrap" style="padding-bottom:110px">
     <h2 class="display ab-h2">Expérience</h2>
     {jobs.map(([w, r, p]) => <div class="ab-job ab-row"><span class="muted">{w}</span><span class="r">{r}</span><span class="muted">{p}</span></div>)}
@@ -71,6 +81,17 @@ const diplomas = [
 </Base>
 
 <style is:global>
+  .method { padding-bottom: 96px; }
+  .method-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px; counter-reset: m; }
+  .mstep { position: relative; display: flex; flex-direction: column; gap: 12px; padding: 30px 26px 34px; border-radius: 24px; background: var(--card); box-shadow: 0 0 0 1px var(--line); overflow: hidden; transition: transform .5s var(--spring), color .4s; }
+  .mstep::before { content: ''; position: absolute; inset: 0; background: var(--grad); transform: translateY(101%); transition: transform .55s cubic-bezier(.7,0,.2,1); }
+  .mstep > * { position: relative; }
+  .mstep:hover { transform: translateY(-6px); color: #fff; }
+  .mstep:hover::before { transform: none; }
+  .mstep .mnum { font-family: var(--font-display); font-size: 56px; font-weight: 700; line-height: 1; letter-spacing: -0.05em; color: var(--accent-large); transition: color .4s; }
+  .mstep:hover .mnum { color: #fff; }
+  .mstep b { font-family: var(--font-display); font-size: 26px; font-weight: 600; letter-spacing: -0.02em; }
+  .mstep span:last-child { font-size: 16px; line-height: 1.55; opacity: .85; }
   .ab-hero { padding-top: 150px; padding-bottom: 96px; display: flex; flex-wrap: wrap; gap: 64px; align-items: center; justify-content: space-between; }
   .ab-text { flex: 1 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 28px; }
   .ab-stats { display: flex; gap: 48px; flex-wrap: wrap; margin-top: 12px; }

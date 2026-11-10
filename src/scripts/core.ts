@@ -156,9 +156,13 @@ document.querySelectorAll<HTMLElement>('[data-filter-scope]').forEach((scope) =>
   const chips = scope.querySelectorAll<HTMLButtonElement>('[data-filter]');
   const items = scope.querySelectorAll<HTMLElement>('[data-cat]');
   const count = scope.querySelector('[data-count]');
+  const apply = (c: HTMLButtonElement, push = true) => c.dispatchEvent(new CustomEvent('apply', { detail: push }));
   chips.forEach((c) =>
-    c.addEventListener('click', () => {
+    c.addEventListener('click', () => apply(c)));
+  chips.forEach((c) =>
+    c.addEventListener('apply', (ev) => {
       const f = c.dataset.filter!;
+      if ((ev as CustomEvent).detail && c.dataset.slug) { const u = new URL(location.href); if (f === 'Tout') u.searchParams.delete('cat'); else u.searchParams.set('cat', c.dataset.slug); history.replaceState(null, '', u); }
       chips.forEach((o) => o.setAttribute('aria-pressed', String(o === c)));
       let n = 0;
       items.forEach((it) => {
@@ -170,6 +174,19 @@ document.querySelectorAll<HTMLElement>('[data-filter-scope]').forEach((scope) =>
       ScrollTrigger.refresh();
     })
   );
+  // lien partageable : /projets?cat=packaging ouvre directement le bon filtre
+  const wanted = new URLSearchParams(location.search).get('cat');
+  const start = wanted && [...chips].find((c) => c.dataset.slug === wanted);
+  if (start) apply(start, false);
+});
+
+/* ---------- compteurs qui défilent jusqu'à leur valeur ---------- */
+document.querySelectorAll<HTMLElement>('[data-countup]').forEach((el) => {
+  const end = Number(el.dataset.countup || 0);
+  if (reduced || !end) return;
+  const o = { v: 0 };
+  el.textContent = '0';
+  gsap.to(o, { v: end, duration: 1.8, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 85%', once: true }, onUpdate: () => { el.textContent = String(Math.round(o.v)); } });
 });
 
 /* ---------- lecteur du showreel ---------- */

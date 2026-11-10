@@ -1,0 +1,31 @@
+---
+// Questions fréquentes de la boutique (à ajuster si besoin)
+const FAQ = [
+  ['Avec quelle version d’Illustrator ?', 'PackForge fonctionne avec Adobe Illustrator 2022 et plus. BrandForge fonctionne avec les versions récentes d’Illustrator. Sous Windows comme sur Mac. En cas de doute, écris-moi ta version avant l’achat.'],
+  ['Comment je reçois l’extension ?', 'Après le paiement, tu reçois le fichier de l’extension avec son guide. Avec le lien de paiement en ligne, le téléchargement est automatique ; par WhatsApp, je te l’envoie directement.'],
+  ['Est-ce difficile à installer ?', 'Non : un installateur Windows et Mac est fourni, avec un guide pas à pas. Si ça bloque, je t’aide à l’installer.'],
+  ['Comment payer ?', 'Par Mobile Money (Wave, Orange Money, MTN) ou par carte bancaire.'],
+  ['Et la licence ?', 'BrandForge est vendu avec une licence à vie. Pour PackForge, la licence est attribuée par poste : demande-moi les détails si tu veux l’installer sur plusieurs ordinateurs.'],
+  ['Un problème ou une question ?', 'Écris-moi sur WhatsApp ou par email : je réponds et je t’accompagne.']
+];
+---
+<section class="wrap shop-faq">
+  <div class="section-title"><h2>Questions fréquentes</h2></div>
+  {FAQ.map(([q, a]) => (
+    <details class="faq">
+      <summary><span>{q}</span><span class="faq-plus" aria-hidden="true">+</span></summary>
+      <p class="muted">{a}</p>
+    </details>
+  ))}
+</section>
+
+<style is:global>
+  .shop-faq { padding-bottom: 110px; }
+  .faq { border-top: 1px solid var(--line); }
+  .faq:last-of-type { border-bottom: 1px solid var(--line); }
+  .faq summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 24px 0; font-size: 20px; font-weight: 500; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq-plus { flex: 0 0 auto; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; transition: transform .4s var(--ease), background-color .3s; }
+  .faq[open] .faq-plus { transform: rotate(45deg); background: var(--accent); border-color: var(--accent); color: #0A0A0A; }
+  .faq p { margin: 0 0 24px; max-width: 820px; font-size: 17px; line-height: 1.6; }
+</style>

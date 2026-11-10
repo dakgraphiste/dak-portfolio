@@ -12,13 +12,17 @@ if (!notes.length) notes.push(['Le projet', `${p.categoryLabel}${filled(p.client
 const photos = [...new Set([...p.gallery.slice(1), p.gallery[0], p.cover])].slice(0, 3);
 const fiche = [['Client', p.client], ['Catégorie', p.categoryLabel], ['Année', p.year], ['Rôle', p.role], ['Livrables', p.deliverables]].filter(([, v]) => filled(v));
 
-type Item = { kind: 'id' | 'note' | 'photo' | 'end'; i: number };
+type Item = { kind: 'id' | 'note' | 'photo' | 'secret' | 'map' | 'end'; i: number };
 const order: Item[] = [{ kind: 'id', i: 0 }];
 const n = Math.max(notes.length, photos.length);
 for (let k = 0; k < n; k++) {
   if (notes[k]) order.push({ kind: 'note', i: k });
   if (photos[k]) order.push({ kind: 'photo', i: k });
+  if (k === 0) order.push({ kind: 'secret', i: 0 });
 }
+order.push({ kind: 'map', i: 0 });
+// lignes caviardées : survoler (ou toucher) pour révéler
+const secret = [['Client', p.client], ['Rôle', p.role], ['Livrables', p.deliverables], ['Année', p.year]].filter(([, v]) => filled(v)).slice(0, 3);
 order.push({ kind: 'end', i: 0 });
 
 // disposition en zigzag : gauche / droite, inclinaisons et profondeurs variées
@@ -32,7 +36,7 @@ const isLast = (k: number) => k === items.length - 1;
 ---
 <section class="dossier" data-board style={`--bh:${height}px`}>
   <div class="dossier-head wrap">
-    <span class="tw">Dossier n° {num} — Opération {p.client}</span>
+    <h2 class="tw" style="margin:0;font-size:inherit;font-weight:400">Dossier n° {num} — Opération {p.client}</h2>
     <span class="tw dim">Pièces à conviction : {items.length}</span>
   </div>
   <div class="board">
@@ -65,6 +69,28 @@ const isLast = (k: number) => k === items.length - 1;
             <img src={photos[it.i]} alt={`${p.title} — pièce ${it.piece}`} loading="lazy" />
             <figcaption class="tw">Pièce {it.piece} · {p.client}</figcaption>
           </figure>
+        )}
+        {it.kind === 'secret' && (
+          <article class="card-note card-secret">
+            <span class="tape" aria-hidden="true"></span>
+            <span class="tw dim">Pièce {it.piece} · note confidentielle</span>
+            <h3 class="tw">Top secret</h3>
+            <ul>{secret.map(([k2, v]) => <li><span class="tw">{k2} :</span> <span class="redact" tabindex="0">{v}</span></li>)}</ul>
+            <span class="tw dim" style="font-size:13px">Survole les passages noircis</span>
+          </article>
+        )}
+        {it.kind === 'map' && (
+          <article class="card-map">
+            <svg viewBox="0 0 320 220" aria-hidden="true">
+              <rect width="320" height="220" fill="#DCE7EE" />
+              <path d="M0 150 C60 140 90 160 140 150 S230 130 320 145 V220 H0 Z" fill="#9EC4DB" />
+              <path d="M40 120 C90 110 120 128 170 118 S250 104 300 112" fill="none" stroke="#9EC4DB" stroke-width="10" stroke-linecap="round" />
+              <g stroke="#FFFFFF" stroke-width="3" fill="none" opacity=".9"><path d="M20 40 L300 70" /><path d="M60 0 L110 220" /><path d="M200 0 L180 220" /><path d="M0 95 L320 90" /></g>
+              <circle cx="168" cy="104" r="26" fill="none" stroke="#D7261E" stroke-width="3" stroke-dasharray="6 5" />
+              <circle cx="168" cy="104" r="6" fill="#D7261E" />
+            </svg>
+            <p class="tw">Lieu de l'opération : Abidjan, Côte d'Ivoire · 5°21′ N, 4°01′ O</p>
+          </article>
         )}
         {it.kind === 'end' && isLast(k) && (
           <div class="card-end">

@@ -1,0 +1,23 @@
+---
+// Campagnes : le visuel mis en situation sur un panneau 4×3 de nuit et un abribus rétroéclairé.
+import { srcset } from '../../data/site';
+interface Props { cover: string; poster: string; client: string }
+const { cover, poster, client } = Astro.props;
+---
+<section class="insitu" data-mouse-scope aria-label={`Campagne ${client} en situation`}>
+  <div class="wrap"><span class="cs-kicker" style="color:#F0C9B8">En situation</span></div>
+  <div class="street">
+    <div class="sky" aria-hidden="true"></div>
+    <div class="billboard" data-mouse="-26">
+      <span class="lamp l1" aria-hidden="true"></span><span class="lamp l2" aria-hidden="true"></span><span class="lamp l3" aria-hidden="true"></span>
+      <div class="bb-frame"><img src={cover} srcset={srcset(cover)} sizes="760px" alt={`Visuel ${client} sur un panneau 4×3`} loading="lazy" /></div>
+      <span class="bb-leg left" aria-hidden="true"></span><span class="bb-leg right" aria-hidden="true"></span>
+    </div>
+    <div class="shelter" data-mouse="30">
+      <div class="sh-roof" aria-hidden="true"></div>
+      <div class="sh-panel"><img src={poster} alt={`Visuel ${client} sur un abribus`} loading="lazy" /></div>
+      <span class="sh-post" aria-hidden="true"></span>
+    </div>
+    <div class="ground" aria-hidden="true"></div>
+  </div>
+</section>

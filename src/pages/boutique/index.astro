@@ -1,12 +1,13 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Mascot from '../../components/Mascot.astro';
+import ShopFaq from '../../components/ShopFaq.astro';
 import { PRODUCTS, PRODUCT_TYPES, SHOP_OPEN, orderLink } from '../../data/shop';
 import { SITE, sm } from '../../data/site';
 const types = ['Tout', ...PRODUCT_TYPES.filter((t) => PRODUCTS.some((p) => p.type === t))];
 const wa = `${SITE.whatsapp}?text=${encodeURIComponent('Bonjour Dak, je voudrais être prévenu(e) de l’ouverture de la boutique.')}`;
 ---
-<Base title="Boutique" description="Mockups, extensions et templates créés par Dak.graphiste, graphiste à Abidjan : des ressources prêtes à l'emploi pour créatifs.">
+<Base title="Boutique" description="Mockups, extensions et templates créés par Dak.graphiste, graphiste à Abidjan : des ressources prêtes à l'emploi pour créatifs." image="/images/og/boutique.jpg">
   <section class="wrap shop-hero">
     <div style="flex:1 1 620px;min-width:0;display:flex;flex-direction:column;gap:26px">
       <span class="eyebrow" data-reveal>Boutique · ressources pour créatifs</span>
@@ -17,6 +18,7 @@ const wa = `${SITE.whatsapp}?text=${encodeURIComponent('Bonjour Dak, je voudrais
       <li><b>Téléchargement</b><span>rapide après paiement</span></li>
       <li><b>Mobile Money</b><span>Wave, Orange, MTN, carte</span></li>
       <li><b>Support</b><span>une question ? je réponds</span></li>
+      <li><b>Installateur</b><span>Windows et Mac, avec guide</span></li>
     </ul>
   </section>
 
@@ -53,6 +55,8 @@ const wa = `${SITE.whatsapp}?text=${encodeURIComponent('Bonjour Dak, je voudrais
       <a href={wa} class="btn btn-accent" target="_blank" rel="noopener noreferrer">Me prévenir sur WhatsApp →</a>
     </section>
   )}
+
+  {SHOP_OPEN && <ShopFaq />}
 
   <div class="cta-band"><Mascot pose={3} bubble="Une ressource sur mesure ?" /><p>Besoin d'un mockup<br />sur mesure ?</p><span class="magnetic"><a href="/contact" class="btn" style="background:#0A0A0A;color:#fff">Me contacter →</a></span></div>
 </Base>

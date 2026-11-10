@@ -2,27 +2,14 @@
 import Base from '../../layouts/Base.astro';
 import Mascot from '../../components/Mascot.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
-import { PROJECTS, CATEGORIES, sm } from '../../data/site';
+import { PROJECTS, CATEGORIES, catSlug } from '../../data/site';
 const cats = ['Tout', ...CATEGORIES];
-const wheel = Array.from({ length: 24 }, (_, i) => PROJECTS[i % PROJECTS.length]);
 ---
-<Base title="Projets" description="Projets de Davy Aymard Kouassi (Dak.graphiste) : identités visuelles, affiches, publicité, packaging, réseaux sociaux et retouche photo.">
+<Base title="Projets" description="Projets de Davy Aymard Kouassi (Dak.graphiste) : identités visuelles, affiches, publicité, packaging, réseaux sociaux et retouche photo." image="/images/og/projets.jpg">
   <section class="wrap" style="padding-top:150px;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap">
     <h1 class="display" data-lines style="font-size:clamp(52px,8vw,124px);font-weight:600"><span class="line-mask"><span>Projets</span></span><span class="line-mask"><span>sélectionnés</span></span></h1>
-    <p class="muted" data-reveal=".3" style="margin:0;max-width:360px;font-size:17px;line-height:1.5">Identités, réseaux sociaux, campagnes, packagings et affiches, pour des marques locales et internationales. Survole la roue pour l'arrêter.</p>
+    <p class="muted" data-reveal=".3" style="margin:0;max-width:360px;font-size:17px;line-height:1.5">Identités, réseaux sociaux, campagnes, packagings et affiches, pour des marques locales et internationales, en agence et en freelance.</p>
   </section>
-
-  <div class="wheelbox" data-mouse-scope>
-    <div class="wheel-anchor" data-mouse="-80">
-      <div class="wheel">
-        {wheel.map((p, i) => (
-          <div class="wcard" style={`transform:rotate(${i * 15}deg) translateY(-1150px)`}>
-            <a href={`/projets/${p.slug}`} class="inner" aria-label={p.title} data-cursor="Voir"><img src={sm(p.poster)} alt="" decoding="async" /></a>
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>
 
   <div class="marquee" aria-hidden="true" style="border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:18px 0">
     <div class="marquee-track" style="font-family:var(--font-display);font-weight:600;font-size:64px;letter-spacing:-0.03em;white-space:nowrap">
@@ -35,7 +22,7 @@ const wheel = Array.from({ length: 24 }, (_, i) => PROJECTS[i % PROJECTS.length]
     <div class="section-title">
       <h2>Tous les projets <span class="muted" data-count>({PROJECTS.length})</span></h2>
       <div class="chips" role="group" aria-label="Filtrer par catégorie">
-        {cats.map((c, i) => <button type="button" class="chip" data-filter={c} aria-pressed={i === 0 ? 'true' : 'false'}>{c}</button>)}
+        {cats.map((c, i) => <button type="button" class="chip" data-filter={c} data-slug={catSlug(c)} aria-pressed={i === 0 ? 'true' : 'false'}>{c}</button>)}
       </div>
     </div>
     <div class="pgrid">{PROJECTS.map((p) => <ProjectCard project={p} />)}</div>
@@ -44,15 +31,3 @@ const wheel = Array.from({ length: 24 }, (_, i) => PROJECTS[i % PROJECTS.length]
   <div class="cta-band"><Mascot pose={1} bubble="Let'z Go !" /><p>Un projet en tête ?</p><a href="/contact" class="btn btn-fg">Me contacter →</a></div>
 </Base>
 
-<style is:global>
-  .wheelbox { position: relative; height: 560px; overflow: hidden; margin-top: 8px; }
-  .wheel-anchor { position: absolute; left: 50%; top: 250px; width: 0; height: 0; transition: translate 1s var(--ease); }
-  .wheel { position: absolute; left: -1200px; top: 0; width: 2400px; height: 2400px; animation: spin-wheel 160s linear infinite; }
-  .wheelbox:hover .wheel { animation-play-state: paused; }
-  @keyframes spin-wheel { to { transform: rotate(-360deg); } }
-  .wcard { position: absolute; left: 1080px; top: 1040px; width: 240px; height: 320px; }
-  .wcard .inner { position: absolute; inset: 0; border-radius: 26px; overflow: hidden; display: block; box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 20px 40px -20px rgba(0,0,0,.35); transition: transform .5s var(--ease); }
-  .wcard:hover .inner { transform: translateY(-28px) scale(1.08); }
-  .wcard img { width: 100%; height: 100%; object-fit: cover; }
-  @media (max-width: 700px) { .wheelbox { height: 420px; } .wheel-anchor { top: 160px; } }
-</style>

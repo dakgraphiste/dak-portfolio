@@ -3,6 +3,8 @@ import Base from '../layouts/Base.astro';
 import Mascot from '../components/Mascot.astro';
 import { PRODUCTS, SHOP_OPEN } from '../data/shop';
 import { PROJECTS, CLIENTS, sm, srcset } from '../data/site';
+// pays cités dans le portfolio (Yango, FanMilk, Bavaria, Bonnet Rouge, La Vache qui rit)
+const MARKETS = 8;
 
 const FAN = ['orika', 'budweiser', 'fanmilk', 'posters-coupe-du-monde-2026', 'bonnet-rouge', 'superclean', 'chapn', 'yango', 'bavaria-smalt', 'posters-can-2025', 'abodjama', 'totalenergies-pakinou'];
 const fan = FAN.map((slug) => PROJECTS.find((p) => p.slug === slug)!).map((p, i) => ({ img: p.poster, a: -6 - i * 15, d: i * 0.07, z: 30 - i }));
@@ -18,11 +20,11 @@ const FADED = new Set(['Je', "m'appelle", 'On', 'Depuis', 'plus', 'de', 'je', 'd
 const words = "Je m'appelle Davy Aymard Kouassi. On m'appelle Dak. Depuis plus de 7 ans, je construis des identités, des campagnes et des atouts de communication pour des marques qui ne peuvent pas se permettre l'à-peu-près.".split(' ');
 
 const services = [
-  ['01', 'Identité visuelle', P['orika'].cover, '/projets'],
-  ['02', 'Réseaux sociaux', P['budweiser'].cover, '/projets'],
-  ['03', 'Campagnes & key visuals', P['totalenergies-rentree'].cover, '/projets'],
-  ['04', 'Packaging & produit', P['trajolou'].cover, '/projets'],
-  ['05', 'Affiches & sport', P['posters-can-2025'].cover, '/projets'],
+  ['01', 'Identité visuelle', P['orika'].cover, '/projets?cat=identite'],
+  ['02', 'Réseaux sociaux', P['budweiser'].cover, '/projets?cat=reseaux-sociaux'],
+  ['03', 'Campagnes & key visuals', P['totalenergies-rentree'].cover, '/projets?cat=campagnes'],
+  ['04', 'Packaging & produit', P['trajolou'].cover, '/projets?cat=packaging'],
+  ['05', 'Affiches & sport', P['posters-can-2025'].cover, '/projets?cat=affiches'],
   ['06', 'Formations', P['chapn'].cover, '/formations']
 ];
 const recent = ['orika', 'budweiser', 'totalenergies-pakinou', 'chapn', 'posters-coupe-du-monde-2026', 'trajolou', 'la-vache-qui-rit', 'air-elegance-can'].map((s) => P[s]);
@@ -93,6 +95,13 @@ const brand = 'dak.graphiste'.split('');
           : <span style={FADED.has(w) ? 'opacity:.62' : undefined}>{w}</span>)}
       </p>
     </div>
+  </section>
+
+  <section class="figures wrap" aria-label="Chiffres clés">
+    <div class="fig"><span class="fig-n"><span data-countup="7">7</span>+</span><span class="fig-l">ans de design et de direction artistique</span></div>
+    <div class="fig"><span class="fig-n" data-countup={PROJECTS.length}>{PROJECTS.length}</span><span class="fig-l">projets présentés</span></div>
+    <div class="fig"><span class="fig-n" data-countup={CLIENTS.length}>{CLIENTS.length}</span><span class="fig-l">marques accompagnées, de Budweiser à TotalEnergies</span></div>
+    <div class="fig"><span class="fig-n" data-countup={MARKETS}>{MARKETS}</span><span class="fig-l">pays d'Afrique de l'Ouest et du Centre</span></div>
   </section>
 
   <!-- Accroche 1 -->
@@ -209,9 +218,6 @@ const brand = 'dak.graphiste'.split('');
 
   <div class="cta-band"><Mascot pose={1} bubble="Let'z Go !" /><p>Un projet ?<br />Une formation ?</p><span class="magnetic"><a href="/contact" class="btn" style="background:#0A0A0A;color:#fff">Écrire à Dak →</a></span></div>
 
-  <div class="band-accent marquee" aria-hidden="true">
-    <div class="marquee-track"><span style="padding-right:32px">IDENTITÉ — AFFICHE — LOGO — PACKAGING — FORMATION — DAK.GRAPHISTE — </span><span style="padding-right:32px">IDENTITÉ — AFFICHE — LOGO — PACKAGING — FORMATION — DAK.GRAPHISTE — </span></div>
-  </div>
 </Base>
 
 <style is:global>
@@ -334,6 +340,11 @@ const brand = 'dak.graphiste'.split('');
   .st-card:hover .st-img img { transform: scale(1.05) rotate(-1deg); }
   .st-meta { display: flex; justify-content: space-between; gap: 12px; font-size: 16px; }
   .st-meta span { color: var(--accent-text); font-weight: 700; }
+  /* chiffres clés */
+  .figures { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 0; padding-top: 90px; padding-bottom: 90px; }
+  .fig { display: flex; flex-direction: column; gap: 10px; padding: 26px 24px; border-left: 1px solid var(--line); }
+  .fig-n { font-family: var(--font-display); font-weight: 700; font-size: clamp(56px, 6vw, 92px); line-height: 1; letter-spacing: -0.05em; color: var(--accent-large); }
+  .fig-l { font-size: 16px; line-height: 1.45; color: var(--muted); max-width: 240px; }
   /* clients */
   .logos { background: #0B0B0C; color: #F4F4F2; padding: 120px 0 130px; display: flex; flex-direction: column; gap: 28px; }
   .logos-head { text-align: center; padding: 0 20px 36px; display: flex; flex-direction: column; gap: 10px; align-items: center; }
