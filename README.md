@@ -11,15 +11,45 @@ npm run dev
 
 Puis ouvrir http://localhost:4321.
 
-## Modifier le contenu
+## Mettre à jour le site (sans rien installer)
 
-Tout le contenu se trouve dans `src/data/site.ts` :
+Tout se fait depuis le navigateur, sur GitHub. Chaque modification enregistrée est mise en ligne par Vercel en 1 à 2 minutes.
 
-- **Coordonnées et réseaux** : objet `SITE`.
-- **Projets** : liste `PROJECTS`. Pour chaque projet, remplir `year`, `role`, `brief`, `concept`, `challenge`, et mettre 3 visuels dans `gallery`.
-- **Ajouter un projet** : déposer l'image d'origine (jpg/png) dans `images-src/`, puis ajouter une ligne `p(...)` dans `PROJECTS`. Les versions WebP optimisées sont générées automatiquement au build (`npm run images` pour les créer à la main). La page de l'étude de cas est créée automatiquement.
-- **Formations** : liste `COURSES`.
-- **Clients** : liste `CLIENTS`.
+### Modifier un texte (coordonnées, projet, formation)
+
+1. Ouvrir https://github.com/dakgraphiste/dak-portfolio/blob/main/src/data/site.ts
+2. Cliquer sur l'icône crayon ✏️ (« Edit this file »).
+3. Modifier le texte entre les guillemets, sans toucher aux virgules ni aux accolades.
+4. Cliquer sur **Commit changes…** puis **Commit changes**. C'est en ligne 1 à 2 minutes après.
+
+### Ajouter un nouveau projet
+
+1. **Les images** : ouvrir https://github.com/dakgraphiste/dak-portfolio/tree/main/images-src → **Add file → Upload files**. Déposer :
+   - `mon-projet.jpg` : la couverture (un visuel large) ;
+   - `mon-projet-c1.jpg`, `mon-projet-c2.jpg`, `mon-projet-c3.jpg` : 3 visuels pour la cascade et la galerie.
+   Puis **Commit changes**. (Les versions légères WebP sont créées automatiquement.)
+2. **Les textes** : dans `src/data/site.ts`, copier un bloc `make({ ... }),` de la liste `PORTFOLIO` et l'adapter :
+   - `slug` : l'adresse de la page (ex. `mon-projet` → /projets/mon-projet), en minuscules sans espace ni accent ;
+   - `image` : le nom des fichiers sans extension (`mon-projet`) ;
+   - `category` : `Identité`, `Réseaux sociaux`, `Campagnes`, `Packaging`, `Affiches` ou `Retouche` ;
+   - `year`, `role`, `brief` (contexte), `concept`, `challenge` : facultatifs, ce qui est vide n'est pas affiché.
+   Les projets placés en haut de la liste apparaissent en premier.
+3. Ajouter la marque dans `CLIENTS` si elle doit défiler sur l'accueil.
+
+### Autres réglages fréquents
+
+- **CV** : déposer le PDF dans `public/`, puis mettre son chemin dans `SITE.cv` (ex. `'/cv-davy-aymard-kouassi.pdf'`).
+- **Showreel** : coller le lien d'intégration YouTube (`https://www.youtube.com/embed/ID`) dans `SHOWREEL.video` de `src/pages/showreel.astro`.
+- **Formulaire de contact** : remplacer `VOTRE_ID` dans `SITE.formAction` par l'identifiant Formspree.
+- **Mascotte suspendue** : composant `src/components/Spidey.astro` (texte de la bulle). Pour la retirer d'une page : `<Base mascot={false}>`.
+
+En cas d'erreur, Vercel garde l'ancienne version en ligne. On peut revenir en arrière dans Vercel → Deployments → ⋯ → **Promote to Production** sur une version précédente.
+
+## Statistiques de visites
+
+- **Vercel Analytics** (déjà intégré au code, sans cookies) : sur vercel.com → projet `dak-portfolio` → onglet **Analytics** → **Enable**. On y voit les visiteurs, pages vues, pages les plus vues, pays, appareils et sites d'origine.
+- **Vitesse réelle** (facultatif) : onglet **Speed Insights** → **Enable**.
+- **Google** : https://search.google.com/search-console → ajouter `https://dak-portfolio-gray.vercel.app` → envoyer le plan du site `sitemap-index.xml`. On y voit les recherches Google qui mènent au site.
 
 ## À compléter
 

@@ -50,13 +50,6 @@ const logoStyles = [
 const logos = CLIENTS.map((n, i) => ({ n, st: logoStyles[i % logoStyles.length] }));
 const row2 = logos.slice(4).concat(logos.slice(0, 4));
 const brand = 'dak.graphiste'.split('');
-const stages = [
-  ["L'idée s'éveille", 'Un hologramme jaillit de la main : chaque projet commence par une intuition.'],
-  ['Pensé pour le monde', 'Des identités qui voyagent et se reconnaissent partout.'],
-  ["Cap sur la Côte d'Ivoire", "Le globe éclate et se recompose : c'est ici que tout se crée."],
-  ['Abidjan', 'Le studio de Dak. · 5°21′ N, 4°01′ O'],
-  ['Des projets pilotés', 'Briefs, maquettes, livrables : chaque projet devient un tableau de bord clair.']
-];
 ---
 <Base title="Accueil">
   <!-- Intro -->
@@ -86,24 +79,6 @@ const stages = [
       <span>Créons<br />l'inoubliable.</span>
       <b>Davy Aymard Kouassi — dak.graphiste</b>
     </div>
-  </section>
-
-  <!-- Immersion 3D -->
-  <section class="immersion" data-immersion data-cursor-hide>
-    <div class="imm-pin">
-      <canvas aria-hidden="true"></canvas>
-      <div class="scan" aria-hidden="true"></div>
-      <div class="imm-text" aria-live="polite">
-        <span class="eyebrow" style="color:#7FD8FF">Immersion · <span data-stage-num>01</span> / 05</span>
-        <span class="imm-title display" data-stage-title>{stages[0][0]}</span>
-        <span class="imm-sub" data-stage-text>{stages[0][1]}</span>
-      </div>
-      <div class="imm-foot">
-        <div class="dots">{stages.map((_, i) => <span class={i === 0 ? 'on' : ''}></span>)}</div>
-        <span>Défile ou déplace la souris · hologramme → globe → Côte d'Ivoire → Abidjan → projets</span>
-      </div>
-    </div>
-    <script type="application/json" data-stages set:html={JSON.stringify(stages)} />
   </section>
 
   <!-- Manifeste -->
@@ -252,7 +227,7 @@ const stages = [
   .hero-title span { display: inline-block; animation: rise 1.2s cubic-bezier(.2,.8,.1,1) both; }
   @media (max-width: 700px) { .hero-title { font-size: 29vw; white-space: nowrap; } }
   .hero-id { position: absolute; left: var(--gutter); top: 110px; z-index: 6; display: flex; flex-direction: column; gap: 4px; font-size: 15px; }
-  .badge { position: absolute; right: clamp(20px, 5vw, 72px); top: 110px; z-index: 6; width: 132px; height: 132px; animation: spin 14s linear infinite; }
+  .badge { position: absolute; right: clamp(110px, 11vw, 210px); top: 110px; z-index: 6; width: 132px; height: 132px; animation: spin 14s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
   .hero-foot { position: absolute; left: 0; right: 0; bottom: 0; z-index: 6; display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; padding: 32px var(--gutter); }
   .hero-foot p { margin: 0; display: flex; align-items: baseline; gap: .3em; font-family: var(--font-display); font-weight: 600; font-size: clamp(22px, 3vw, 40px); letter-spacing: -0.03em; line-height: 1.15; }
@@ -263,21 +238,6 @@ const stages = [
   .spot { position: absolute; inset: 0; z-index: 5; background: var(--accent); color: #0A0A0A; pointer-events: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; text-align: center; clip-path: circle(0px at 50% 50%); }
   .spot span { font-family: var(--font-display); font-weight: 800; font-size: clamp(64px, 11vw, 170px); line-height: .9; letter-spacing: -0.06em; }
   @media (max-width: 700px) { .badge { display: none; } .fan { transform: translate(80px, -30px) rotateZ(-26deg) rotateX(14deg) rotateY(-22deg) scale(.42); } }
-
-  /* immersion */
-  .immersion { position: relative; height: 230vh; background: #04070D; color: #EAF6FF; }
-  .imm-pin { position: sticky; top: 0; height: 100vh; overflow: hidden; background: radial-gradient(ellipse at 58% 55%, #0A1828 0%, #04070D 60%); }
-  .imm-pin canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-  .scan { position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(120,220,255,.06) 0, rgba(120,220,255,.06) 1px, transparent 1px, transparent 4px); animation: scan 1s linear infinite; }
-  @keyframes scan { to { background-position: 0 8px; } }
-  .imm-text { position: absolute; left: var(--gutter); top: 110px; display: flex; flex-direction: column; gap: 14px; max-width: 400px; }
-  .imm-title { font-size: clamp(34px, 4.4vw, 64px); }
-  .imm-sub { font-size: 17px; line-height: 1.5; color: #A9C3D6; }
-  .imm-foot { position: absolute; left: var(--gutter); right: var(--gutter); bottom: 40px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 14px; color: #A9C3D6; }
-  .dots { display: flex; gap: 10px; }
-  .dots span { height: 8px; width: 8px; border-radius: 8px; background: rgba(234,246,255,.35); transition: width .4s var(--ease), background-color .4s; }
-  .dots span.on { width: 48px; background: var(--accent); }
-  @media (max-width: 700px) { .imm-text { top: 96px; right: var(--gutter); } }
 
   /* manifeste */
   .manifesto { background: var(--fg); color: var(--bg); padding: 150px 0 120px; }
@@ -362,7 +322,6 @@ const stages = [
 
 <script>
   import { gsap, ScrollTrigger, reduced, finePointer } from '../scripts/core';
-  import { initImmersion } from '../scripts/immersion';
 
   /* hero : éventail + projecteur orange */
   const hero = document.querySelector<HTMLElement>('[data-hero]')!;
@@ -383,25 +342,6 @@ const stages = [
       spot.style.clipPath = `circle(${sp.r.toFixed(1)}px at ${sp.x.toFixed(1)}px ${sp.y.toFixed(1)}px)`;
     });
   }
-
-  /* immersion : épinglée au défilement + souris */
-  const imm = document.querySelector<HTMLElement>('[data-immersion]')!;
-  const stages: string[][] = JSON.parse(imm.querySelector('[data-stages]')!.textContent || '[]');
-  const num = imm.querySelector('[data-stage-num]')!, title = imm.querySelector('[data-stage-title]')!, text = imm.querySelector('[data-stage-text]')!;
-  const dots = imm.querySelectorAll('.dots span');
-  // la scène 3D n'est calculée qu'à l'approche de la section (chargement initial plus léger)
-  let scene: ReturnType<typeof initImmersion> | null = null, pending = 0;
-  new IntersectionObserver(([en], obs) => {
-    if (!en.isIntersecting || scene) return;
-    obs.disconnect();
-    scene = initImmersion(imm.querySelector('.imm-pin')!, imm.querySelector('canvas')!, (s) => {
-      num.textContent = '0' + (s + 1); title.textContent = stages[s][0]; text.textContent = stages[s][1];
-      dots.forEach((d, i) => d.classList.toggle('on', i === s));
-      if (!reduced) gsap.fromTo([title, text], { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: .6, stagger: .06, ease: 'power3.out' });
-    });
-    scene.setScroll(pending);
-  }, { rootMargin: '800px 0px' }).observe(imm);
-  ScrollTrigger.create({ trigger: imm, start: 'top top', end: 'bottom bottom', onUpdate: (st) => { pending = st.progress; scene?.setScroll(st.progress); } });
 
   /* bande des projets récents : glisse avec la souris */
   const strip = document.querySelector<HTMLElement>('[data-strip]')!;

@@ -172,6 +172,40 @@ document.querySelectorAll<HTMLElement>('[data-filter-scope]').forEach((scope) =>
   );
 });
 
+/* ---------- mascotte suspendue à son fil ---------- */
+{
+  const sp = document.querySelector<HTMLElement>('[data-spidey]');
+  if (sp) {
+    const rig = sp.querySelector<HTMLElement>('.spidey-rig')!;
+    const btn = sp.querySelector<HTMLButtonElement>('.spidey-btn')!;
+    const rest = () => Math.min(window.innerHeight * (window.innerWidth < 700 ? 0.1 : 0.2), 180);
+    let ang = 0, av = 0, len = 0, lv = 0, target = 0, lastY = window.scrollY, lastX: number | null = null;
+    const intro = document.documentElement.classList.contains('no-intro') || !document.querySelector('.loader') ? 300 : 1700;
+    setTimeout(() => { target = rest(); }, reduced ? 0 : intro);
+    window.addEventListener('resize', () => { if (target) target = rest(); });
+    btn.addEventListener('click', () => {
+      const open = sp.classList.toggle('talk');
+      btn.setAttribute('aria-expanded', String(open));
+      av += 0.09; lv -= 18;
+    });
+    if (reduced) {
+      setTimeout(() => rig.style.setProperty('--len', rest() + 'px'), 0);
+    } else {
+      window.addEventListener('mousemove', (e) => { if (lastX !== null) av += (e.clientX - lastX) * 0.00045; lastX = e.clientX; });
+      gsap.ticker.add(() => {
+        const y = window.scrollY, v = y - lastY; lastY = y;
+        av += v * 0.0007;                 // le défilement le fait se balancer
+        av += -ang * 0.025; av *= 0.955;  // ressort + amortissement
+        ang = Math.max(-0.55, Math.min(0.55, ang + av));
+        const goal = target + (target ? Math.min(140, Math.abs(v) * 2.2) : 0); // le fil s'étire en défilant
+        lv += (goal - len) * 0.07; lv *= 0.8; len += lv;
+        rig.style.setProperty('--len', Math.max(0, len).toFixed(1) + 'px');
+        rig.style.transform = `rotate(${(ang * 57.3).toFixed(2)}deg)`;
+      });
+    }
+  }
+}
+
 /* ---------- lecteur du showreel ---------- */
 {
   const player = document.querySelector<HTMLElement>('[data-tilt].player');
