@@ -1,0 +1,26 @@
+---
+import { sm } from '../../data/site';
+interface Props { posts: string[]; client: string; category: string }
+const { posts, client, category } = Astro.props;
+const loop = [...posts, ...posts];
+---
+<section class="cs-feed">
+  <div class="wrap section-title"><h2>{category === 'Réseaux sociaux' ? 'Le fil' : 'La série'} <span class="muted">· {posts.length} visuels</span></h2><span class="muted">Clique sur un visuel pour l'agrandir</span></div>
+  <div class="wrap feed-layout">
+    <div class="phone" aria-hidden="true">
+      <div class="phone-screen">
+        <div class="phone-top"><span class="ph-av"></span><b>{client}</b><span class="ph-dots">•••</span></div>
+        <div class="feed-track" style={`--n:${posts.length}`}>{loop.map((p) => <img src={sm(p)} alt="" loading="lazy" />)}</div>
+      </div>
+    </div>
+    <div class="feed-grid">
+      {posts.map((p, i) => (
+        <button type="button" class="post" data-full={p} data-reveal={String(Math.min(i * 0.06, 0.5))} aria-label={`Agrandir le visuel ${i + 1}`}>
+          <img src={sm(p)} alt={`${client} — visuel ${i + 1}`} loading="lazy" />
+        </button>
+      ))}
+    </div>
+  </div>
+  <div class="marquee feed-marquee" aria-hidden="true"><div class="marquee-track">{loop.map((p) => <img src={sm(p)} alt="" loading="lazy" />)}</div></div>
+</section>
+<div class="lightbox" data-lightbox hidden><button type="button" class="lb-close" aria-label="Fermer">×</button><img alt="" /></div>

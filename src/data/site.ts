@@ -56,6 +56,9 @@ export type Project = {
   challenge: string;
   gallery: string[]; // 3 visuels du projet (cascade au survol + galerie)
   poster: string; // version verticale soignée (livre ouvert de l'accueil, roue, projets récents)
+  theme?: { p1: string; p2: string; ink?: string }; // couleurs de la page du projet
+  brand?: { logo: string; symbol?: string; palette: { name: string; hex: string }[]; values: string[] }; // identités visuelles
+  posts?: string[]; // publications regroupées (réseaux sociaux, affiches, campagnes)
 };
 
 const DA = 'Direction artistique & design graphique';
@@ -229,7 +232,35 @@ const BEHANCE: Project[] = [
   bh('retouche-photo-2', 'Retouche photo — Série 2', 'Shooting beauté', 'Retouche', 'Retouche photo', 'Retouche beauté', 'retouche-2', '236832235/RETOUCHE-PHOTO')
 ].map((p) => ({ ...p, ...DETAILS[p.slug] }));
 
-export const PROJECTS: Project[] = [...PORTFOLIO, ...BEHANCE];
+/* ---------- Mise en scène des études de cas ---------- */
+const posts = (image: string, n: number) => Array.from({ length: n }, (_, i) => img(`${image}-p${String(i + 1).padStart(2, '0')}`));
+const STAGE: Record<string, Partial<Project>> = {
+  orika: { theme: { p1: '#CE3754', p2: '#FAF1F2' }, brand: { logo: 'orika-logo', symbol: 'orika-symbole', values: ['Délicatesse', 'Premium', 'Sensoriel', 'Fait ici', 'Pensé pour le monde'],
+    palette: [{ name: 'Magenta Bloom', hex: '#CE3754' }, { name: 'Dusty Rose', hex: '#CB7D79' }, { name: 'Snow', hex: '#FAF1F2' }] } },
+  chapn: { theme: { p1: '#5E2BBF', p2: '#C9F35B' }, brand: { logo: 'chapn-logo', symbol: 'chapn-symbole', values: ['Vitesse', 'Mouvement', 'Envoie', 'Reçois', "Chap'n"],
+    palette: [{ name: 'Indigo Bloom', hex: '#5E2BBF' }, { name: 'Chartreuse', hex: '#C9F35B' }, { name: 'Noir', hex: '#000000' }, { name: 'Porcelain', hex: '#F7F7EF' }] } },
+  lumora: { theme: { p1: '#8E2222', p2: '#FD5F54' }, brand: { logo: 'lumora-logo', values: ['Lumière', 'Diversité', 'Confiance', 'Stabilité', 'Authenticité'],
+    palette: [{ name: 'Bordeaux profond', hex: '#380E0F' }, { name: 'Rouge brique', hex: '#8E2222' }, { name: 'Corail', hex: '#FD5F54' }, { name: 'Rose poudré', hex: '#FACAC6' }, { name: 'Blanc lumière', hex: '#F7F7FF' }] } },
+  pakinou: { theme: { p1: '#A6421E', p2: '#F3E8D2' }, brand: { logo: 'pakinou-logo', symbol: 'pakinou-symbole', values: ['Rythme', 'Danse', 'Joie', 'Cérémonie', 'Culture'],
+    palette: [{ name: 'Terre cuite', hex: '#A6421E' }, { name: 'Ocre', hex: '#E8813E' }, { name: 'Brun rouge', hex: '#882E0C' }, { name: 'Orange festif', hex: '#FD8D37' }, { name: 'Crème', hex: '#F3E8D2' }] } },
+  budweiser: { theme: { p1: '#C8102E', p2: '#F5F1E8' }, posts: posts('budweiser', 9) },
+  fanmilk: { theme: { p1: '#1E5CC8', p2: '#EAF2FF' }, posts: posts('fanmilk', 10) },
+  'bonnet-rouge': { theme: { p1: '#D0021B', p2: '#FFF1E8' }, posts: posts('bonnet-rouge-sm', 9) },
+  'la-vache-qui-rit': { theme: { p1: '#E2001A', p2: '#FFF4E6' }, posts: posts('la-vache-qui-rit', 8) },
+  superclean: { theme: { p1: '#2433A0', p2: '#EEF1FF' }, posts: posts('superclean', 10) },
+  yango: { theme: { p1: '#E4002B', p2: '#FFF0F2' }, posts: posts('yango', 9) },
+  'bavaria-smalt': { theme: { p1: '#0B4AA8', p2: '#EAF2FF' }, posts: posts('bavaria-smalt', 10) },
+  'posters-coupe-du-monde-2026': { theme: { p1: '#FF6A13', p2: '#FFF3EA' }, posts: posts('posters-fwc-2026', 6) },
+  'posters-can-2025': { theme: { p1: '#5B2A86', p2: '#F4EEFA' }, posts: posts('posters-can-2025', 5) },
+  'mitsubishi-destinator': { theme: { p1: '#E60012', p2: '#F2F4F7' }, posts: posts('mitsubishi-destinator', 4) },
+  'pakinou-campagne': { theme: { p1: '#A6421E', p2: '#F3E8D2' }, posts: posts('pakinou-kv', 3) },
+  'totalenergies-rentree': { theme: { p1: '#E4002B', p2: '#FFF5EC' } }, 'totalenergies-pakinou': { theme: { p1: '#E4002B', p2: '#FFF5EC' } },
+  'totalenergies-quartz': { theme: { p1: '#E4002B', p2: '#FFF5EC' } }, 'bonnet-rouge-fetes': { theme: { p1: '#D0021B', p2: '#FFF1E8' } },
+  'air-elegance-can': { theme: { p1: '#0F7A4A', p2: '#EFF8F3' } }, trajolou: { theme: { p1: '#0E7C74', p2: '#FFEFF6' } },
+  abodjama: { theme: { p1: '#C79A1B', p2: '#FBF5E6' } }, bronze: { theme: { p1: '#7A1F2B', p2: '#F4F1EE' } }
+};
+
+export const PROJECTS: Project[] = [...PORTFOLIO, ...BEHANCE].map((p) => ({ ...p, ...STAGE[p.slug] }));
 
 // Marques accompagnées (en agence chez SimplyBlack et en freelance)
 export const CLIENTS = ['Budweiser', 'TotalEnergies', 'La Vache qui rit', 'Yango', 'FanMilk', 'Bonnet Rouge', 'Mitsubishi', 'Bavaria', 'SuperClean', 'Air Elegance', 'Orika', "Chap'n", 'Lumora', 'Pakinou', 'Trajolou', 'Abodjama', 'Bronzé', 'KPALO'];

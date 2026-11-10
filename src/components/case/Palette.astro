@@ -1,0 +1,17 @@
+---
+interface Props { palette: { name: string; hex: string }[] }
+const { palette } = Astro.props;
+const rgb = (hex: string) => { const n = parseInt(hex.slice(1), 16); return `${n >> 16} · ${(n >> 8) & 255} · ${n & 255}`; };
+const ink = (hex: string) => { const n = parseInt(hex.slice(1), 16), l = (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255; return l > 0.6 ? '#141010' : '#FFFFFF'; };
+---
+<section class="cs-palette" data-palette>
+  <div class="wrap cs-palette-head"><span class="cs-kicker" style="color:var(--p1)">La palette</span><span class="muted">Survole une couleur</span></div>
+  <div class="pal-row">
+    {palette.map((c, i) => (
+      <div class="pal-col" style={`--c:${c.hex};--ci:${ink(c.hex)};--i:${i}`}>
+        <span class="pal-num">{String(i + 1).padStart(2, '0')}</span>
+        <span class="pal-info"><b>{c.name}</b><span class="pal-hex" data-hex={c.hex}>{c.hex}</span><span class="pal-rgb">RGB {rgb(c.hex)}</span></span>
+      </div>
+    ))}
+  </div>
+</section>

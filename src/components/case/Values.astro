@@ -1,0 +1,9 @@
+---
+interface Props { values: string[] }
+const { values } = Astro.props;
+---
+<section class="cs-values" data-values>
+  <div class="wrap"><span class="cs-kicker" style="color:var(--p1)">Les valeurs</span></div>
+  <p class="wrap val-list">{values.map((v) => <span class="val">{v}</span>)}</p>
+  <div class="marquee val-marquee" aria-hidden="true"><div class="marquee-track">{[...values, ...values, ...values, ...values].map((v) => <span>{v} <i>✦</i> </span>)}</div></div>
+</section>
