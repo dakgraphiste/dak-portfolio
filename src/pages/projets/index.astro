@@ -17,7 +17,7 @@ const wheel = Array.from({ length: 24 }, (_, i) => PROJECTS[i % PROJECTS.length]
       <div class="wheel">
         {wheel.map((p, i) => (
           <div class="wcard" style={`transform:rotate(${i * 15}deg) translateY(-1150px)`}>
-            <a href={`/projets/${p.slug}`} class="inner" aria-label={p.title} data-cursor="Voir"><img src={sm(p.cover)} alt="" decoding="async" /></a>
+            <a href={`/projets/${p.slug}`} class="inner" aria-label={p.title} data-cursor="Voir"><img src={sm(p.poster)} alt="" decoding="async" /></a>
           </div>
         ))}
       </div>

@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+
 // Coordonnées et liens de Davy Aymard Kouassi (Dak.graphiste)
 export const SITE = {
   brand: 'dak.graphiste',
@@ -21,7 +24,7 @@ export const SITE = {
 export const filled = (s?: string) => !!s && !/\[[^\]]*\]/.test(s);
 
 /** Version 480 px d'une image (vignettes). */
-export const sm = (src: string) => src.replace(/\.webp$/, '-480.webp');
+export const sm = (src: string) => src.replace(/\.webp(\?.*)?$/, '-480.webp$1');
 /** srcset pour laisser le navigateur choisir la bonne taille. */
 export const srcset = (src: string) => `${sm(src)} 480w, ${src} 1600w`;
 
@@ -52,18 +55,23 @@ export type Project = {
   conceptLabel?: string; // « Le concept », « Le mécanisme », « La mission »…
   challenge: string;
   gallery: string[]; // 3 visuels du projet (cascade au survol + galerie)
+  poster: string; // version verticale soignée (livre ouvert de l'accueil, roue, projets récents)
 };
 
 const DA = 'Direction artistique & design graphique';
 const AGENCE = 'Direction artistique · agence SimplyBlack';
-const img = (name: string) => `/images/projets/${name}.webp`;
+// Empreinte du fichier dans l'adresse : une image modifiée est rechargée tout de suite (pas d'ancienne version en cache)
+const version = (name: string) => {
+  try { return createHash('md5').update(readFileSync(`public/images/projets/${name}.webp`)).digest('hex').slice(0, 8); } catch { return '1'; }
+};
+const img = (name: string) => `/images/projets/${name}.webp?v=${version(name)}`;
 const crops = (name: string, n = 3) => Array.from({ length: n }, (_, k) => img(`${name}-c${k + 1}`));
 
-type In = Omit<Project, 'cover' | 'gallery' | 'behance' | 'year' | 'role' | 'brief' | 'concept' | 'challenge'> &
+type In = Omit<Project, 'cover' | 'gallery' | 'poster' | 'behance' | 'year' | 'role' | 'brief' | 'concept' | 'challenge'> &
   Partial<Pick<Project, 'behance' | 'year' | 'role' | 'brief' | 'concept' | 'challenge'>> & { image: string; gallery?: string[]; shots?: number };
 const make = ({ image, gallery, shots = 3, ...p }: In): Project => ({
   behance: '', year: '', role: DA, brief: '', concept: '', challenge: '',
-  ...p, cover: img(image), gallery: gallery || crops(image, shots)
+  ...p, cover: img(image), poster: img(`${image}-poster`), gallery: gallery || crops(image, shots)
 });
 
 /* ---------- Projets du portfolio PDF (textes de Davy) ---------- */

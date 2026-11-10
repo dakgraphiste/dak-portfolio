@@ -3,7 +3,8 @@ import Base from '../layouts/Base.astro';
 import Mascot from '../components/Mascot.astro';
 import { PROJECTS, CLIENTS, sm, srcset } from '../data/site';
 
-const fan = PROJECTS.slice(0, 14).map((p, i) => ({ img: p.cover, a: -6 - i * 15, d: i * 0.07, z: 30 - i }));
+const FAN = ['orika', 'budweiser', 'fanmilk', 'posters-coupe-du-monde-2026', 'bonnet-rouge', 'superclean', 'chapn', 'yango', 'bavaria-smalt', 'posters-can-2025', 'abodjama', 'totalenergies-pakinou'];
+const fan = FAN.map((slug) => PROJECTS.find((p) => p.slug === slug)!).map((p, i) => ({ img: p.poster, a: -6 - i * 15, d: i * 0.07, z: 30 - i }));
 const P = Object.fromEntries(PROJECTS.map((p) => [p.slug, p]));
 
 const IC = {
@@ -135,7 +136,7 @@ const brand = 'dak.graphiste'.split('');
     <div class="strip" data-strip-track>
       {recent.map((p) => (
         <a href={`/projets/${p.slug}`} class="tcard" data-cursor="Voir">
-          <img class="tc-img" src={p.cover} srcset={srcset(p.cover)} sizes="340px" alt="" loading="lazy" />
+          <img class="tc-img" src={p.poster} srcset={srcset(p.poster)} sizes="340px" alt="" loading="lazy" />
           {p.gallery.slice(0, 3).map((g) => <span class={p.gallery.length > 1 ? 'casc real' : 'casc'} aria-hidden="true"><img src={sm(g)} alt="" loading="lazy" /></span>)}
           <span class="cap">{p.title}</span>
         </a>
