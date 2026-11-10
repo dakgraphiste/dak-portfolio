@@ -57,13 +57,13 @@ export type Project = {
 const DA = 'Direction artistique & design graphique';
 const AGENCE = 'Direction artistique · agence SimplyBlack';
 const img = (name: string) => `/images/projets/${name}.webp`;
-const crops = (name: string) => [1, 2, 3].map((k) => img(`${name}-c${k}`));
+const crops = (name: string, n = 3) => Array.from({ length: n }, (_, k) => img(`${name}-c${k + 1}`));
 
 type In = Omit<Project, 'cover' | 'gallery' | 'behance' | 'year' | 'role' | 'brief' | 'concept' | 'challenge'> &
-  Partial<Pick<Project, 'behance' | 'year' | 'role' | 'brief' | 'concept' | 'challenge'>> & { image: string; gallery?: string[] };
-const make = ({ image, gallery, ...p }: In): Project => ({
+  Partial<Pick<Project, 'behance' | 'year' | 'role' | 'brief' | 'concept' | 'challenge'>> & { image: string; gallery?: string[]; shots?: number };
+const make = ({ image, gallery, shots = 3, ...p }: In): Project => ({
   behance: '', year: '', role: DA, brief: '', concept: '', challenge: '',
-  ...p, cover: img(image), gallery: gallery || crops(image)
+  ...p, cover: img(image), gallery: gallery || crops(image, shots)
 });
 
 /* ---------- Projets du portfolio PDF (textes de Davy) ---------- */
@@ -112,35 +112,35 @@ const PORTFOLIO: Project[] = [
     brief: "Bavaria Smalt, une boisson à base de malt et de soda. L'idée : faire comprendre aux consommateurs qu'elle respecte tous les codes du sans-alcool et peut facilement s'imposer au quotidien.",
     challenge: "Effacer l'association à la Bavaria alcoolisée et installer cette nouvelle gamme de soda au malt, en respectant les codes de la marque dans plusieurs pays : Gabon, Côte d'Ivoire, Cameroun." }),
   // KV Campaigns
-  make({ slug: 'bonnet-rouge-fetes', title: 'Bonnet Rouge — KV fêtes de fin d’année', client: 'Bonnet Rouge', category: 'Campagnes', categoryLabel: 'Campagne (KV)', deliverables: "Key visual Côte d'Ivoire & Burkina Faso", image: 'bonnet-rouge-kv',
+  make({ slug: 'bonnet-rouge-fetes', title: 'Bonnet Rouge — KV fêtes de fin d’année', client: 'Bonnet Rouge', category: 'Campagnes', categoryLabel: 'Campagne (KV)', deliverables: "Key visual Côte d'Ivoire & Burkina Faso", image: 'bonnet-rouge-kv', shots: 1,
     brief: "Pour les fêtes de fin d'année, un KV pour Bonnet Rouge utilisé au Burkina Faso et en Côte d'Ivoire. L'idée : intégrer Bonnet Rouge comme un membre de la famille, celui qu'on côtoie tout le temps, même pour Noël et le Nouvel An.",
     concept: "Célébrer avec Bonnet Rouge." }),
-  make({ slug: 'totalenergies-rentree', title: 'TotalEnergies — Back to School', client: 'TotalEnergies', category: 'Campagnes', categoryLabel: 'Campagne (KV)', deliverables: 'Key visual promo boutique', image: 'totalenergies-bts',
+  make({ slug: 'totalenergies-rentree', title: 'TotalEnergies — Back to School', client: 'TotalEnergies', category: 'Campagnes', categoryLabel: 'Campagne (KV)', deliverables: 'Key visual promo boutique', image: 'totalenergies-bts', shots: 1,
     brief: "Pour la rentrée, un KV pour la campagne Promo Back to School de TotalEnergies, afin de mettre en avant sa boutique : un endroit où l'on repart avec un kit scolaire en cadeau (sac à dos, gourde, stylos, blocs-notes…).",
     concept: "Pour tout achat de 15 000 FCFA dans la boutique TotalEnergies, des kits scolaires, gourdes et autres cadeaux offerts.", conceptLabel: 'Le mécanisme' }),
-  make({ slug: 'totalenergies-pakinou', title: 'TotalEnergies — Promo Pakinou', client: 'TotalEnergies', category: 'Campagnes', categoryLabel: 'Campagne (KV)', deliverables: 'Key visual promo boutique', image: 'totalenergies-pakinou', year: '2025',
+  make({ slug: 'totalenergies-pakinou', title: 'TotalEnergies — Promo Pakinou', client: 'TotalEnergies', category: 'Campagnes', categoryLabel: 'Campagne (KV)', deliverables: 'Key visual promo boutique', image: 'totalenergies-pakinou', shots: 1, year: '2025',
     brief: "Pour la fête de Pakinou, un KV pour la campagne Promo Pakinou de TotalEnergies : mettre en avant la boutique tout en reflétant l'esprit de la fête.",
     concept: "Du 1er au 30 avril 2025, pour tout achat en boutique à partir de 10 000 FCFA, tentez de gagner un an de carburant.", conceptLabel: 'Le mécanisme' }),
-  make({ slug: 'totalenergies-quartz', title: 'TotalEnergies — Promo Quartz', client: 'TotalEnergies', category: 'Campagnes', categoryLabel: 'Campagne (KV)', deliverables: 'Key visual promo lubrifiants', image: 'totalenergies-quartz', year: '2025', role: AGENCE,
+  make({ slug: 'totalenergies-quartz', title: 'TotalEnergies — Promo Quartz', client: 'TotalEnergies', category: 'Campagnes', categoryLabel: 'Campagne (KV)', deliverables: 'Key visual promo lubrifiants', image: 'totalenergies-quartz', shots: 2, year: '2025', role: AGENCE,
     brief: "Promo Quartz pour la rentrée : un KV pour mettre en avant la réduction sur les lubrifiants Quartz de TotalEnergies.",
     concept: "« À la rentrée Quartz, ça chauffe pas ! » : 1 000 FCFA de réduction sur les lubrifiants Quartz, du 1er au 30 septembre 2025.", conceptLabel: 'Le mécanisme' }),
   make({ slug: 'mitsubishi-destinator', title: 'Mitsubishi — Destinator', client: 'Mitsubishi', category: 'Campagnes', categoryLabel: 'Campagne (KV)', deliverables: "Key visuals pour appel d'offres", image: 'mitsubishi-destinator',
     brief: "Pour le lancement du Destinator, SUV 7 places, nous avons conçu des KV pour l'appel d'offres de Mitsubishi.",
     concept: "Le véhicule parfait pour toute la famille." }),
-  make({ slug: 'air-elegance-can', title: 'Air Elegance — CAN au Maroc', client: 'Air Elegance', category: 'Campagnes', categoryLabel: 'Campagne (KV)', deliverables: 'Key visual campagne « No Stress »', image: 'air-elegance-can', year: '2025',
+  make({ slug: 'air-elegance-can', title: 'Air Elegance — CAN au Maroc', client: 'Air Elegance', category: 'Campagnes', categoryLabel: 'Campagne (KV)', deliverables: 'Key visual campagne « No Stress »', image: 'air-elegance-can', shots: 1, year: '2025',
     brief: "Pour la CAN au Maroc, Air Elegance lance une campagne « No Stress » pour ses clients. Un KV réalisé pour communiquer sur leur offre.",
     concept: "« No stress. Sois serein, on gère. »" }),
   make({ slug: 'pakinou-campagne', title: 'Pakinou — Campagne évènement', client: 'Pakinou', category: 'Campagnes', categoryLabel: 'Campagne (KV)', deliverables: 'Teasers, KV 12 m², supports évènement', image: 'pakinou-kv',
     brief: "À l'occasion de Pâques, nous avons géré la communication autour de l'évènement culturel Pakinou : teasers, KV pour 12 m² et autres supports, pour promouvoir l'évènement.",
     concept: "« Lève-toi et danse. Aujourd'hui ça va chauffer. »" }),
   // Packaging & Product Design
-  make({ slug: 'trajolou', title: 'Trajolou — Packaging', client: 'Trajolou', category: 'Packaging', categoryLabel: 'Packaging', deliverables: 'Packaging de la nouvelle gamme de poupées', image: 'trajolou', year: '2025',
+  make({ slug: 'trajolou', title: 'Trajolou — Packaging', client: 'Trajolou', category: 'Packaging', categoryLabel: 'Packaging', deliverables: 'Packaging de la nouvelle gamme de poupées', image: 'trajolou', shots: 1, year: '2025',
     brief: "Trajolou, marque de poupées locale : le compagnon idéal pour les petites filles qui veulent des poupées aux codes internationaux, dans le respect de la culture africaine.",
     concept: "Création du packaging de la nouvelle gamme de poupées Trajolou, en restant dans l'univers des petites filles.", conceptLabel: 'La mission' }),
-  make({ slug: 'abodjama', title: 'Abodjama — Attiéké de Babi', client: 'Abodjama', category: 'Packaging', categoryLabel: 'Packaging', deliverables: 'Packaging 900 g à 50 kg', image: 'abodjama',
+  make({ slug: 'abodjama', title: 'Abodjama — Attiéké de Babi', client: 'Abodjama', category: 'Packaging', categoryLabel: 'Packaging', deliverables: 'Packaging 900 g à 50 kg', image: 'abodjama', shots: 1,
     brief: "Abodjama commercialise l'attiéké, semoule de manioc, dans des emballages représentatifs de la culture ivoirienne.",
     concept: "Créer le packaging « Attiéké de Babi » en respectant les codes visuels d'Abodjama et les codes culturels.", conceptLabel: 'La mission' }),
-  make({ slug: 'bronze', title: 'Bronzé — Logo & packaging', client: 'Bronzé', category: 'Packaging', categoryLabel: 'Logo & packaging', deliverables: 'Logo, packaging', image: 'bronze',
+  make({ slug: 'bronze', title: 'Bronzé — Logo & packaging', client: 'Bronzé', category: 'Packaging', categoryLabel: 'Logo & packaging', deliverables: 'Logo, packaging', image: 'bronze', shots: 1,
     brief: "Bronzé, marque de senteurs de luxe et de bougies parfumées, qui se veut unique et premium. Nous avons réalisé le logo et le packaging.",
     concept: "Un packaging simple, épuré et luxueux.", conceptLabel: 'La mission' }),
   // Posters

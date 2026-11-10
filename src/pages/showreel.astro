@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Mascot from '../components/Mascot.astro';
 import { PROJECTS, srcset } from '../data/site';
 const P = Object.fromEntries(PROJECTS.map((p) => [p.slug, p]));
 // Remplacer `video` par l'URL d'intégration YouTube/Vimeo (ex. https://www.youtube.com/embed/ID) quand les vidéos sont prêtes
@@ -60,7 +61,7 @@ const vids = [
       </div>
     </section>
   </div>
-  <div class="cta-band"><p>Une vidéo pour ta marque ?</p><a href="/contact" class="btn" style="background:#0A0A0A;color:#fff">Parlons-en →</a></div>
+  <div class="cta-band"><Mascot pose={3} bubble="Action !" /><p>Une vidéo pour ta marque ?</p><a href="/contact" class="btn" style="background:#0A0A0A;color:#fff">Parlons-en →</a></div>
 </Base>
 
 <style is:global>

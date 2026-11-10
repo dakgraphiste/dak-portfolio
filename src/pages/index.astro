@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Mascot from '../components/Mascot.astro';
 import { PROJECTS, CLIENTS, sm, srcset } from '../data/site';
 
 const fan = PROJECTS.slice(0, 14).map((p, i) => ({ img: p.cover, a: -6 - i * 15, d: i * 0.07, z: 30 - i }));
@@ -194,6 +195,8 @@ const brand = 'dak.graphiste'.split('');
       <a href="/contact" class="cta-o">Créer mon affiche →</a>
     </div>
   </section>
+
+  <div class="cta-band"><Mascot pose={1} bubble="Let'z Go !" /><p>Un projet ?<br />Une formation ?</p><span class="magnetic"><a href="/contact" class="btn" style="background:#0A0A0A;color:#fff">Écrire à Dak →</a></span></div>
 
   <div class="band-accent marquee" aria-hidden="true">
     <div class="marquee-track"><span style="padding-right:32px">IDENTITÉ — AFFICHE — LOGO — PACKAGING — FORMATION — DAK.GRAPHISTE — </span><span style="padding-right:32px">IDENTITÉ — AFFICHE — LOGO — PACKAGING — FORMATION — DAK.GRAPHISTE — </span></div>

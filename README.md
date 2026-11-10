@@ -41,7 +41,7 @@ Tout se fait depuis le navigateur, sur GitHub. Chaque modification enregistrée 
 - **CV** : déposer le PDF dans `public/`, puis mettre son chemin dans `SITE.cv` (ex. `'/cv-davy-aymard-kouassi.pdf'`).
 - **Showreel** : coller le lien d'intégration YouTube (`https://www.youtube.com/embed/ID`) dans `SHOWREEL.video` de `src/pages/showreel.astro`.
 - **Formulaire de contact** : remplacer `VOTRE_ID` dans `SITE.formAction` par l'identifiant Formspree.
-- **Mascotte suspendue** : composant `src/components/Spidey.astro` (texte de la bulle). Pour la retirer d'une page : `<Base mascot={false}>`.
+- **Mascotte Let'z Go** : composant `src/components/Mascot.astro`, utilisé dans les bandeaux d'appel à l'action (pose et bulle réglables).
 
 En cas d'erreur, Vercel garde l'ancienne version en ligne. On peut revenir en arrière dans Vercel → Deployments → ⋯ → **Promote to Production** sur une version précédente.
 

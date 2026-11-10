@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Mascot from '../components/Mascot.astro';
 import { SITE, PROJECTS, CLIENTS, sm, srcset, filled } from '../data/site';
 const P = Object.fromEntries(PROJECTS.map((p) => [p.slug, p]));
 const expertises = ['Direction artistique', 'Identité visuelle & logo', 'Content calendars & réseaux sociaux', 'Key visuals & campagnes', 'Packaging & produit', 'Affiches & illustration', 'Motion design'];
@@ -66,7 +67,7 @@ const diplomas = [
   </section>
   )}
 
-  <div class="cta-band"><p>Travaillons ensemble.</p><a href="/contact" class="btn btn-fg">Me contacter →</a></div>
+  <div class="cta-band"><Mascot pose={2} bubble="On y va ?" /><p>Travaillons ensemble.</p><a href="/contact" class="btn btn-fg">Me contacter →</a></div>
 </Base>
 
 <style is:global>

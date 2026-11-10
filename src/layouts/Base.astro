@@ -17,16 +17,14 @@ import '@fontsource/playfair-display/700-italic.css';
 import '@fontsource/pacifico/400.css';
 import '../styles/global.css';
 import { SITE, NAV } from '../data/site';
-import Spidey from '../components/Spidey.astro';
 
 interface Props {
   title: string;
   description?: string;
   footer?: boolean;
-  mascot?: boolean;
   image?: string;
 }
-const { mascot = true, title, description = `${SITE.name} — ${SITE.role} à ${SITE.city}. Identité visuelle, affiches, packaging, réseaux sociaux et formations.`, footer = true, image = '/images/projets/chapn.png' } = Astro.props;
+const { title, description = `${SITE.name} — ${SITE.role} à ${SITE.city}. Identité visuelle, affiches, packaging, réseaux sociaux et formations.`, footer = true, image = '/images/projets/chapn.png' } = Astro.props;
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const fullTitle = title === 'Accueil' ? `${SITE.brand} — ${SITE.name}, graphiste à Abidjan` : `${title} — ${SITE.brand}`;
 const letters = SITE.brand.split('');
@@ -96,7 +94,6 @@ const ogImage = new URL(image, Astro.site).toString();
     </footer>
   )}
 
-  {mascot && <Spidey />}
   <div class="cursor" aria-hidden="true"></div>
   <script>
     import '../scripts/core';
