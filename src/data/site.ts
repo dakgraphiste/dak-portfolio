@@ -58,6 +58,7 @@ export type Project = {
   theme?: { p1: string; p2: string; ink?: string }; // couleurs de la page du projet
   brand?: { logo: string; symbol?: string; palette: { name: string; hex: string }[]; values: string[] }; // identités visuelles
   posts?: string[]; // publications regroupées (réseaux sociaux, affiches, campagnes)
+  secret?: [string, string][]; // note « Top secret » du dossier : infos propres au projet
 };
 
 const DA = 'Direction artistique & design graphique';
@@ -259,12 +260,39 @@ const STAGE: Record<string, Partial<Project>> = {
   abodjama: { theme: { p1: '#C79A1B', p2: '#FBF5E6' } }, bronze: { theme: { p1: '#7A1F2B', p2: '#F4F1EE' } }
 };
 
+// Infos « Top secret » propres à chaque projet (tirées du portfolio)
+const SECRET: Record<string, [string, string][]> = {
+  "budweiser": [["Nom de code", "« Let It Pour »"], ["Période", "2024 – 2026"], ["Temps fort", "Fan Festival BudFC, Coupe du Monde 2026"]],
+  "fanmilk": [["Marchés", "Côte d'Ivoire, Togo, Bénin"], ["Défi", "3 pays, 3 codes, une seule marque"]],
+  "bonnet-rouge": [["Marchés", "Côte d'Ivoire, Burkina Faso"], ["Produits", "Lait en poudre, gamme crémeuse"], ["Règle", "Un seul système visuel"]],
+  "la-vache-qui-rit": [["Marchés", "Côte d'Ivoire, Sénégal"], ["Contrainte", "Guidelines mondiales de la mascotte"], ["Temps forts", "Petit-déjeuner ivoirien, fêtes religieuses"]],
+  "superclean": [["Héros", "« Le génie »"], ["Agence", "SimplyBlack"]],
+  "yango": [["Marchés", "Côte d'Ivoire, Sénégal, Cameroun, Angola…"], ["Contrainte", "Codes de marque mondiaux"]],
+  "bavaria-smalt": [["Marchés", "Gabon, Côte d'Ivoire, Cameroun"], ["Mission", "Imposer un soda au malt sans alcool"]],
+  "totalenergies-rentree": [["Seuil", "15 000 FCFA d'achat"], ["Cadeaux", "Sac à dos, gourde, stylos, blocs-notes"]],
+  "totalenergies-pakinou": [["Période", "Du 1er au 30 avril 2025"], ["Seuil", "10 000 FCFA d'achat"], ["À gagner", "Un an de carburant"]],
+  "totalenergies-quartz": [["Accroche", "« Ça chauffe pas ! »"], ["Remise", "1 000 FCFA"], ["Période", "Septembre 2025"]],
+  "mitsubishi-destinator": [["Véhicule", "Destinator, SUV 7 places"], ["Cadre", "Appel d'offres"]],
+  "air-elegance-can": [["Événement", "CAN au Maroc"], ["Accroche", "« No stress »"]],
+  "bonnet-rouge-fetes": [["Marchés", "Burkina Faso, Côte d'Ivoire"], ["Moment", "Noël et Nouvel An"]],
+  "pakinou-campagne": [["Supports", "Teasers, KV de 12 m²"], ["Accroche", "« Lève-toi et danse »"]],
+  "chapn": [["Origine du nom", "Nouchi « chap'n » = vite"], ["Cible", "Jeunes entrepreneurs et freelances d'Afrique de l'Ouest"], ["Couleur signature", "Indigo Bloom #5E2BBF"]],
+  "orika": [["Fabrication", "Locale"], ["Ambition", "Les marchés internationaux"], ["Couleur signature", "Magenta Bloom #CE3754"]],
+  "lumora": [["Secteurs", "Agriculture, élevage, immobilier, mobilier, import-export"], ["Idée source", "La lumière"]],
+  "pakinou": [["Communauté", "Baoulé"], ["Esprit", "Rythme, danse, joie, cérémonie"]],
+  "trajolou": [["Produit", "Poupée Érell, senteur chocolat"], ["Âge", "3 ans et plus"]],
+  "abodjama": [["Produit", "Attiéké de Babi"], ["Formats", "De 900 g à 50 kg"]],
+  "bronze": [["Univers", "Senteurs de luxe et bougies parfumées"], ["Livrables", "Logo et packaging"]],
+  "posters-coupe-du-monde-2026": [["Fil conducteur", "« D'Abidjan to the World »"], ["Équipe", "Les Éléphants"]],
+  "posters-can-2025": [["Inspiration", "Les animés"], ["Thème", "Duels et confrontations"]],
+};
+
 // Ordre d'affichage : grandes marques et projets d'agence d'abord
 const ORDER = ['budweiser', 'totalenergies-rentree', 'la-vache-qui-rit', 'yango', 'fanmilk', 'totalenergies-pakinou', 'mitsubishi-destinator', 'bonnet-rouge',
   'air-elegance-can', 'totalenergies-quartz', 'bavaria-smalt', 'superclean', 'bonnet-rouge-fetes', 'chapn', 'orika', 'lumora', 'pakinou', 'pakinou-campagne',
   'trajolou', 'abodjama', 'bronze', 'posters-coupe-du-monde-2026', 'posters-can-2025'];
 const rank = (s: string) => { const i = ORDER.indexOf(s); return i < 0 ? 999 : i; };
-export const PROJECTS: Project[] = [...PORTFOLIO, ...BEHANCE].map((p) => ({ ...p, ...STAGE[p.slug] })).sort((a, b) => rank(a.slug) - rank(b.slug));
+export const PROJECTS: Project[] = [...PORTFOLIO, ...BEHANCE].map((p) => ({ ...p, ...STAGE[p.slug], secret: SECRET[p.slug] })).sort((a, b) => rank(a.slug) - rank(b.slug));
 export const isAgency = (p: Project) => /agence/i.test(p.role);
 /** identifiant de catégorie pour les liens filtrés (/projets?cat=identite) */
 export const catSlug = (c: string) => c.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z]+/g, '-');

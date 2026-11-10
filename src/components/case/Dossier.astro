@@ -18,11 +18,11 @@ const n = Math.max(notes.length, photos.length);
 for (let k = 0; k < n; k++) {
   if (notes[k]) order.push({ kind: 'note', i: k });
   if (photos[k]) order.push({ kind: 'photo', i: k });
-  if (k === 0) order.push({ kind: 'secret', i: 0 });
+  if (k === 0 && p.secret?.length) order.push({ kind: 'secret', i: 0 });
 }
 order.push({ kind: 'map', i: 0 });
-// lignes caviardées : survoler (ou toucher) pour révéler
-const secret = [['Client', p.client], ['Rôle', p.role], ['Livrables', p.deliverables], ['Année', p.year]].filter(([, v]) => filled(v)).slice(0, 3);
+// lignes caviardées propres au projet : survoler (ou toucher) pour révéler
+const secret = p.secret || [];
 order.push({ kind: 'end', i: 0 });
 
 // disposition en zigzag : gauche / droite, inclinaisons et profondeurs variées
