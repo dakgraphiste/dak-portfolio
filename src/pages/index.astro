@@ -2,38 +2,39 @@
 import Base from '../layouts/Base.astro';
 import { PROJECTS, CLIENTS, sm, srcset } from '../data/site';
 
-const fan = PROJECTS.map((p, i) => ({ img: p.cover, a: -6 - i * 15, d: i * 0.07, z: 30 - i }));
+const fan = PROJECTS.slice(0, 14).map((p, i) => ({ img: p.cover, a: -6 - i * 15, d: i * 0.07, z: 30 - i }));
 const P = Object.fromEntries(PROJECTS.map((p) => [p.slug, p]));
 
 const IC = {
-  Ps: ['Ps', '#001E36', '#31A8FF', 'Photoshop'], Ai: ['Ai', '#330000', '#FF9A00', 'Illustrator'], Id: ['Id', '#49021F', '#FF3366', 'InDesign'],
-  Ae: ['Ae', '#00005B', '#9999FF', 'After Effects'], Lr: ['Lr', '#001D34', '#74BFFF', 'Lightroom'], Fg: ['Fg', '#1E1E1E', '#A259FF', 'Figma'],
-  Fb: ['f', '#1877F2', '#FFFFFF', 'Facebook'], Ig: ['Ig', '#E1306C', '#FFFFFF', 'Instagram'], Be: ['Bē', '#1769FF', '#FFFFFF', 'Behance'], In: ['in', '#0A66C2', '#FFFFFF', 'LinkedIn']
+  Ps: ['Ps', '#001E36', '#31A8FF', 'Photoshop'], Ai: ['Ai', '#330000', '#FF9A00', 'Illustrator'], Ae: ['Ae', '#00005B', '#9999FF', 'After Effects'],
+  Pr: ['Pr', '#1D0031', '#EA77FF', 'Premiere Pro'], IA: ['IA', '#FF5A1F', '#0A0A0A', 'IA générative'],
+  Fb: ['f', '#1877F2', '#FFFFFF', 'Facebook'], Be: ['Bē', '#1769FF', '#FFFFFF', 'Behance'], In: ['in', '#0A66C2', '#FFFFFF', 'LinkedIn']
 } as Record<string, string[]>;
-const KW: Record<string, string[]> = { 'Dak.': ['Be', 'In'], images: ['Ps', 'Lr'], 'identités,': ['Ai', 'Id'], 'affiches,': ['Ps', 'Ai'], 'packagings,': ['Ai', 'Ps'], 'réseaux': ['Fb', 'Ig'], sociaux: ['Ig', 'Fb'], formations: ['Ae', 'Fg'] };
-const FADED = new Set(['Je', "m'appelle", 'On', 'à', 'je', 'les', 'en', 'qui', 'et', 'pour', 'celles', 'ceux', 'veulent', "qu'on", 'se', "d'eux.", 'transforme', ':', 'marquent']);
-const words = "Je m'appelle Davy Aymard Kouassi. On m'appelle Dak. Graphiste senior à Abidjan, je transforme les idées en images qui marquent : identités, affiches, packagings, réseaux sociaux et formations pour celles et ceux qui veulent qu'on se souvienne d'eux.".split(' ');
-const tools = ['Ps', 'Ai', 'Id', 'Ae', 'Lr', 'Fg', 'Fb', 'Ig', 'Be', 'In'];
+const KW: Record<string, string[]> = { 'Dak.': ['Be', 'In'], 'identités,': ['Ai', 'Ps'], campagnes: ['Ps', 'Ae'], communication: ['Pr', 'IA'], marques: ['Fb', 'Be'] };
+const FADED = new Set(['Je', "m'appelle", 'On', 'Depuis', 'plus', 'de', 'je', 'des', 'et', 'pour', 'qui', 'ne', 'peuvent', 'pas', 'se', 'permettre', 'construis', 'atouts']);
+const words = "Je m'appelle Davy Aymard Kouassi. On m'appelle Dak. Depuis plus de 7 ans, je construis des identités, des campagnes et des atouts de communication pour des marques qui ne peuvent pas se permettre l'à-peu-près.".split(' ');
+const tools = ['Ps', 'Ai', 'Ae', 'Pr', 'IA', 'Fb', 'Be', 'In'];
 
 const services = [
-  ['01', 'Identité visuelle', P['chapn'].cover, '/projets'],
-  ['02', 'Affiches & print', P['king-fish'].cover, '/projets'],
-  ['03', 'Publicité & packaging', P['kpalo-energie'].cover, '/projets'],
-  ['04', 'Réseaux sociaux', P['placali-chap'].cover, '/projets'],
-  ['05', 'Formations', P['pakinou'].cover, '/formations']
+  ['01', 'Identité visuelle', P['orika'].cover, '/projets'],
+  ['02', 'Réseaux sociaux', P['budweiser'].cover, '/projets'],
+  ['03', 'Campagnes & key visuals', P['totalenergies-rentree'].cover, '/projets'],
+  ['04', 'Packaging & produit', P['trajolou'].cover, '/projets'],
+  ['05', 'Affiches & sport', P['posters-can-2025'].cover, '/projets'],
+  ['06', 'Formations', P['chapn'].cover, '/formations']
 ];
-const recent = ['chapn', 'kpalo-energie', 'placali-chap', 'lumora', 'king-fish', 'freeandize', 'finance', 'pakinou'].map((s) => P[s]);
+const recent = ['orika', 'budweiser', 'totalenergies-pakinou', 'chapn', 'posters-coupe-du-monde-2026', 'trajolou', 'la-vache-qui-rit', 'air-elegance-can'].map((s) => P[s]);
 const acc1 = [
   { p: P['chapn'], cap: "Chap'n · identité", pos: 'left:4%;top:12%', rot: -8, w: 300, k: -40, stk: 'Identité complète' },
-  { p: P['lumora'], cap: 'Lumora · logo', pos: 'left:8%;bottom:9%', rot: 6, w: 240, k: -20 },
-  { p: P['pakinou'], cap: 'Pakinou · univers', pos: 'right:5%;top:16%', rot: 7, w: 270, k: 30, stk: 'Logo + charte' },
-  { p: P['freeandize'], cap: 'Freeandize · packaging', pos: 'right:9%;bottom:8%', rot: -5, w: 230, k: 18 }
+  { p: P['orika'], cap: 'Orika · cosmétique', pos: 'left:8%;bottom:9%', rot: 6, w: 240, k: -20 },
+  { p: P['lumora'], cap: 'Lumora · identité', pos: 'right:5%;top:16%', rot: 7, w: 270, k: 30, stk: 'Logo + charte' },
+  { p: P['bronze'], cap: 'Bronzé · logo & packaging', pos: 'right:9%;bottom:8%', rot: -5, w: 230, k: 18 }
 ];
 const acc2 = [
-  { p: P['king-fish'], cap: 'King Fish · posters', pos: 'left:5%;top:14%', rot: -7, w: 290, k: -36, stk: 'Grand format' },
-  { p: P['deborah-djaouri'], cap: 'Deborah Djaouri · poster', pos: 'left:10%;bottom:8%', rot: 5, w: 230, k: -18 },
-  { p: P['kpalo-energie'], cap: 'KPALO · campagne', pos: 'right:4%;top:12%', rot: 8, w: 300, k: 32, stk: 'Print & digital' },
-  { p: P['poulet-a-gogo'], cap: 'Poulet à gogo · affiche', pos: 'right:10%;bottom:9%', rot: -6, w: 230, k: 16 }
+  { p: P['posters-can-2025'], cap: 'CAN 2025 · posters', pos: 'left:5%;top:14%', rot: -7, w: 290, k: -36, stk: 'Série sport' },
+  { p: P['totalenergies-pakinou'], cap: 'TotalEnergies · KV', pos: 'left:10%;bottom:8%', rot: 5, w: 230, k: -18 },
+  { p: P['air-elegance-can'], cap: 'Air Elegance · KV', pos: 'right:4%;top:12%', rot: 8, w: 300, k: 32, stk: 'Print & digital' },
+  { p: P['king-fish'], cap: 'King Fish · affiche', pos: 'right:10%;bottom:9%', rot: -6, w: 230, k: 16 }
 ];
 const logoStyles = [
   "font-family:var(--font-display);font-weight:800;font-size:40px;letter-spacing:-0.04em",
@@ -159,7 +160,7 @@ const stages = [
       {recent.map((p) => (
         <a href={`/projets/${p.slug}`} class="tcard" data-cursor="Voir">
           <img class="tc-img" src={p.cover} srcset={srcset(p.cover)} sizes="340px" alt="" loading="lazy" />
-          {p.gallery.slice(0, 3).map((g) => <span class="casc" aria-hidden="true"><img src={sm(g)} alt="" loading="lazy" /></span>)}
+          {p.gallery.slice(0, 3).map((g) => <span class={p.gallery.length > 1 ? 'casc real' : 'casc'} aria-hidden="true"><img src={sm(g)} alt="" loading="lazy" /></span>)}
           <span class="cap">{p.title}</span>
         </a>
       ))}
@@ -194,8 +195,8 @@ const stages = [
   <!-- Clients -->
   <section class="logos marquee">
     <div class="logos-head">
-      <span class="eyebrow">Ils m'ont fait confiance</span>
-      <span class="display" style="font-size:clamp(30px,3.6vw,52px);font-weight:600">Marques, restaurants, artistes et entreprises.</span>
+      <span class="eyebrow">Marques accompagnées</span>
+      <span class="display" style="font-size:clamp(30px,3.6vw,52px);font-weight:600">De Budweiser à TotalEnergies, en agence et en freelance.</span>
       <span style="color:#A6A6AC;font-size:17px">Identité, campagne, réseaux sociaux… Un projet ? <a href="/contact" style="color:#F4F4F2;text-decoration:underline;text-underline-offset:4px">Contactez-moi.</a></span>
     </div>
     <div class="marquee-track pausable logo-row">{[...logos, ...logos].map((l) => <span class="lpill"><span style={l.st}>{l.n}</span></span>)}</div>

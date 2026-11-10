@@ -7,10 +7,10 @@ export function getStaticPaths() {
 const { project: p, index, next } = Astro.props;
 const meta = [['Client', p.client], ['Année', p.year], ['Catégorie', p.categoryLabel], ['Mon rôle', p.role], ['Livrables', p.deliverables]].filter(([, v]) => filled(v));
 // seuls les textes remplis s'affichent ; sinon un résumé du projet
-let blocks = [['Le brief', p.brief], ['Le concept', p.concept], ['Le challenge', p.challenge]].filter(([, t]) => filled(t));
+let blocks = [['Le contexte', p.brief], [p.conceptLabel || 'Le concept', p.concept], ['Le challenge', p.challenge]].filter(([, t]) => filled(t));
 if (!blocks.length) blocks = [['Le projet', `${p.categoryLabel} ${filled(p.client) ? `pour ${p.client}` : ''}. Livrables : ${p.deliverables.toLowerCase()}. Retrouve le projet complet, avec toutes ses déclinaisons, sur Behance.`.replace(' .', '.')]];
 const numbered = blocks.map(([h, t], i) => [String(i + 1).padStart(2, '0'), h, t]);
-const gallery = [...new Set(p.gallery)];
+const gallery = [...new Set([p.cover, ...p.gallery])];
 ---
 <Base title={p.title} description={`${p.title} — ${p.categoryLabel}. Étude de cas par Davy Aymard Kouassi (Dak.graphiste), graphiste à Abidjan.`} image={p.cover}>
   <section class="cs-hero" data-mouse-scope>
@@ -37,7 +37,7 @@ const gallery = [...new Set(p.gallery)];
     <div class="g1" data-mouse="-14"><img src={gallery[0]} alt={`${p.title} — visuel principal`} loading="lazy" /></div>
     {gallery.slice(1, 3).map((g, i) => <div class={i ? 'g3' : 'g2'} data-mouse={i ? 18 : -24}><img src={g} srcset={srcset(g)} sizes="(max-width: 860px) 100vw, 50vw" alt={`${p.title} — visuel ${i + 2}`} loading="lazy" /></div>)}
   </section>
-  <p class="wrap" style="padding-bottom:110px"><a href={p.behance} target="_blank" rel="noopener noreferrer" class="btn btn-line">Voir le projet complet sur Behance ↗</a></p>
+  <p class="wrap" style="padding-bottom:110px">{p.behance ? <a href={p.behance} target="_blank" rel="noopener noreferrer" class="btn btn-line">Voir le projet complet sur Behance ↗</a> : <a href="/contact" class="btn btn-line">Un projet similaire ? Parlons-en →</a>}</p>
 
   <a href={`/projets/${next.slug}`} class="cs-next" data-cursor="Suivant">
     <span style="display:flex;flex-direction:column;gap:14px;position:relative;z-index:2"><span class="eyebrow" style="color:#fff;opacity:.85">Projet suivant</span><span class="display" style="font-size:clamp(40px,6vw,96px)">{next.title}</span></span>

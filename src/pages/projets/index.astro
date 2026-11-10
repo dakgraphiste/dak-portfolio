@@ -1,14 +1,14 @@
 ---
 import Base from '../../layouts/Base.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
-import { PROJECTS, sm } from '../../data/site';
-const cats = ['Tout', 'Identité', 'Affiches', 'Publicité', 'Réseaux sociaux', 'Retouche'];
+import { PROJECTS, CATEGORIES, sm } from '../../data/site';
+const cats = ['Tout', ...CATEGORIES];
 const wheel = Array.from({ length: 24 }, (_, i) => PROJECTS[i % PROJECTS.length]);
 ---
 <Base title="Projets" description="Projets de Davy Aymard Kouassi (Dak.graphiste) : identités visuelles, affiches, publicité, packaging, réseaux sociaux et retouche photo.">
   <section class="wrap" style="padding-top:150px;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap">
     <h1 class="display" data-lines style="font-size:clamp(52px,8vw,124px);font-weight:600"><span class="line-mask"><span>Projets</span></span><span class="line-mask"><span>sélectionnés</span></span></h1>
-    <p class="muted" data-reveal=".3" style="margin:0;max-width:360px;font-size:17px;line-height:1.5">Identités, affiches, publicités et réseaux sociaux. Survole la roue pour l'arrêter, choisis une carte.</p>
+    <p class="muted" data-reveal=".3" style="margin:0;max-width:360px;font-size:17px;line-height:1.5">Identités, réseaux sociaux, campagnes, packagings et affiches, pour des marques locales et internationales. Survole la roue pour l'arrêter.</p>
   </section>
 
   <div class="wheelbox" data-mouse-scope>
@@ -25,8 +25,8 @@ const wheel = Array.from({ length: 24 }, (_, i) => PROJECTS[i % PROJECTS.length]
 
   <div class="marquee" aria-hidden="true" style="border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:18px 0">
     <div class="marquee-track" style="font-family:var(--font-display);font-weight:600;font-size:64px;letter-spacing:-0.03em;white-space:nowrap">
-      <span style="padding-right:40px">Identité visuelle — <span class="outline">Affiches</span> — Publicité — <span class="outline">Packaging</span> — Réseaux sociaux — <span class="outline">Retouche</span> — </span>
-      <span style="padding-right:40px">Identité visuelle — <span class="outline">Affiches</span> — Publicité — <span class="outline">Packaging</span> — Réseaux sociaux — <span class="outline">Retouche</span> — </span>
+      <span style="padding-right:40px">Identité visuelle — <span class="outline">Réseaux sociaux</span> — Campagnes — <span class="outline">Packaging</span> — Affiches — <span class="outline">Key visuals</span> — </span>
+      <span style="padding-right:40px">Identité visuelle — <span class="outline">Réseaux sociaux</span> — Campagnes — <span class="outline">Packaging</span> — Affiches — <span class="outline">Key visuals</span> — </span>
     </div>
   </div>
 

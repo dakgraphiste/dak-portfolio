@@ -1,12 +1,13 @@
 ---
 import Base from '../layouts/Base.astro';
-import { SITE, PROJECTS, sm, srcset, filled } from '../data/site';
+import { SITE, PROJECTS, CLIENTS, sm, srcset, filled } from '../data/site';
 const P = Object.fromEntries(PROJECTS.map((p) => [p.slug, p]));
-const expertises = ['Identité visuelle & logo', 'Direction artistique', 'Affiches & print', 'Publicité & packaging', 'Réseaux sociaux', 'Retouche photo'];
-const tools = ['Photoshop', 'Illustrator', 'InDesign', 'Lightroom', 'After Effects', 'Figma'];
-const marq = ['Identité visuelle', 'Logo', 'Charte graphique', 'Affiche', 'Packaging', 'Social media', 'Retouche', 'Formation'];
+const expertises = ['Direction artistique', 'Identité visuelle & logo', 'Content calendars & réseaux sociaux', 'Key visuals & campagnes', 'Packaging & produit', 'Affiches & illustration', 'Motion design'];
+const tools = ['Illustrator', 'Photoshop', 'After Effects', 'Premiere Pro', 'IA générative'];
+const marq = ['Budweiser', 'TotalEnergies', 'La Vache qui rit', 'Yango', 'FanMilk', 'Bonnet Rouge', 'Mitsubishi', 'Bavaria', 'SuperClean', 'Air Elegance', 'Orika', "Chap'n"];
 const jobs = [
-  ['Aujourd’hui', 'Graphiste senior', 'Freelance · Dak.graphiste, Abidjan'],
+  ['Aujourd’hui', 'Senior Graphic Designer', 'Freelance · Dak.graphiste, Abidjan'],
+  ['Agence', 'Direction artistique', 'SimplyBlack, Abidjan · Budweiser, TotalEnergies, SuperClean…'],
   ['[années]', '[Poste]', '[Entreprise / studio]'],
   ['[années]', '[Poste ou stage]', '[Entreprise / studio]']
 ].filter((j) => j.every(filled));
@@ -21,20 +22,21 @@ const diplomas = [
     <div class="ab-text">
       <span class="eyebrow" data-reveal>À propos · CV · Abidjan</span>
       <h1 class="display" data-lines style="font-size:clamp(48px,7vw,104px);font-weight:600"><span class="line-mask"><span>Bonjour, je suis</span></span><span class="line-mask"><span>Davy, alias <span class="accent">Dak.</span></span></span></h1>
-      <p class="muted" data-reveal=".3" style="margin:0;max-width:560px;font-size:19px;line-height:1.55">Graphiste senior basé à Abidjan, je conçois des identités visuelles, des affiches, des campagnes publicitaires, des packagings et des visuels pour les réseaux sociaux. J’accompagne marques, restaurants, artistes et entreprises, du brief au fichier final, et je transmets mon savoir-faire en formation.</p>
+      <p class="muted" data-reveal=".3" style="margin:0;max-width:560px;font-size:19px;line-height:1.55">Fort de plus de 7 ans d’expérience en design graphique et direction artistique, j’ai développé une approche créative ancrée dans la rigueur et l’audace visuelle. Basé à Abidjan, je maîtrise toute la chaîne créative, du concept au livrable final, sur des projets d’identité visuelle, de communication publicitaire et de motion design.</p>
       <div data-reveal=".45" style="display:flex;gap:12px;flex-wrap:wrap">
         {SITE.cv && <a href={SITE.cv} class="btn btn-fg" download>Télécharger le CV (PDF) ↓</a>}
         <a href="/contact" class="btn btn-line">Me contacter</a>
       </div>
       <div class="ab-stats" data-reveal=".6">
-        <div><span class="display">12</span><span class="muted">projets sur Behance</span></div>
-        <div><span class="display">670</span><span class="muted">appréciations Behance</span></div>
+        <div><span class="display">7+ ans</span><span class="muted">d'expérience</span></div>
+        <div><span class="display">{PROJECTS.length}</span><span class="muted">projets présentés</span></div>
+        <div><span class="display">{CLIENTS.length}</span><span class="muted">marques accompagnées</span></div>
       </div>
     </div>
     <div class="ab-portrait" aria-hidden="true">
       <div class="l1" data-mouse="-36"></div>
-      <div class="l2" data-mouse="20"><img src={P['lumora'].cover} srcset={srcset(P['lumora'].cover)} sizes="360px" alt="" /></div>
-      <div class="l3" data-mouse="70"><img src={sm(P['pakinou'].cover)} alt="" loading="lazy" /></div>
+      <div class="l2" data-mouse="20"><img class="masc" src="/images/mascotte.webp" alt="Let’z Go, la mascotte 3D de Dak" width="382" height="1241" /></div>
+      <div class="l3" data-mouse="70"><img src={sm(P['orika'].cover)} alt="" loading="lazy" /></div>
     </div>
   </section>
 
@@ -76,7 +78,8 @@ const diplomas = [
   .ab-portrait { position: relative; flex: 0 1 460px; height: 580px; min-width: 300px; }
   .ab-portrait > div { position: absolute; transition: translate 1s var(--ease); }
   .ab-portrait .l1 { left: 40px; top: 0; width: 360px; height: 480px; border-radius: 32px; background: var(--grad); transform: rotate(-6deg); }
-  .ab-portrait .l2 img { width: 100%; height: 100%; object-fit: cover; border-radius: 32px; }
+  .ab-portrait .l2 { background: radial-gradient(circle at 50% 30%, #FFE3D3, #F1ECE6 70%) !important; overflow: hidden; align-items: flex-end !important; }
+  .ab-portrait .l2 .masc { height: 96%; width: auto; object-fit: contain; filter: drop-shadow(0 20px 30px rgba(0,0,0,.25)); }
   .ab-portrait .l2 { left: 60px; top: 50px; width: 360px; height: 480px; border-radius: 32px; background: var(--card); box-shadow: 0 0 0 1px var(--line); display: flex; align-items: center; justify-content: center; color: var(--muted); font-weight: 600; }
   .ab-portrait .l3 { left: 0; bottom: 0; width: 180px; height: 220px; border-radius: 24px; overflow: hidden; transform: rotate(-10deg); box-shadow: 0 30px 50px -20px rgba(0,0,0,.5); }
   .ab-portrait .l3 img { width: 100%; height: 100%; object-fit: cover; }
