@@ -34,6 +34,7 @@ const ALL: Product[] = [
       'Studio de mockups 3D et logo animé',
       'Interface en français, licence à vie'
     ],
+    buyUrl: '', // ← coller ici le lien Chariow de BrandForge (vide = commande WhatsApp)
     images: ['/images/boutique/brandforge-1.webp', '/images/boutique/brandforge-2.webp', '/images/boutique/brandforge-3.webp', '/images/boutique/brandforge-4.webp'],
     published: true
   },
@@ -51,6 +52,7 @@ const ALL: Product[] = [
       'Exports PDF/X-4, DXF, SVG, fiche technique, vidéo',
       'Interface en français, thèmes clair et sombre'
     ],
+    buyUrl: '', // ← coller ici le lien Chariow de PackForge (vide = commande WhatsApp)
     images: ['/images/boutique/packforge-1.webp', '/images/boutique/packforge-2.webp', '/images/boutique/packforge-3.webp', '/images/boutique/packforge-4.webp'],
     published: true
   }
