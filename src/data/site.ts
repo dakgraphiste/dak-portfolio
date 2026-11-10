@@ -17,8 +17,13 @@ export const SITE = {
   // Remplacer par l'identifiant Formspree (https://formspree.io) pour recevoir les messages du formulaire
   formAction: 'https://formspree.io/f/VOTRE_ID',
   // Mettre le nom du fichier déposé dans public/ (ex. '/cv-davy-aymard-kouassi.pdf') pour afficher le bouton
-  cv: ''
+  cv: '',
+  // Google Search Console : coller ici le code de la balise « google-site-verification » (sans guillemets autour)
+  googleVerification: ''
 };
+
+/** Coupe un texte à ~155 caractères sur un mot (descriptions pour Google). */
+export const clip = (s: string, n = 155) => (s.length <= n ? s : s.slice(0, s.lastIndexOf(' ', n - 1)).replace(/[,;:.\s]+$/, '') + '…');
 
 /** Vrai si le texte est rempli (pas vide et sans texte provisoire entre crochets). */
 export const filled = (s?: string) => !!s && !/\[[^\]]*\]/.test(s);

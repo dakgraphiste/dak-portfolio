@@ -1,6 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { PROJECTS, sm, srcset, filled } from '../../data/site';
+import { PROJECTS, SITE, sm, srcset, filled, clip } from '../../data/site';
 import BrandStage from '../../components/case/BrandStage.astro';
 import Palette from '../../components/case/Palette.astro';
 import Values from '../../components/case/Values.astro';
@@ -19,9 +19,23 @@ let blocks = [['Le contexte', p.brief], [p.conceptLabel || 'Le concept', p.conce
 if (!blocks.length) blocks = [['Le projet', `${p.categoryLabel} ${filled(p.client) ? `pour ${p.client}` : ''}. Livrables : ${p.deliverables.toLowerCase()}. Retrouve le projet complet, avec toutes ses déclinaisons, sur Behance.`.replace(' .', '.')]];
 const numbered = blocks.map(([h, t], i) => [String(i + 1).padStart(2, '0'), h, t]);
 const gallery = [...new Set([p.cover, ...p.gallery])];
+const site = Astro.site!.toString().replace(/\/$/, '');
+const url = `${site}/projets/${p.slug}`;
+const desc = clip(`${p.title} : ${filled(p.brief) ? p.brief : `${p.categoryLabel} pour ${p.client}`} Étude de cas par Dak.graphiste, graphiste à Abidjan.`);
+const ld = [
+  { '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Accueil', item: `${site}/` },
+    { '@type': 'ListItem', position: 2, name: 'Projets', item: `${site}/projets` },
+    { '@type': 'ListItem', position: 3, name: p.title, item: url }] },
+  { '@type': 'CreativeWork', '@id': `${url}#projet`, name: p.title, url, headline: p.title, description: desc, inLanguage: 'fr',
+    image: [p.cover, ...(p.slides || []).slice(0, 4).map((s) => s.src)].map((s) => site + s.split('?')[0]),
+    genre: p.categoryLabel, keywords: [p.categoryLabel, p.client, 'graphiste Abidjan', 'design graphique'].join(', '),
+    creator: { '@id': `${site}/#davy` }, author: { '@id': `${site}/#davy` }, ...(filled(p.year) ? { dateCreated: p.year } : {}),
+    about: { '@type': 'Organization', name: p.client }, ...(p.behance ? { sameAs: p.behance } : {}) }
+];
 const themeVars = p.theme ? `--p1:${p.theme.p1};--p2:${p.theme.p2}` : '';
 ---
-<Base title={p.title} description={`${p.title} — ${p.categoryLabel}. Étude de cas par Davy Aymard Kouassi (Dak.graphiste), graphiste à Abidjan.`} image={p.cover}>
+<Base title={p.title} description={desc} image={p.cover} jsonld={ld} type="article">
   <div class="cs-page" style={themeVars}>
   <section class="cs-hero" data-mouse-scope>
     <div class="cs-bg" data-mouse="-40"><img src={p.cover} alt={p.title} fetchpriority="high" /></div>

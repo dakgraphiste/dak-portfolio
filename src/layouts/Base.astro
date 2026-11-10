@@ -27,12 +27,39 @@ interface Props {
   footer?: boolean;
   whatsapp?: boolean;
   image?: string;
+  noindex?: boolean;
+  jsonld?: Record<string, unknown>[]; // données structurées propres à la page
+  type?: string;
 }
-const { title, description = `${SITE.name} — ${SITE.role} à ${SITE.city}. Identité visuelle, affiches, packaging, réseaux sociaux et formations.`, footer = true, image = '/images/og/accueil.jpg', whatsapp = true } = Astro.props;
+const { title, description = `${SITE.name} — ${SITE.role} à ${SITE.city}. Identité visuelle, affiches, packaging, réseaux sociaux et formations.`, footer = true, image = '/images/og/accueil.jpg', whatsapp = true, noindex = false, jsonld = [], type = 'website' } = Astro.props;
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const fullTitle = title === 'Accueil' ? `${SITE.brand} — ${SITE.name}, graphiste à Abidjan` : `${title} — ${SITE.brand}`;
 const letters = SITE.brand.split('');
 const ogImage = new URL(image, Astro.site).toString();
+const canonical = new URL(path === '/' ? '/' : path, Astro.site).toString();
+const origin = Astro.site!.toString().replace(/\/$/, '');
+// Identité de Dak pour Google : personne + activité locale + site
+const person = {
+  '@type': 'Person', '@id': `${origin}/#davy`, name: SITE.name, alternateName: ['Dak', SITE.brand], jobTitle: SITE.role,
+  email: SITE.email, telephone: SITE.phone, url: `${origin}/a-propos`, image: `${origin}/images/og/a-propos.jpg`,
+  address: { '@type': 'PostalAddress', addressLocality: 'Abidjan', addressCountry: 'CI' },
+  knowsAbout: ['Identité visuelle', 'Direction artistique', 'Design graphique', 'Affiches publicitaires', 'Packaging', 'Retouche photo', 'Réseaux sociaux'],
+  sameAs: [SITE.behance, SITE.linkedin, SITE.facebook]
+};
+const graph = [
+  person,
+  { '@type': 'WebSite', '@id': `${origin}/#site`, url: `${origin}/`, name: SITE.brand, inLanguage: 'fr', publisher: { '@id': `${origin}/#davy` } },
+  ...(path === '/' ? [{
+    '@type': 'ProfessionalService', '@id': `${origin}/#studio`, name: `${SITE.brand} — graphiste à Abidjan`, url: `${origin}/`, image: ogImage,
+    telephone: SITE.phone, email: SITE.email, priceRange: '$$', founder: { '@id': `${origin}/#davy` },
+    address: { '@type': 'PostalAddress', addressLocality: 'Abidjan', addressCountry: 'CI' },
+    geo: { '@type': 'GeoCoordinates', latitude: 5.3599, longitude: -4.0083 },
+    areaServed: [{ '@type': 'Country', name: "Côte d'Ivoire" }, { '@type': 'Place', name: 'Afrique de l’Ouest' }, { '@type': 'Place', name: 'International (à distance)' }],
+    serviceType: ['Identité visuelle', 'Affiches et campagnes publicitaires', 'Packaging', 'Design pour réseaux sociaux', 'Retouche photo', 'Formations en design graphique'],
+    sameAs: [SITE.behance, SITE.linkedin, SITE.facebook]
+  }] : []),
+  ...jsonld
+];
 ---
 <!doctype html>
 <html lang="fr" class="no-js">
@@ -41,19 +68,31 @@ const ogImage = new URL(image, Astro.site).toString();
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{fullTitle}</title>
   <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large'} />
+  {SITE.googleVerification && <meta name="google-site-verification" content={SITE.googleVerification} />}
+  <meta name="author" content={SITE.name} />
+  <meta name="geo.region" content="CI-AB" />
+  <meta name="geo.placename" content="Abidjan" />
   <meta property="og:title" content={fullTitle} />
   <meta property="og:description" content={description} />
   <meta property="og:image" content={ogImage} />
-  <meta property="og:type" content="website" />
+  <meta property="og:type" content={type} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:site_name" content={SITE.brand} />
+  <meta property="og:locale" content="fr_FR" />
+  <meta property="og:image:alt" content={fullTitle} />
+  <meta name="twitter:title" content={fullTitle} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="theme-color" content="#0A0A0A" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
   <script is:inline src="/theme.js"></script>
-  <script type="application/ld+json" set:html={JSON.stringify({
-    '@context': 'https://schema.org', '@type': 'Person', name: SITE.name, alternateName: 'Dak', jobTitle: SITE.role,
-    email: SITE.email, telephone: SITE.phone, address: { '@type': 'PostalAddress', addressLocality: 'Abidjan', addressCountry: 'CI' },
-    sameAs: [SITE.behance, SITE.linkedin, SITE.facebook]
-  })} />
+  <script type="application/ld+json" set:html={JSON.stringify({ '@context': 'https://schema.org', '@graph': graph })} />
 </head>
 <body>
   <a class="sr-only" href="#contenu">Aller au contenu</a>
