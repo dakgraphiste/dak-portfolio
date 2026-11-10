@@ -235,10 +235,10 @@ export const PROJECTS: Project[] = [...PORTFOLIO, ...BEHANCE];
 export const CLIENTS = ['Budweiser', 'TotalEnergies', 'La Vache qui rit', 'Yango', 'FanMilk', 'Bonnet Rouge', 'Mitsubishi', 'Bavaria', 'SuperClean', 'Air Elegance', 'Orika', "Chap'n", 'Lumora', 'Pakinou', 'Trajolou', 'Abodjama', 'Bronzé', 'KPALO'];
 
 export const COURSES = [
-  { title: 'Brand identity : du brief à la charte graphique', desc: 'La méthode complète pour créer une identité cohérente : brief, recherches, logo, couleurs, typographies et charte.', level: 'Tous niveaux', format: 'En ligne', img: '/images/projets/chapn.webp' },
+  { title: 'Brand identity : du brief à la charte graphique', desc: 'La méthode complète pour créer une identité cohérente : brief, recherches, logo, couleurs, typographies et charte.', level: 'Tous niveaux', format: 'En ligne', img: '/images/projets/chapn-brand.webp' },
   { title: 'Retouche photo professionnelle', desc: 'Peau naturelle, lumière et couleurs : les techniques de retouche beauté et produit sur Photoshop.', level: 'Débutant', format: 'Présentiel', img: '/images/projets/retouche-2.webp' },
   { title: "Création d'affiches qui marquent", desc: 'Hiérarchie, typographie, couleurs : concevoir des affiches lisibles qui attirent l’œil, en print comme sur écran.', level: 'Débutant', format: 'En ligne', img: '/images/projets/king-fish.webp' },
   { title: 'Design pour les réseaux sociaux', desc: 'Créer des posts cohérents et efficaces pour une marque : gabarits, séries, formats et déclinaisons.', level: 'Débutant', format: 'En ligne', img: '/images/projets/placali-chap.webp' },
   { title: 'Packaging et visuels publicitaires', desc: 'Concevoir un emballage qui se démarque en rayon, puis le visuel publicitaire qui le met en scène.', level: 'Intermédiaire', format: 'Atelier', img: '/images/projets/freeandize.webp' },
-  { title: "Et bien d'autres : formation sur mesure", desc: 'Un besoin précis ou une équipe à former ? On construit ensemble un programme adapté à ton niveau et à tes objectifs.', level: 'Tous niveaux', format: 'Atelier', img: '/images/projets/lumora.webp' }
+  { title: "Et bien d'autres : formation sur mesure", desc: 'Un besoin précis ou une équipe à former ? On construit ensemble un programme adapté à ton niveau et à tes objectifs.', level: 'Tous niveaux', format: 'Atelier', img: '/images/projets/lumora-brand.webp' }
 ];
