@@ -19,7 +19,7 @@ export const SITE = {
   // Mettre le nom du fichier déposé dans public/ (ex. '/cv-davy-aymard-kouassi.pdf') pour afficher le bouton
   cv: '',
   // Google Search Console : coller ici le code de la balise « google-site-verification » (sans guillemets autour)
-  googleVerification: ''
+  googleVerification: 'xWbfjBnfrkx4GvoEA--HWIY9XAY04riyTrkIi32ZG_c'
 };
 
 /** Coupe un texte à ~155 caractères sur un mot (descriptions pour Google). */
