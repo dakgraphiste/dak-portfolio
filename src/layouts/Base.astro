@@ -16,7 +16,10 @@ import '@fontsource/playfair-display/600-italic.css';
 import '@fontsource/playfair-display/700-italic.css';
 import '@fontsource/pacifico/400.css';
 import '../styles/global.css';
-import { SITE, NAV } from '../data/site';
+import { SITE, NAV as BASE_NAV } from '../data/site';
+import { SHOP_OPEN } from '../data/shop';
+// « Boutique » n'apparaît dans le menu que si un produit est publié
+const NAV = SHOP_OPEN ? [...BASE_NAV.slice(0, 2), { href: '/boutique', label: 'Boutique' }, ...BASE_NAV.slice(2)] : BASE_NAV;
 
 interface Props {
   title: string;

@@ -36,6 +36,15 @@ Tout se fait depuis le navigateur, sur GitHub. Chaque modification enregistrée 
    Les projets placés en haut de la liste apparaissent en premier.
 3. Ajouter la marque dans `CLIENTS` si elle doit défiler sur l'accueil.
 
+### Boutique (mockups, extensions, templates…)
+
+Les produits sont dans `src/data/shop.ts`. Pour chaque produit : nom, type (`Mockups`, `Extensions`, `Templates`, `Packs`), prix, description, contenu, images d'aperçu (à déposer dans `public/images/boutique/`).
+
+- `buyUrl` : lien de paiement (Chariow, Selar, Gumroad…). Sans lien, le bouton ouvre une commande WhatsApp pré-remplie.
+- `published: true` pour mettre le produit en ligne. Les 3 produits d'exemple sont en `published: false` : à remplacer.
+- Le menu « Boutique » et l'encart de l'accueil apparaissent automatiquement dès qu'un produit est publié.
+- Aperçu en local avec les produits non publiés : `PREVIEW_DRAFTS=1 npm run build`.
+
 ### Autres réglages fréquents
 
 - **CV** : déposer le PDF dans `public/`, puis mettre son chemin dans `SITE.cv` (ex. `'/cv-davy-aymard-kouassi.pdf'`).

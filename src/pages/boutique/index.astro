@@ -1,0 +1,83 @@
+---
+import Base from '../../layouts/Base.astro';
+import Mascot from '../../components/Mascot.astro';
+import { PRODUCTS, PRODUCT_TYPES, SHOP_OPEN, orderLink } from '../../data/shop';
+import { SITE, sm } from '../../data/site';
+const types = ['Tout', ...PRODUCT_TYPES.filter((t) => PRODUCTS.some((p) => p.type === t))];
+const wa = `${SITE.whatsapp}?text=${encodeURIComponent('Bonjour Dak, je voudrais être prévenu(e) de l’ouverture de la boutique.')}`;
+---
+<Base title="Boutique" description="Mockups, extensions et templates créés par Dak.graphiste, graphiste à Abidjan : des ressources prêtes à l'emploi pour créatifs.">
+  <section class="wrap shop-hero">
+    <div style="flex:1 1 620px;min-width:0;display:flex;flex-direction:column;gap:26px">
+      <span class="eyebrow" data-reveal>Boutique · ressources pour créatifs</span>
+      <h1 class="display" data-lines style="font-size:clamp(52px,8.5vw,132px);font-weight:600"><span class="line-mask"><span>Mockups,</span></span><span class="line-mask"><span>extensions <span class="accent">&amp; plus.</span></span></span></h1>
+      <p class="muted" data-reveal=".3" style="margin:0;max-width:560px;font-size:19px;line-height:1.55">Les outils que j'utilise sur mes projets clients, prêts à l'emploi pour gagner du temps et présenter ton travail comme un pro.</p>
+    </div>
+    <ul class="shop-perks" data-reveal=".45">
+      <li><b>Téléchargement</b><span>rapide après paiement</span></li>
+      <li><b>Mobile Money</b><span>Wave, Orange, MTN, carte</span></li>
+      <li><b>Support</b><span>une question ? je réponds</span></li>
+    </ul>
+  </section>
+
+  {SHOP_OPEN ? (
+    <section class="wrap" data-filter-scope style="padding-bottom:110px">
+      <div class="section-title">
+        <h2>Produits <span class="muted" data-count>({PRODUCTS.length})</span></h2>
+        <div class="chips" role="group" aria-label="Filtrer par type">{types.map((t, i) => <button type="button" class="chip" data-filter={t} aria-pressed={i === 0 ? 'true' : 'false'}>{t}</button>)}</div>
+      </div>
+      <div class="sgrid">
+        {PRODUCTS.map((p) => (
+          <article class="scard" data-cat={p.type}>
+            <a href={`/boutique/${p.slug}`} class="svis" data-cursor="Voir">
+              <img src={p.images[0]} alt={p.name} loading="lazy" />
+              {p.images[1] && <img class="alt" src={p.images[1]} alt="" loading="lazy" />}
+              <span class="stype">{p.type}</span>
+            </a>
+            <div class="sbody">
+              <a href={`/boutique/${p.slug}`} class="sname">{p.name}</a>
+              <p class="muted">{p.short}</p>
+              <div class="sbuy">
+                <span class="sprice">{p.price}</span>
+                <a href={orderLink(p)} class="btn btn-accent sbtn" target="_blank" rel="noopener noreferrer">{p.buyUrl ? 'Acheter' : 'Commander'} →</a>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  ) : (
+    <section class="wrap shop-soon">
+      <p class="display" style="font-size:clamp(32px,4vw,56px);font-weight:600">La boutique ouvre bientôt.</p>
+      <p class="muted" style="margin:0;font-size:18px">Mockups, extensions et templates arrivent. Écris-moi pour être prévenu(e) ou pour une commande.</p>
+      <a href={wa} class="btn btn-accent" target="_blank" rel="noopener noreferrer">Me prévenir sur WhatsApp →</a>
+    </section>
+  )}
+
+  <div class="cta-band"><Mascot pose={3} bubble="Une ressource sur mesure ?" /><p>Besoin d'un mockup<br />sur mesure ?</p><span class="magnetic"><a href="/contact" class="btn" style="background:#0A0A0A;color:#fff">Me contacter →</a></span></div>
+</Base>
+
+<style is:global>
+  .shop-hero { padding-top: 150px; padding-bottom: 72px; display: flex; flex-wrap: wrap; gap: 48px; align-items: flex-end; justify-content: space-between; }
+  .shop-perks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+  .shop-perks li { display: flex; flex-direction: column; gap: 2px; padding: 14px 20px; border-radius: 16px; border: 1px solid var(--line); min-width: 240px; }
+  .shop-perks b { font-weight: 600; }
+  .shop-perks span { font-size: 14px; color: var(--muted); }
+  .sgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 32px; }
+  .scard[hidden] { display: none; }
+  .scard { display: flex; flex-direction: column; border-radius: 26px; overflow: hidden; background: var(--card); box-shadow: 0 0 0 1px var(--line), 0 30px 60px -40px rgba(0,0,0,.5); transition: transform .5s var(--ease); }
+  .scard:hover { transform: translateY(-8px); }
+  .svis { position: relative; display: block; aspect-ratio: 4 / 3; overflow: hidden; background: #222; }
+  .svis img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity .5s ease, transform .8s var(--ease); }
+  .svis .alt { opacity: 0; transform: scale(1.06); }
+  .scard:hover .svis .alt { opacity: 1; transform: none; }
+  .scard:hover .svis img:first-child { transform: scale(1.06); }
+  .stype { position: absolute; left: 16px; top: 16px; padding: 7px 13px; border-radius: 999px; background: rgba(255,255,255,.92); color: #0A0A0A; font-size: 13px; font-weight: 600; }
+  .sbody { display: flex; flex-direction: column; gap: 10px; padding: 22px 22px 24px; flex: 1; }
+  .sname { font-family: var(--font-display); font-size: 24px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; }
+  .sbody p { margin: 0; font-size: 15px; line-height: 1.55; }
+  .sbuy { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .sprice { font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--accent-text); }
+  .sbtn { min-height: 46px; padding: 0 20px; font-size: 15px; }
+  .shop-soon { padding-top: 24px; padding-bottom: 120px; display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
+</style>

@@ -1,0 +1,50 @@
+---
+import Base from '../../layouts/Base.astro';
+import { PRODUCTS, orderLink } from '../../data/shop';
+import { filled } from '../../data/site';
+export function getStaticPaths() {
+  return PRODUCTS.map((p) => ({ params: { slug: p.slug }, props: { p, others: PRODUCTS.filter((o) => o.slug !== p.slug).slice(0, 3) } }));
+}
+const { p, others } = Astro.props;
+---
+<Base title={p.name} description={`${p.name} — ${p.short}`} image={p.images[0]}>
+  <section class="wrap pd" data-mouse-scope>
+    <div class="pd-gallery">
+      <div class="pd-main" data-mouse="-14"><img src={p.images[0]} alt={p.name} fetchpriority="high" /></div>
+      {p.images.length > 1 && <div class="pd-thumbs">{p.images.slice(1).map((im) => <img src={im} alt="" loading="lazy" />)}</div>}
+    </div>
+    <div class="pd-info">
+      <span class="eyebrow">{p.type}</span>
+      <h1 class="display" data-lines style="font-size:clamp(40px,5vw,72px);font-weight:600"><span class="line-mask"><span>{p.name}</span></span></h1>
+      {filled(p.price) && <span class="pd-price">{p.price}</span>}
+      <p class="muted" style="margin:0;font-size:18px;line-height:1.6">{p.description}</p>
+      <ul class="pd-inc">{p.includes.map((i) => <li>{i}</li>)}</ul>
+      <a href={orderLink(p)} class="btn btn-accent" target="_blank" rel="noopener noreferrer" style="align-self:flex-start">{p.buyUrl ? 'Acheter maintenant' : 'Commander sur WhatsApp'} →</a>
+      <p class="muted" style="margin:0;font-size:14px">{p.buyUrl ? 'Paiement sécurisé, fichier envoyé automatiquement après achat.' : 'Paiement par Wave, Orange Money, MTN ou carte. Fichier envoyé après paiement.'}</p>
+    </div>
+  </section>
+  {others.length > 0 && (
+    <section class="wrap" style="padding-bottom:110px">
+      <div class="section-title"><h2>Tu aimeras aussi</h2><a href="/boutique" style="font-weight:600;text-decoration:underline;text-underline-offset:6px">Toute la boutique →</a></div>
+      <div class="pd-more">{others.map((o) => <a href={`/boutique/${o.slug}`} class="pd-card"><img src={o.images[0]} alt="" loading="lazy" /><b>{o.name}</b><span class="muted">{o.price}</span></a>)}</div>
+    </section>
+  )}
+</Base>
+
+<style is:global>
+  .pd { padding-top: 150px; padding-bottom: 96px; display: flex; flex-wrap: wrap; gap: 56px; align-items: flex-start; }
+  .pd-gallery { flex: 1 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+  .pd-main { border-radius: 28px; overflow: hidden; aspect-ratio: 4 / 3; transition: translate 1s var(--ease); }
+  .pd-main img { width: 100%; height: 100%; object-fit: cover; }
+  .pd-thumbs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .pd-thumbs img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 16px; }
+  .pd-info { flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 20px; position: sticky; top: 110px; }
+  .pd-price { font-family: var(--font-display); font-size: 36px; font-weight: 700; color: var(--accent-text); }
+  .pd-inc { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .pd-inc li { padding-left: 28px; position: relative; }
+  .pd-inc li::before { content: '✓'; position: absolute; left: 0; color: var(--accent-text); font-weight: 700; }
+  .pd-more { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 24px; }
+  .pd-card { display: flex; flex-direction: column; gap: 8px; }
+  .pd-card img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 20px; transition: transform .5s var(--ease); }
+  .pd-card:hover img { transform: scale(1.03); }
+</style>
