@@ -16,7 +16,6 @@ const IC = {
 const KW: Record<string, string[]> = { 'Dak.': ['Be', 'In'], 'identités,': ['Ai', 'Ps'], campagnes: ['Ps', 'Ae'], communication: ['Pr', 'IA'], marques: ['Fb', 'Be'] };
 const FADED = new Set(['Je', "m'appelle", 'On', 'Depuis', 'plus', 'de', 'je', 'des', 'et', 'pour', 'qui', 'ne', 'peuvent', 'pas', 'se', 'permettre', 'construis', 'atouts']);
 const words = "Je m'appelle Davy Aymard Kouassi. On m'appelle Dak. Depuis plus de 7 ans, je construis des identités, des campagnes et des atouts de communication pour des marques qui ne peuvent pas se permettre l'à-peu-près.".split(' ');
-const tools = ['Ps', 'Ai', 'Ae', 'Pr', 'IA', 'Fb', 'Be', 'In'];
 
 const services = [
   ['01', 'Identité visuelle', P['orika'].cover, '/projets'],
@@ -93,10 +92,6 @@ const brand = 'dak.graphiste'.split('');
           ? <span class="kw">{w}<span class="u"></span>{KW[w].map((n, j) => <span class="ico" style={`--ix:${j ? 38 : -38}px;--ir:${j ? 10 : -10}deg;--id:${j * 0.08}s`}><span class="tile" style={`background:${IC[n][1]};color:${IC[n][2]}`}>{IC[n][0]}</span></span>)}</span>
           : <span style={FADED.has(w) ? 'opacity:.62' : undefined}>{w}</span>)}
       </p>
-    </div>
-    <div class="wrap tools">
-      <span style="opacity:.6;font-size:15px">Ma boîte à outils</span>
-      <div class="tools-row">{tools.map((n) => <span class="tool3d" title={IC[n][3]}><span class="tile" style={`background:${IC[n][1]};color:${IC[n][2]}`}>{IC[n][0]}</span></span>)}</div>
     </div>
   </section>
 
@@ -259,7 +254,7 @@ const brand = 'dak.graphiste'.split('');
   @media (max-width: 700px) { .badge { display: none; } .fan { transform: translate(80px, -30px) rotateZ(-26deg) rotateX(14deg) rotateY(-22deg) scale(.42); } }
 
   /* manifeste */
-  .manifesto { background: var(--fg); color: var(--bg); padding: 150px 0 120px; }
+  .manifesto { background: var(--fg); color: var(--bg); padding: 140px 0 130px; }
   .mf-grid { display: flex; flex-wrap: wrap; gap: 48px 80px; }
   .mf-side { flex: 0 0 200px; display: flex; flex-direction: column; gap: 12px; }
   .mf-text { flex: 1 1 640px; min-width: 0; margin: 0; font-weight: 400; font-size: clamp(26px, 3.1vw, 44px); line-height: 1.35; letter-spacing: -0.02em; display: flex; flex-wrap: wrap; column-gap: .26em; }
