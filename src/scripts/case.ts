@@ -1,35 +1,28 @@
 // Animations des études de cas : logo vectoriel, grille, palette, valeurs, publications.
 import { gsap, ScrollTrigger, reduced } from './core';
 
-/* ---- scène logo : grille puis logo dessiné et rempli ---- */
+/* ---- scène logo : le logo s'ouvre depuis le centre, passe du flou au net, puis un reflet le balaie ---- */
 document.querySelectorAll<HTMLElement>('[data-logo-stage]').forEach((stage) => {
   if (reduced) return;
-  const lines = stage.querySelectorAll('.gl'), circles = stage.querySelectorAll('.gc'), dots = stage.querySelector('.gl-dots');
-  const paths = stage.querySelectorAll('.cs-logo-svg .bl'), grid = stage.querySelector('.cs-grid');
-  const tl = gsap.timeline({ paused: true })
-    .set(paths, { strokeDashoffset: 1, fillOpacity: 0, strokeOpacity: 1 })
-    .set(lines, { strokeDashoffset: 1 }).set(grid, { opacity: .55 }).set(dots, { opacity: 0 })
-    .to(lines, { strokeDashoffset: 0, duration: 1.2, stagger: 0.06, ease: 'power2.inOut' })
-    .to(dots, { opacity: 1, duration: .4 }, '-=.4')
-    .to(circles, { rotate: 90, duration: 2.4, ease: 'power2.inOut' }, 0.4)
-    .to(paths, { strokeDashoffset: 0, duration: 1.8, stagger: 0.25, ease: 'power2.inOut' }, 0.6)
-    .to(paths, { fillOpacity: 1, duration: .9, stagger: 0.15, ease: 'power1.out' }, '-=.6')
-    .to(paths, { strokeOpacity: 0, duration: .6 }, '-=.4')
-    .to(grid, { opacity: .18, duration: 1 }, '-=.4');
+  const box = stage.querySelector<HTMLElement>('.logo-img')!, img = box.querySelector('img'), sheen = box.querySelector('.logo-sheen');
+  let breathe: gsap.core.Tween | null = null;
+  const tl = gsap.timeline({ paused: true, onComplete: () => { breathe = gsap.to(img, { scale: 1.03, duration: 2.6, yoyo: true, repeat: -1, ease: 'sine.inOut' }); } })
+    .add(() => { breathe?.kill(); })
+    .fromTo(box, { clipPath: 'inset(0 50% 0 50%)' }, { clipPath: 'inset(0 0% 0 0%)', duration: 1.3, ease: 'expo.inOut' })
+    .fromTo(img, { scale: 1.25, filter: 'blur(14px)' }, { scale: 1, filter: 'blur(0px)', duration: 1.6, ease: 'expo.out' }, 0.2)
+    .fromTo(sheen, { xPercent: -120 }, { xPercent: 120, duration: 1.1, ease: 'power2.inOut' }, 1.4);
   ScrollTrigger.create({ trigger: stage, start: 'top 65%', once: true, onEnter: () => tl.play(0) });
   stage.querySelector('[data-replay]')?.addEventListener('click', () => tl.play(0));
 });
 
 /* ---- symbole : arrive en tournant, puis flotte ---- */
 document.querySelectorAll<HTMLElement>('[data-sym]').forEach((tile) => {
-  const svg = tile.querySelector('.sym-svg'), paths = tile.querySelectorAll('.bl');
   if (reduced) return;
-  gsap.set(paths, { strokeDashoffset: 1, fillOpacity: 0 });
+  const img = tile.querySelector('.sym-img');
   gsap.timeline({ scrollTrigger: { trigger: tile, start: 'top 75%', once: true } })
     .from(tile, { scale: .7, rotate: -14, opacity: 0, duration: 1.1, ease: 'back.out(1.6)' })
-    .to(paths, { strokeDashoffset: 0, duration: 1.2, stagger: .2, ease: 'power2.inOut' }, .3)
-    .to(paths, { fillOpacity: 1, strokeOpacity: 0, duration: .7 }, '-=.4')
-    .add(() => { gsap.to(svg, { y: -10, rotate: 4, duration: 2.4, yoyo: true, repeat: -1, ease: 'sine.inOut' }); });
+    .from(img, { scale: 1.4, filter: 'blur(10px)', duration: 1, ease: 'expo.out' }, .2)
+    .add(() => { gsap.to(tile, { y: -10, rotate: 2, duration: 2.4, yoyo: true, repeat: -1, ease: 'sine.inOut' }); });
 });
 
 /* ---- palette : colonnes qui montent, codes couleur qui défilent ---- */

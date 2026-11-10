@@ -1,41 +1,34 @@
 ---
-// Scène logo : grille de construction qui se trace, logo vectorisé dessiné puis rempli, symbole.
+// Scène logo : le logo original (image fidèle, non vectorisée) se révèle et s'anime.
 interface Props { brand: { logo: string; symbol?: string }; name: string }
 const { brand, name } = Astro.props;
-const svgs = import.meta.glob('../../brand/*.svg', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
-const get = (n?: string) => (n ? svgs[`../../brand/${n}.svg`] : undefined);
-const bgOf = (svg?: string) => (svg ? (svg.match(/data-bg="([^"]+)"/) || [])[1] || '#111' : '#111');
+// couleur de fond de chaque logo (relevée sur les planches) pour un rendu sans bord
+const BG: Record<string, string> = {
+  'orika-logo': '#FAF1F2', 'orika-symbole': '#CF3956', 'chapn-logo': '#C8F459', 'chapn-symbole': '#5D2BBE',
+  'lumora-logo': '#380E0F', 'pakinou-logo': '#F3E8D2', 'pakinou-symbole': '#3F170B'
+};
 const ink = (hex: string) => { const n = parseInt(hex.slice(1), 16), l = (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255; return l > 0.6 ? '#141010' : '#FFFFFF'; };
-const logo = get(brand.logo), sym = get(brand.symbol);
-const lbg = bgOf(logo), sbg = bgOf(sym);
+const src = (n: string) => `/images/projets/${n}.webp`;
+const lbg = BG[brand.logo] || '#111', sbg = brand.symbol ? BG[brand.symbol] || '#111' : '#111';
 ---
-<section class="cs-logo" style={`--lbg:${lbg};--link:${ink(lbg)}`} data-logo-stage>
+<section class="cs-logo" style={`--lbg:${lbg};--link:${ink(lbg)}`} data-logo-stage data-mouse-scope>
   <div class="wrap cs-logo-head">
     <span class="cs-kicker">Le logo</span>
     <button type="button" class="cs-replay" data-replay aria-label="Rejouer l'animation du logo">Rejouer ↺</button>
   </div>
   <div class="cs-logo-canvas">
-    <svg class="cs-grid" viewBox="0 0 1000 560" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-      <g fill="none" stroke="currentColor" stroke-width="1">
-        <path class="gl" pathLength="1" d="M0 280H1000" /><path class="gl" pathLength="1" d="M500 0V560" />
-        <path class="gl" pathLength="1" d="M0 140H1000" /><path class="gl" pathLength="1" d="M0 420H1000" />
-        <path class="gl" pathLength="1" d="M250 0V560" /><path class="gl" pathLength="1" d="M750 0V560" />
-        <path class="gl" pathLength="1" d="M220 0L780 560" /><path class="gl" pathLength="1" d="M780 0L220 560" />
-        <circle class="gl gc" pathLength="1" cx="500" cy="280" r="130" /><circle class="gl gc" pathLength="1" cx="500" cy="280" r="230" />
-        <rect class="gl" pathLength="1" x="270" y="150" width="460" height="260" rx="2" />
-      </g>
-      <g class="gl-dots" fill="currentColor">
-        <circle cx="500" cy="280" r="4" /><circle cx="270" cy="150" r="3" /><circle cx="730" cy="150" r="3" /><circle cx="270" cy="410" r="3" /><circle cx="730" cy="410" r="3" />
-      </g>
-    </svg>
-    <div class="cs-logo-svg" set:html={logo} />
+    <div class="logo-halo" aria-hidden="true"></div>
+    <div class="logo-img" data-mouse="-22">
+      <img src={src(brand.logo)} alt={`Logo ${name}`} loading="lazy" />
+      <span class="logo-sheen" aria-hidden="true"></span>
+    </div>
   </div>
-  <p class="wrap cs-logo-note">Logo {name} · vectorisé et animé</p>
+  <p class="wrap cs-logo-note">Logo {name}</p>
 </section>
 
-{sym && (
+{brand.symbol && (
   <section class="cs-symbol wrap" data-mouse-scope>
-    <div class="sym-tile" style={`--sbg:${sbg}`} data-sym data-mouse="-18"><div class="sym-svg" set:html={sym} /></div>
+    <div class="sym-tile" style={`--sbg:${sbg}`} data-sym data-mouse="-18"><img class="sym-img" src={src(brand.symbol)} alt={`Symbole ${name}`} loading="lazy" /></div>
     <div class="sym-copy">
       <span class="cs-kicker" style="color:var(--p1)">Le symbole</span>
       <p class="display" style="font-size:clamp(30px,3.6vw,52px);font-weight:600;margin:0">Une forme qui porte toute la marque.</p>
