@@ -1,0 +1,18 @@
+---
+// Le rendu final : le visuel principal en grand. Il s'ouvre d'une carte vers le plein écran au défilement.
+import { srcset } from '../../data/site';
+interface Props { src: string; title: string; client: string; label: string }
+const { src, title, client, label } = Astro.props;
+---
+<section class="showcase" data-showcase>
+  <div class="sc-pin">
+    <figure class="sc-frame" data-sc-frame>
+      <img src={src} srcset={srcset(src)} sizes="100vw" alt={`${title} — rendu final`} loading="lazy" data-sc-img />
+    </figure>
+    <div class="sc-cap" data-sc-cap>
+      <span class="tw">Pièce maîtresse · {label}</span>
+      <h2>Le rendu final</h2>
+      <span class="muted">{client}</span>
+    </div>
+  </div>
+</section>

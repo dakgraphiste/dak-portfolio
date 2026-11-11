@@ -8,6 +8,7 @@ import PostsWall from '../../components/case/PostsWall.astro';
 import Dossier from '../../components/case/Dossier.astro';
 import InSitu from '../../components/case/InSitu.astro';
 import BehanceReel from '../../components/case/BehanceReel.astro';
+import Showcase from '../../components/case/Showcase.astro';
 import '../../styles/case.css';
 export function getStaticPaths() {
   return PROJECTS.map((p, i) => ({ params: { slug: p.slug }, props: { project: p, index: i, next: PROJECTS[(i + 1) % PROJECTS.length], prev: PROJECTS[(i - 1 + PROJECTS.length) % PROJECTS.length] } }));
@@ -33,6 +34,24 @@ const ld = [
     creator: { '@id': `${site}/#davy` }, author: { '@id': `${site}/#davy` }, ...(filled(p.year) ? { dateCreated: p.year } : {}),
     about: { '@type': 'Organization', name: p.client }, ...(p.behance ? { sameAs: p.behance } : {}) }
 ];
+// Répartition des images : chaque visuel n'apparaît qu'une fois sur la page
+const key = (u: string) => u.split('?')[0];
+const used = new Set([key(p.cover), key(p.poster)]);
+const take = (list: string[], n: number) => {
+  const out: string[] = [];
+  for (const u of list) { if (out.length >= n) break; if (!used.has(key(u))) { used.add(key(u)); out.push(u); } }
+  return out;
+};
+// pièces du tableau : détails du visuel (si plusieurs), sinon quelques planches Behance prises dans la série, sinon des publications
+const slidesAll = p.slides || [];
+const spread = slidesAll.length > 4 ? [Math.floor(slidesAll.length / 3), Math.floor((2 * slidesAll.length) / 3)].map((i) => slidesAll[i].src) : [];
+let boardPhotos = p.gallery.length > 1 ? take(p.gallery, 3) : [];
+if (boardPhotos.length < 2) boardPhotos = [...boardPhotos, ...take(spread, 3 - boardPhotos.length)];
+if (boardPhotos.length < 2 && p.posts) boardPhotos = [...boardPhotos, ...take([...p.posts].reverse(), 2)];
+const reelSlides = slidesAll.filter((s) => !boardPhotos.includes(s.src));
+const wallPosts = p.posts?.filter((u) => !boardPhotos.includes(u));
+// grand format du visuel principal quand il n'y a pas déjà de planches plein écran
+const showShowcase = !reelSlides.length && p.category !== 'Campagnes'; // les campagnes ont déjà leur mise en situation
 const themeVars = p.theme ? `--p1:${p.theme.p1};--p2:${p.theme.p2}` : '';
 ---
 <Base title={p.title} description={desc} image={p.cover} jsonld={ld} type="article">
@@ -50,7 +69,7 @@ const themeVars = p.theme ? `--p1:${p.theme.p1};--p2:${p.theme.p2}` : '';
     </div>
   </section>
 
-  <Dossier p={p} num={String(index + 1).padStart(2, '0')} />
+  <Dossier p={p} num={String(index + 1).padStart(2, '0')} photos={boardPhotos} />
 
   {p.brand && (
     <>
@@ -60,11 +79,13 @@ const themeVars = p.theme ? `--p1:${p.theme.p1};--p2:${p.theme.p2}` : '';
     </>
   )}
 
-  {p.slides && <BehanceReel slides={p.slides} client={p.client} behance={p.behance} />}
+  {showShowcase && <Showcase src={p.cover} title={p.title} client={p.client} label={p.categoryLabel} />}
 
   {p.category === 'Campagnes' && <InSitu cover={p.cover} poster={p.poster} client={p.client} />}
 
-  {p.posts && <PostsWall posts={p.posts} client={p.client} category={p.category} />}
+  {wallPosts && wallPosts.length > 0 && <PostsWall posts={wallPosts} client={p.client} category={p.category} />}
+
+  {reelSlides.length > 0 && <BehanceReel slides={reelSlides} client={p.client} behance={p.behance} />}
 
 
   <p class="wrap" style="padding-top:40px;padding-bottom:110px">{p.behance ? <a href={p.behance} target="_blank" rel="noopener noreferrer" class="btn btn-line">Voir le projet complet sur Behance ↗</a> : <a href="/contact" class="btn btn-line">Un projet similaire ? Parlons-en →</a>}</p>

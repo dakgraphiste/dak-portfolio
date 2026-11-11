@@ -144,3 +144,15 @@ document.querySelectorAll<HTMLElement>('[data-reel]').forEach((sec) => {
   });
   slides[0]?.classList.add('is-on');
 });
+
+/* ---- le rendu final : la carte s'agrandit jusqu'au plein écran pendant le défilement ---- */
+document.querySelectorAll<HTMLElement>('[data-showcase]').forEach((sec) => {
+  if (reduced || !window.matchMedia('(min-width: 861px)').matches) return;
+  const frame = sec.querySelector<HTMLElement>('[data-sc-frame]')!;
+  const img = sec.querySelector<HTMLElement>('[data-sc-img]');
+  const cap = sec.querySelector<HTMLElement>('[data-sc-cap]');
+  gsap.timeline({ scrollTrigger: { trigger: sec, start: 'top top', end: 'bottom bottom', scrub: 0.6 } })
+    .fromTo(frame, { clipPath: 'inset(16% 22% 16% 22% round 28px)' }, { clipPath: 'inset(0% 0% 0% 0% round 0px)', ease: 'power2.inOut', duration: 1 })
+    .fromTo(img, { scale: 1.25 }, { scale: 1, ease: 'none', duration: 1 }, 0)
+    .fromTo(cap, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.4 }, 0.55);
+});

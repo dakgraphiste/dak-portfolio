@@ -197,3 +197,26 @@
   .reel-bar, .reel-count { display: none; }
 }
 html.reduced .reel-img img { transform: none; }
+
+/* ---------- le rendu final : la carte s'ouvre en plein écran ---------- */
+.showcase { position: relative; height: 210vh; background: #0A0A0A; color: #fff; }
+.sc-pin { position: sticky; top: 0; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.sc-frame { position: absolute; inset: 0; margin: 0; clip-path: inset(16% 22% 16% 22% round 28px); will-change: clip-path; }
+.sc-frame img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.25); will-change: transform; }
+.sc-pin::after { content: ''; position: absolute; inset: auto 0 0 0; height: 45%; background: linear-gradient(180deg, transparent, rgba(0,0,0,.55)); pointer-events: none; }
+.sc-cap { position: absolute; left: var(--gutter); bottom: 120px; z-index: 2; display: flex; flex-direction: column; gap: 6px; text-shadow: 0 2px 20px rgba(0,0,0,.6); }
+.sc-cap h2 { margin: 0; font-family: var(--font-display); font-size: clamp(40px, 6vw, 96px); letter-spacing: -0.04em; line-height: 1; }
+.sc-cap .tw { color: var(--p2, #FFB38F); font-size: 14px; }
+.sc-cap .muted { color: rgba(255,255,255,.75); }
+@media (max-width: 860px) {
+  .showcase { height: auto; padding: 70px 0 40px; }
+  .sc-pin { position: relative; height: auto; display: block; padding: 0 var(--gutter); }
+  .sc-frame { position: relative; clip-path: none; border-radius: 22px; overflow: hidden; }
+  .sc-frame img { height: auto; transform: none; }
+  .sc-cap { position: static; margin-top: 20px; text-shadow: none; }
+  .sc-pin::after { display: none; }
+}
+html.reduced .showcase { height: auto; }
+html.reduced .sc-pin { position: relative; }
+html.reduced .sc-frame { clip-path: none; }
+html.reduced .sc-frame img { transform: none; }

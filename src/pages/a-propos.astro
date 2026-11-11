@@ -34,10 +34,10 @@ const diplomas = [
         <div><span class="display">{CLIENTS.length}</span><span class="muted">marques accompagnées</span></div>
       </div>
     </div>
-    <div class="ab-portrait" aria-hidden="true">
-      <div class="l1" data-mouse="-36"></div>
-      <div class="l2" data-mouse="20"><img class="masc" src="/images/mascotte.webp" alt="Let’z Go, la mascotte 3D de Dak" width="382" height="1241" /></div>
-      <div class="l3" data-mouse="70"><img src={sm(P['orika'].poster)} alt="" loading="lazy" /></div>
+    <div class="ab-portrait">
+      <div class="l1" data-mouse="-36" aria-hidden="true"></div>
+      <div class="l2" data-mouse="20"><img class="photo" src="/images/davy.webp" srcset="/images/davy-480.webp 480w, /images/davy.webp 900w" sizes="360px" alt="Portrait de Davy Aymard Kouassi, graphiste à Abidjan" width="900" height="1349" fetchpriority="high" /></div>
+      <div class="l3" data-mouse="70" aria-hidden="true"><img class="masc" src="/images/mascotte.webp" alt="" width="382" height="1241" loading="lazy" /></div>
     </div>
   </section>
 
@@ -100,11 +100,12 @@ const diplomas = [
   .ab-portrait { position: relative; flex: 0 1 460px; height: 580px; min-width: 300px; }
   .ab-portrait > div { position: absolute; transition: translate 1s var(--ease); }
   .ab-portrait .l1 { left: 40px; top: 0; width: 360px; height: 480px; border-radius: 32px; background: var(--grad); transform: rotate(-6deg); }
-  .ab-portrait .l2 { background: radial-gradient(circle at 50% 30%, #FFE3D3, #F1ECE6 70%) !important; overflow: hidden; align-items: flex-end !important; }
-  .ab-portrait .l2 .masc { height: 96%; width: auto; object-fit: contain; filter: drop-shadow(0 20px 30px rgba(0,0,0,.25)); }
+  .ab-portrait .l2 { background: #10121c !important; overflow: hidden; }
+  .ab-portrait .l2 .photo { width: 100%; height: 100%; object-fit: cover; object-position: 50% 12%; }
   .ab-portrait .l2 { left: 60px; top: 50px; width: 360px; height: 480px; border-radius: 32px; background: var(--card); box-shadow: 0 0 0 1px var(--line); display: flex; align-items: center; justify-content: center; color: var(--muted); font-weight: 600; }
   .ab-portrait .l3 { left: 0; bottom: 0; width: 180px; height: 220px; border-radius: 24px; overflow: hidden; transform: rotate(-10deg); box-shadow: 0 30px 50px -20px rgba(0,0,0,.5); }
-  .ab-portrait .l3 img { width: 100%; height: 100%; object-fit: cover; }
+  .ab-portrait .l3 { background: radial-gradient(circle at 50% 30%, #FFE3D3, #F1ECE6 70%); display: flex; align-items: flex-end; justify-content: center; }
+  .ab-portrait .l3 .masc { height: 94%; width: auto; object-fit: contain; filter: drop-shadow(0 12px 18px rgba(0,0,0,.25)); }
   .ab-pill { padding: 12px 22px; border-radius: 999px; border: 1px solid var(--line); font-size: 18px; font-weight: 500; white-space: nowrap; margin-right: 12px; }
   .ab-two { display: flex; flex-wrap: wrap; gap: 64px; padding-top: 96px; padding-bottom: 72px; }
   .ab-two > div { flex: 1 1 420px; min-width: 0; }

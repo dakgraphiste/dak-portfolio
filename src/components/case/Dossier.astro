@@ -3,13 +3,11 @@
 // de punaise en punaise au défilement, punaise voyageuse qui met chaque pièce en lumière.
 import '@fontsource/special-elite/400.css';
 import { filled, sm, type Project } from '../../data/site';
-interface Props { p: Project; num: string }
-const { p, num } = Astro.props;
+interface Props { p: Project; num: string; photos: string[] }
+const { p, num, photos } = Astro.props;
 
 const notes = [['Le contexte', p.brief], [p.conceptLabel || 'Le concept', p.concept], ['Le challenge', p.challenge]].filter(([, t]) => filled(t));
 if (!notes.length) notes.push(['Le projet', `${p.categoryLabel}${filled(p.client) ? ` pour ${p.client}` : ''}. Livrables : ${p.deliverables.toLowerCase()}.`]);
-// photos épinglées : visuels du projet différents de celui de la fiche
-const photos = [...new Set([...p.gallery.slice(1), p.gallery[0], p.cover])].slice(0, 3);
 const fiche = [['Client', p.client], ['Catégorie', p.categoryLabel], ['Année', p.year], ['Rôle', p.role], ['Livrables', p.deliverables]].filter(([, v]) => filled(v));
 
 type Item = { kind: 'id' | 'note' | 'photo' | 'secret' | 'map' | 'end'; i: number };

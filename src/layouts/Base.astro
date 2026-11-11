@@ -41,7 +41,7 @@ const origin = Astro.site!.toString().replace(/\/$/, '');
 // Identité de Dak pour Google : personne + activité locale + site
 const person = {
   '@type': 'Person', '@id': `${origin}/#davy`, name: SITE.name, alternateName: ['Dak', SITE.brand], jobTitle: SITE.role,
-  email: SITE.email, telephone: SITE.phone, url: `${origin}/a-propos`, image: `${origin}/images/og/a-propos.jpg`,
+  email: SITE.email, telephone: SITE.phone, url: `${origin}/a-propos`, image: `${origin}/images/davy.webp`,
   address: { '@type': 'PostalAddress', addressLocality: 'Abidjan', addressCountry: 'CI' },
   knowsAbout: ['Identité visuelle', 'Direction artistique', 'Design graphique', 'Affiches publicitaires', 'Packaging', 'Retouche photo', 'Réseaux sociaux'],
   sameAs: [SITE.behance, SITE.linkedin, SITE.facebook]
