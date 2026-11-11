@@ -156,3 +156,16 @@ document.querySelectorAll<HTMLElement>('[data-showcase]').forEach((sec) => {
     .fromTo(img, { scale: 1.25 }, { scale: 1, ease: 'none', duration: 1 }, 0)
     .fromTo(cap, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.4 }, 0.55);
 });
+
+/* ---- retouche : curseur avant / après, avec une petite démonstration à l'arrivée ---- */
+document.querySelectorAll<HTMLElement>('[data-compare]').forEach((box) => {
+  const range = box.querySelector<HTMLInputElement>('[data-compare-range]')!;
+  const set = (v: number) => { box.style.setProperty('--pos', `${v}%`); range.value = String(v); };
+  range.addEventListener('input', () => set(Number(range.value)));
+  if (reduced) return;
+  const o = { v: 50 };
+  gsap.timeline({ scrollTrigger: { trigger: box, start: 'top 70%', once: true } })
+    .to(o, { v: 82, duration: 0.9, ease: 'power2.inOut', onUpdate: () => set(o.v) })
+    .to(o, { v: 18, duration: 1.1, ease: 'power2.inOut', onUpdate: () => set(o.v) })
+    .to(o, { v: 50, duration: 0.8, ease: 'power2.inOut', onUpdate: () => set(o.v) });
+});

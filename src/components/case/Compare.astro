@@ -1,0 +1,15 @@
+---
+// Retouche : curseur avant / après (glisser, ou flèches du clavier)
+interface Props { before: string; after: string; title: string }
+const { before, after, title } = Astro.props;
+---
+<section class="compare-sec wrap">
+  <div class="section-title"><h2>Avant <span class="muted">/ après</span></h2><span class="muted">Fais glisser le curseur</span></div>
+  <div class="compare" data-compare style="--pos:50%">
+    <img src={after} alt={`${title} — après retouche`} loading="lazy" />
+    <div class="cmp-before"><img src={before} alt={`${title} — avant retouche`} loading="lazy" /></div>
+    <span class="cmp-tag cmp-l">Avant</span><span class="cmp-tag cmp-r">Après</span>
+    <span class="cmp-line" aria-hidden="true"><span class="cmp-knob">⟷</span></span>
+    <input type="range" min="0" max="100" value="50" aria-label="Comparer avant et après" data-compare-range />
+  </div>
+</section>

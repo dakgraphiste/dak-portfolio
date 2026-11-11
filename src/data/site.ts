@@ -5,7 +5,7 @@ import { createHash } from 'node:crypto';
 export const SITE = {
   brand: 'dak.graphiste',
   name: 'Davy Aymard Kouassi',
-  role: 'Senior Graphic Designer',
+  role: 'Creative Director & Visual Strategist',
   city: "Abidjan, Côte d'Ivoire",
   email: 'dakgraphiste@gmail.com',
   phone: '+225 07 78 34 27 09',
@@ -40,8 +40,8 @@ export const NAV = [
   { href: '/contact', label: 'Contact' }
 ];
 
-export type Category = 'Identité' | 'Réseaux sociaux' | 'Campagnes' | 'Packaging' | 'Affiches' | 'Retouche';
-export const CATEGORIES: Category[] = ['Identité', 'Réseaux sociaux', 'Campagnes', 'Packaging', 'Affiches', 'Retouche'];
+export type Category = 'Identité' | 'Réseaux sociaux' | 'Campagnes' | 'Packaging' | 'Affiches' | 'Édition' | 'Retouche';
+export const CATEGORIES: Category[] = ['Identité', 'Réseaux sociaux', 'Campagnes', 'Packaging', 'Affiches', 'Édition', 'Retouche'];
 
 export type Project = {
   slug: string;
@@ -63,6 +63,7 @@ export type Project = {
   theme?: { p1: string; p2: string; ink?: string }; // couleurs de la page du projet
   brand?: { logo: string; symbol?: string; palette: { name: string; hex: string }[]; values: string[] }; // identités visuelles
   posts?: string[]; // publications regroupées (réseaux sociaux, affiches, campagnes)
+  compare?: { before: string; after: string }; // retouche : curseur avant / après
   slides?: { src: string; caption: string }[]; // extraits du dossier Behance (images 16:9 + légende)
   secret?: [string, string][]; // note « Top secret » du dossier : infos propres au projet
 };
@@ -151,7 +152,7 @@ const PORTFOLIO: Project[] = [
     brief: "À l'occasion de Pâques, nous avons géré la communication autour de l'évènement culturel Pakinou : teasers, KV pour 12 m² et autres supports, pour promouvoir l'évènement.",
     concept: "« Lève-toi et danse. Aujourd'hui ça va chauffer. »" }),
   // Packaging & Product Design
-  make({ slug: 'trajolou', title: 'Trajolou — Packaging', client: 'Trajolou', category: 'Packaging', categoryLabel: 'Packaging', deliverables: 'Packaging de la nouvelle gamme de poupées', image: 'trajolou', shots: 1, year: '2025',
+  make({ slug: 'trajolou', title: 'Trajolou — Packaging', client: 'Trajolou', category: 'Packaging', categoryLabel: 'Packaging', deliverables: 'Packaging de la nouvelle gamme de poupées', image: 'trajolou', gallery: [img('trajolou'), img('trajolou-ecran')], year: '2025',
     brief: "Trajolou, marque de poupées locale : le compagnon idéal pour les petites filles qui veulent des poupées aux codes internationaux, dans le respect de la culture africaine.",
     concept: "Création du packaging de la nouvelle gamme de poupées Trajolou, en restant dans l'univers des petites filles.", conceptLabel: 'La mission' }),
   make({ slug: 'abodjama', title: 'Abodjama — Attiéké de Babi', client: 'Abodjama', category: 'Packaging', categoryLabel: 'Packaging', deliverables: 'Packaging 900 g à 50 kg', image: 'abodjama', shots: 1,
@@ -161,6 +162,34 @@ const PORTFOLIO: Project[] = [
     brief: "Bronzé, marque de senteurs de luxe et de bougies parfumées, qui se veut unique et premium. Nous avons réalisé le logo et le packaging.",
     concept: "Un packaging simple, épuré et luxueux.", conceptLabel: 'La mission' }),
   // Posters
+  make({ slug: 'sante-afrique', title: 'Santé Afrique — Magazine', client: 'Santé Afrique', category: 'Édition', categoryLabel: 'Édition & mise en page', deliverables: 'Couvertures et mise en page du magazine', image: 'sante-afrique', gallery: [img('sante-afrique'), img('sante-afrique-numeros')], year: '2025 – 2026', role: 'Design éditorial & mise en page',
+    brief: "Santé Afrique est un magazine consacré à la santé en Côte d'Ivoire et en Afrique : dossiers de fond, portraits de professionnels de santé, actualité de la santé publique.",
+    concept: "Des couvertures portées par un portrait fort et une titraille massive, une couleur dominante différente à chaque numéro, et des pages intérieures aérées où l'illustration accompagne les sujets.",
+    challenge: "Rendre attractifs des sujets sérieux (addictions, santé maternelle, accès aux médicaments) tout en gardant une lecture claire et crédible, numéro après numéro." }),
+  make({ slug: 'couvertures-de-livres', title: 'Éclipsé & Dérive — Couvertures de livres', client: 'Création personnelle', category: 'Édition', categoryLabel: 'Couvertures de livres', deliverables: 'Deux couvertures et leurs mises en situation', image: 'couvertures', gallery: [img('couvertures'), img('couvertures-eclipse'), img('couvertures-derive')], role: 'Direction artistique, photomontage & typographie',
+    brief: "Une série personnelle signée « DVK.GRVPHISTE — Welcome to my world » : deux couvertures de livres imaginaires, chacune accompagnée de son court texte.",
+    concept: "Des ambiances bleutées et brumeuses, un seul sujet isolé (un cocon suspendu, une barque perdue entre ciel et eau) et une typographie à empattements très espacée pour installer le silence.",
+    challenge: "Raconter une histoire entière avec une image, un titre et quelques lignes, sans rien expliquer." }),
+  make({ slug: 'delices-africains', title: 'Les Délices Africains — Flyer & menu', client: 'Les Délices Africains', category: 'Affiches', categoryLabel: 'Flyer & menu', deliverables: "Flyer recto verso : offre du mois et menu de la semaine", image: 'delices-africains', shots: 1, year: '2025',
+    brief: "Les Délices Africains proposent des plats africains à commander. Pour le mois d'avril, une offre spéciale : tous les plats à 12,50 €.",
+    concept: "Un recto qui donne envie (« Savourez l'Afrique chez vous ! », le prix et la date en rouge vif sur fond noir) et un verso qui informe : le menu de la semaine, du mafé au thiéboudienne." }),
+  make({ slug: 'fete-independance', title: 'Faith — Affiches de fêtes', client: 'Création personnelle', category: 'Affiches', categoryLabel: 'Affiches événementielles', deliverables: "Série « Faith », « Indé-pen-dance » et affiche de Pâques", image: 'faith', shots: 1, role: 'Direction artistique, photomontage & typographie',
+    brief: "Des affiches publiées sur les réseaux de Dak.graphiste pour célébrer les grandes dates : la Fête de l'Indépendance de la Côte d'Ivoire, puis Pâques.",
+    concept: "« Faith » : un lettrage géant, orange et liquide, aux couleurs du drapeau, avec au centre un éléphant ou une personnalité qui garde la foi. « Indé-pen-dance » : un taille-crayon d'où sort, fier, un bois forgé à la forme de la carte du pays, à côté d'un boulet de prisonnier.",
+    challenge: "Parler de liberté, de fierté nationale ou de foi avec des symboles simples (un clou, un cœur, un boulet), compris au premier regard." }),
+  make({ slug: 'retouche-avant-apres', title: 'Retouche — Avant / après', client: 'Dak Studio School', category: 'Retouche', categoryLabel: 'Retouche photo', deliverables: "Retouche et étalonnage d'un portrait sportif", image: 'retouche-ba', shots: 1, role: 'Retouche photo & colorimétrie',
+    brief: "Une démonstration de retouche publiée pour Dak Studio School : le même cliché, avant et après.",
+    concept: "Lumière sculptée, contrastes et couleurs relevés, détails du maillot, du ballon et des crampons ravivés : la photo reste naturelle mais devient percutante. Fais glisser le curseur pour comparer." }),
+  make({ slug: 'danone', title: 'Danone — Réseaux sociaux', client: 'Danone', category: 'Réseaux sociaux', categoryLabel: 'Visuels réseaux sociaux', deliverables: 'Publications Instagram et Facebook', image: 'danone', shots: 1,
+    brief: "Des publications pour les yaourts à boire Danone : donner envie de les consommer et de les cuisiner au quotidien.",
+    concept: "Un produit toujours bien visible, des recettes faciles (smoothie, grotto fruité, gâteau au yaourt) et une titraille bleue et blanche aux couleurs de la marque." }),
+  make({ slug: 'posters-football', title: 'Posters — Football & sport', client: 'Création personnelle', category: 'Affiches', categoryLabel: 'Affiches sport', deliverables: 'Posters de joueurs et affiches de match', image: 'posters-football', shots: 1, role: 'Direction artistique, photomontage & illustration',
+    brief: "Une série de posters publiée sur les réseaux de Dak.graphiste autour des grands clubs et des stars : Real Madrid, PSG, Barcelone, Chelsea, Manchester City, la finale de Ligue des champions PSG–Arsenal, et même la NBA avec Oklahoma City.",
+    concept: "Chaque affiche raconte une scène : Mbappé en super-héros sous la pluie de Madrid, en chevalier devant l'Allianz Arena, le Death Note avant Real–Benfica. Une typographie de match sobre laisse toute la place à l'image.",
+    challenge: "Annoncer un match (date, heure, affiche) tout en créant un visuel qu'on a envie de partager pour lui-même." }),
+  make({ slug: 'fantastik-creol', title: 'Affiches musique & spectacles', client: 'Thim Prod & Direct Prod', category: 'Affiches', categoryLabel: 'Affiche événementielle', deliverables: "Affiche Fantastik Créol (deux versions) et visuel d'artiste Axelle Diby", image: 'fantastik-creol', shots: 1, year: '2026',
+    brief: "Fantastik Créol, spectacle VIP aux Folies Bergère à Paris le 15 mai 2026, produit par Thim Prod et Direct Prod.",
+    concept: "Un titre gothique doré et brillant, l'artiste en majesté au centre, et toutes les infos pratiques (heure, lieu, date, tarifs, points de vente) organisées en étiquettes lisibles. Deux versions : violette et rose. Pour Axelle Diby : un lettrage graffiti blanc, un fond rose texturé et des étoiles chromées." }),
   make({ slug: 'posters-coupe-du-monde-2026', title: 'Posters — Coupe du Monde 2026', client: 'Création personnelle', category: 'Affiches', categoryLabel: 'Affiches sport', deliverables: 'Série de posters', image: 'posters-fwc-2026', year: '2026', role: 'Direction artistique, illustration & design',
     brief: "À l'occasion de la Coupe du Monde 2026, des visuels de soutien à la Côte d'Ivoire autour d'un seul fil conducteur : « D'Abidjan to the World ».",
     concept: "Plusieurs concepts pour illustrer le parcours des Éléphants à chaque étape de la compétition, tout en motivant et en supportant l'équipe." }),
@@ -305,8 +334,16 @@ const STAGE: Record<string, Partial<Project>> = {
   superclean: { theme: { p1: '#2433A0', p2: '#EEF1FF' }, posts: posts('superclean', 10) },
   yango: { theme: { p1: '#E4002B', p2: '#FFF0F2' }, posts: posts('yango', 9) },
   'bavaria-smalt': { theme: { p1: '#0B4AA8', p2: '#EAF2FF' }, posts: posts('bavaria-smalt', 10) },
-  'posters-coupe-du-monde-2026': { theme: { p1: '#FF6A13', p2: '#FFF3EA' }, posts: posts('posters-fwc-2026', 6) },
-  'posters-can-2025': { theme: { p1: '#5B2A86', p2: '#F4EEFA' }, posts: posts('posters-can-2025', 5) },
+  'posters-coupe-du-monde-2026': { theme: { p1: '#FF6A13', p2: '#FFF3EA' }, posts: posts('posters-fwc-2026', 21) },
+  'sante-afrique': { theme: { p1: '#4B2A6B', p2: '#EAF6FC' } },
+  'couvertures-de-livres': { theme: { p1: '#1A6A86', p2: '#E6F2F5' }, posts: posts('couvertures', 2) },
+  'delices-africains': { theme: { p1: '#E2231A', p2: '#FFF6D6' } },
+  'fete-independance': { theme: { p1: '#F26B1D', p2: '#E8F6EC' }, posts: posts('faith', 6) },
+  'retouche-avant-apres': { theme: { p1: '#6B5FB5', p2: '#F1EEFA' }, compare: { before: img('retouche-ba-avant'), after: img('retouche-ba-apres') } },
+  'posters-football': { theme: { p1: '#1D3FD1', p2: '#EEF2FF' }, posts: posts('posters-football', 16) },
+  'fantastik-creol': { theme: { p1: '#7A1FB8', p2: '#FCEBFF' }, posts: posts('fantastik-creol', 3) },
+  danone: { theme: { p1: '#0B3D91', p2: '#EAF2FB' }, posts: posts('danone', 4) },
+  'posters-can-2025': { theme: { p1: '#5B2A86', p2: '#F4EEFA' }, posts: posts('posters-can-2025', 15) },
   'mitsubishi-destinator': { theme: { p1: '#E60012', p2: '#F2F4F7' }, posts: posts('mitsubishi-destinator', 4) },
   'pakinou-campagne': { theme: { p1: '#A6421E', p2: '#F3E8D2' }, posts: posts('pakinou-kv', 3) },
   'totalenergies-rentree': { theme: { p1: '#E4002B', p2: '#FFF5EC' } }, 'totalenergies-pakinou': { theme: { p1: '#E4002B', p2: '#FFF5EC' } },
@@ -340,12 +377,19 @@ const SECRET: Record<string, [string, string][]> = {
   "bronze": [["Univers", "Senteurs de luxe et bougies parfumées"], ["Livrables", "Logo et packaging"]],
   "posters-coupe-du-monde-2026": [["Fil conducteur", "« D'Abidjan to the World »"], ["Équipe", "Les Éléphants"]],
   "posters-can-2025": [["Inspiration", "Les animés"], ["Thème", "Duels et confrontations"]],
+  "sante-afrique": [["Numéros", "Du n° 19 au n° 23"], ["Dossiers", "Toxicomanie, santé maternelle, cosmétologie"]],
+  "couvertures-de-livres": [["Signature", "DVK.GRVPHISTE — Welcome to my world"], ["Titres", "Éclipsé, Dérive"]],
+  "delices-africains": [["Offre", "Tous les plats à 12,50 €"], ["Bonus", "Un jus de bissap offert"]],
+  "fete-independance": [["Mot clé", "Faith : garder la foi"], ["Symbole", "Le boulet brisé"]],
+  "retouche-avant-apres": [["Signé", "Dak Studio School"]],
+  "posters-football": [["Clubs", "Real Madrid, Manchester City, Chelsea"], ["Références", "Spider-Man, Death Note, chevaliers"]],
+  "fantastik-creol": [["Lieu", "Folies Bergère, Paris"], ["Date", "15 mai 2026, 18 h"]],
 };
 
 // Ordre d'affichage : grandes marques et projets d'agence d'abord
 const ORDER = ['budweiser', 'totalenergies-rentree', 'la-vache-qui-rit', 'yango', 'fanmilk', 'totalenergies-pakinou', 'mitsubishi-destinator', 'bonnet-rouge',
   'air-elegance-can', 'totalenergies-quartz', 'bavaria-smalt', 'superclean', 'bonnet-rouge-fetes', 'chapn', 'orika', 'lumora', 'pakinou', 'pakinou-campagne',
-  'trajolou', 'abodjama', 'bronze', 'posters-coupe-du-monde-2026', 'posters-can-2025'];
+  'danone', 'trajolou', 'abodjama', 'bronze', 'sante-afrique', 'couvertures-de-livres', 'posters-coupe-du-monde-2026', 'posters-can-2025', 'posters-football', 'fantastik-creol', 'fete-independance', 'delices-africains', 'retouche-avant-apres'];
 const rank = (s: string) => { const i = ORDER.indexOf(s); return i < 0 ? 999 : i; };
 export const PROJECTS: Project[] = [...PORTFOLIO, ...BEHANCE].map((p) => ({ ...p, ...STAGE[p.slug], secret: SECRET[p.slug] })).sort((a, b) => rank(a.slug) - rank(b.slug));
 export const isAgency = (p: Project) => /agence/i.test(p.role);
@@ -353,7 +397,7 @@ export const isAgency = (p: Project) => /agence/i.test(p.role);
 export const catSlug = (c: string) => c.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z]+/g, '-');
 
 // Marques accompagnées (en agence chez SimplyBlack et en freelance)
-export const CLIENTS = ['Budweiser', 'TotalEnergies', 'La Vache qui rit', 'Yango', 'FanMilk', 'Bonnet Rouge', 'Mitsubishi', 'Bavaria', 'SuperClean', 'Air Elegance', 'Orika', "Chap'n", 'Lumora', 'Pakinou', 'Trajolou', 'Abodjama', 'Bronzé', 'KPALO'];
+export const CLIENTS = ['Budweiser', 'TotalEnergies', 'La Vache qui rit', 'Yango', 'FanMilk', 'Bonnet Rouge', 'Mitsubishi', 'Bavaria', 'SuperClean', 'Air Elegance', 'Orika', "Chap'n", 'Lumora', 'Pakinou', 'Trajolou', 'Abodjama', 'Bronzé', 'KPALO', 'Santé Afrique', 'Les Délices Africains'];
 
 export const COURSES = [
   { title: 'Brand identity : du brief à la charte graphique', modules: ["Analyser un brief et définir la plateforme de marque", "Recherches, moodboard et pistes créatives", "Construire le logo et ses déclinaisons", "Couleurs, typographies et système graphique", "Monter la charte et la présenter au client"], desc: 'La méthode complète pour créer une identité cohérente : brief, recherches, logo, couleurs, typographies et charte.', level: 'Tous niveaux', format: 'En ligne', img: '/images/projets/chapn-brand.webp' },

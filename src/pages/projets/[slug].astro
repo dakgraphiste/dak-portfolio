@@ -9,6 +9,7 @@ import Dossier from '../../components/case/Dossier.astro';
 import InSitu from '../../components/case/InSitu.astro';
 import BehanceReel from '../../components/case/BehanceReel.astro';
 import Showcase from '../../components/case/Showcase.astro';
+import Compare from '../../components/case/Compare.astro';
 import '../../styles/case.css';
 export function getStaticPaths() {
   return PROJECTS.map((p, i) => ({ params: { slug: p.slug }, props: { project: p, index: i, next: PROJECTS[(i + 1) % PROJECTS.length], prev: PROJECTS[(i - 1 + PROJECTS.length) % PROJECTS.length] } }));
@@ -51,7 +52,7 @@ if (boardPhotos.length < 2 && p.posts) boardPhotos = [...boardPhotos, ...take([.
 const reelSlides = slidesAll.filter((s) => !boardPhotos.includes(s.src));
 const wallPosts = p.posts?.filter((u) => !boardPhotos.includes(u));
 // grand format du visuel principal quand il n'y a pas déjà de planches plein écran
-const showShowcase = !reelSlides.length && p.category !== 'Campagnes'; // les campagnes ont déjà leur mise en situation
+const showShowcase = !reelSlides.length && p.category !== 'Campagnes' && !p.compare; // les campagnes ont déjà leur mise en situation
 const themeVars = p.theme ? `--p1:${p.theme.p1};--p2:${p.theme.p2}` : '';
 ---
 <Base title={p.title} description={desc} image={p.cover} jsonld={ld} type="article">
@@ -78,6 +79,8 @@ const themeVars = p.theme ? `--p1:${p.theme.p1};--p2:${p.theme.p2}` : '';
       <Values values={p.brand.values} />
     </>
   )}
+
+  {p.compare && <Compare before={p.compare.before} after={p.compare.after} title={p.title} />}
 
   {showShowcase && <Showcase src={p.cover} title={p.title} client={p.client} label={p.categoryLabel} />}
 
