@@ -1,0 +1,23 @@
+---
+// Cadre des pages de l'espace élève : barre d'onglets + contenu
+import Base from '../../layouts/Base.astro';
+import '../../styles/academy.css';
+interface Props { title: string; user?: { email?: string | null } | null; admin?: boolean; active?: string }
+const { title, user, admin = false, active = '' } = Astro.props;
+---
+<Base title={`${title} — Espace élève`} description="Espace élève Dak Studio School." noindex footer={false} whatsapp={!!user}>
+  <div class="portal-wrap">
+    <div class="pbar wrap">
+      <a href="/espace-eleve" class="pbrand"><span aria-hidden="true">🎓</span> Dak Studio School</a>
+      {user && (
+        <nav class="ptabs" aria-label="Espace élève">
+          <a href="/espace-eleve" aria-current={active === 'home' ? 'page' : undefined}>Mes cours</a>
+          <a href="/formations">Catalogue</a>
+          {admin && <a href="/espace-eleve/admin" aria-current={active === 'admin' ? 'page' : undefined}>Administration</a>}
+          <form method="post" action="/espace-eleve/deconnexion"><button type="submit">Déconnexion</button></form>
+        </nav>
+      )}
+    </div>
+    <slot />
+  </div>
+</Base>

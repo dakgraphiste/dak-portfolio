@@ -80,3 +80,39 @@ Tout se trouve dans `src/data/academy.ts` :
 - **Parcours** (`TRACKS`) : liste de cours qui s'enchaînent. Adresse : `/formations/parcours/<slug>`.
 - Vidéo tournée : passer la leçon en `ready: true` (`free: true` pour un aperçu gratuit).
 - Ouverture des inscriptions : `status: 'ouvert'` et `price: '25 000 FCFA'`. Plus tard, `buyUrl` pourra pointer vers le paiement / le portail élève.
+
+## Espace élève (paiement + vidéos)
+
+Adresse : `/espace-eleve`. Tant que les réglages ci-dessous ne sont pas faits, la page affiche « Ouverture très bientôt ».
+
+**1. Supabase (comptes élèves et base de données), gratuit pour démarrer**
+1. Créer un projet sur https://supabase.com (région : Europe, ex. Paris ou Frankfurt).
+2. SQL Editor → New query → coller le contenu de `supabase/schema.sql` → Run.
+3. Authentication → URL Configuration : *Site URL* = l'adresse du site ; *Redirect URLs* : ajouter `https://<adresse du site>/espace-eleve/auth/callback`.
+4. Project Settings → API : noter `Project URL`, la clé `anon` et la clé `service_role` (secrète).
+
+**2. CinetPay (Mobile Money + carte)**
+1. Ouvrir un compte marchand sur https://cinetpay.com et le faire valider.
+2. Dans le back-office : noter l'`APIKEY` et le `SITE_ID`.
+
+**3. Bunny Stream (vidéos protégées)**
+1. Créer une « Video Library » sur https://bunny.net → Stream.
+2. Dans la bibliothèque → Security : activer *Embed view token authentication*, noter la *Token Authentication Key* ; dans *Allowed referrers*, mettre l'adresse du site.
+3. Noter le *Library ID*. Pour chaque vidéo envoyée, copier son *Video ID* dans `video:` de la leçon (`src/data/academy.ts`) et passer `ready: true`.
+
+**4. Vercel → Settings → Environment Variables** (puis redéployer)
+
+| Nom | Valeur |
+| --- | --- |
+| `SUPABASE_URL` | Project URL |
+| `SUPABASE_ANON_KEY` | clé anon |
+| `SUPABASE_SERVICE_ROLE_KEY` | clé service_role (**secrète**) |
+| `CINETPAY_APIKEY` | APIKEY CinetPay (**secrète**) |
+| `CINETPAY_SITE_ID` | SITE_ID CinetPay |
+| `BUNNY_LIBRARY_ID` | Library ID |
+| `BUNNY_TOKEN_KEY` | Token Authentication Key (**secrète**) |
+| `ADMIN_EMAILS` | ton e-mail (accès à `/espace-eleve/admin`) |
+
+**5. Ouvrir la vente d'un cours** : dans `src/data/academy.ts`, `status: 'ouvert'` et `priceFcfa: 25000` (et `priceFcfa` sur un parcours pour le vendre en entier).
+
+Fonctionnement : l'élève crée son compte, paie sur CinetPay, et l'accès s'ouvre dès que le serveur a vérifié le paiement directement auprès de CinetPay (montant compris). Dans `/espace-eleve/admin`, tu vois les paiements et les élèves, et tu peux ouvrir un accès à la main (paiement en espèces, bourse…).

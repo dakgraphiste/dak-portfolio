@@ -1,0 +1,85 @@
+---
+// Connexion, création de compte et mot de passe oublié (formulaires traités côté serveur, sans JavaScript)
+export const prerender = false;
+import Portal from '../../components/academy/Portal.astro';
+import NotReady from '../../components/academy/NotReady.astro';
+import { portalReady } from '../../lib/env';
+import { userClient } from '../../lib/supabase';
+import { safeNext, privatePage } from '../../lib/portal';
+
+privatePage(Astro);
+const ready = portalReady();
+const url = Astro.url;
+const next = safeNext(url.searchParams.get('next'));
+let mode = (url.searchParams.get('mode') || 'connexion') as 'connexion' | 'inscription' | 'oubli';
+let error = '';
+const infoKey = url.searchParams.get('info');
+let info = infoKey === 'confirme' ? 'Ton adresse est confirmée : tu peux te connecter.' : '';
+if (infoKey === 'lien-expire') info = 'Ce lien a expiré ou a déjà servi. Connecte-toi, ou redemande un lien.';
+let email = '';
+
+if (ready && Astro.request.method === 'POST') {
+  const f = await Astro.request.formData();
+  mode = String(f.get('mode') || 'connexion') as typeof mode;
+  email = String(f.get('email') || '').trim().toLowerCase();
+  const password = String(f.get('password') || '');
+  const sb = userClient(Astro.request, Astro.cookies);
+  const callback = new URL(`/espace-eleve/auth/callback?next=${encodeURIComponent(next)}`, url.origin).toString();
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) error = 'Adresse e-mail invalide.';
+  else if (mode === 'connexion') {
+    const { error: e } = await sb.auth.signInWithPassword({ email, password });
+    if (!e) return Astro.redirect(next, 303);
+    error = /confirm/i.test(e.message) ? 'Confirme d’abord ton adresse grâce au lien reçu par e-mail.' : 'E-mail ou mot de passe incorrect.';
+  } else if (mode === 'inscription') {
+    const name = String(f.get('name') || '').trim().slice(0, 80);
+    const phone = String(f.get('phone') || '').trim().slice(0, 30);
+    if (password.length < 8) error = 'Le mot de passe doit faire au moins 8 caractères.';
+    else if (!name) error = 'Indique ton nom.';
+    else {
+      const { data, error: e } = await sb.auth.signUp({ email, password, options: { emailRedirectTo: callback, data: { full_name: name, phone } } });
+      if (e) error = /registered|exists/i.test(e.message) ? 'Un compte existe déjà avec cette adresse : connecte-toi.' : 'Création impossible pour le moment. Réessaie dans un instant.';
+      else if (data.session) return Astro.redirect(next, 303);
+      else { info = `Compte créé. Ouvre l’e-mail envoyé à ${email} et clique sur le lien pour confirmer ton adresse.`; mode = 'connexion'; }
+    }
+  } else if (mode === 'oubli') {
+    await sb.auth.resetPasswordForEmail(email, { redirectTo: new URL('/espace-eleve/auth/callback?next=/espace-eleve/nouveau-mot-de-passe', url.origin).toString() });
+    info = `Si un compte existe pour ${email}, un lien pour choisir un nouveau mot de passe vient d’être envoyé.`;
+    mode = 'connexion';
+  }
+} else if (ready) {
+  // déjà connecté : direction l'espace élève
+  const { data } = await userClient(Astro.request, Astro.cookies).auth.getUser();
+  if (data.user) return Astro.redirect(next, 303);
+}
+const tab = (m: string) => `/espace-eleve/connexion?mode=${m}&next=${encodeURIComponent(next)}`;
+---
+{!ready ? <NotReady /> : (
+<Portal title={mode === 'inscription' ? 'Créer un compte' : 'Connexion'}>
+  <section class="wrap pauth">
+    <div class="pauth-side">
+      <span class="eyebrow">Espace élève</span>
+      <h1 class="display">{mode === 'inscription' ? 'Crée ton compte.' : mode === 'oubli' ? 'Mot de passe oublié.' : 'Bon retour !'}</h1>
+      <p class="muted">Tes cours, tes vidéos et ta progression au même endroit. Un seul compte pour toutes les formations Dak Studio School.</p>
+    </div>
+    <div class="pcard">
+      <nav class="pswitch" aria-label="Choix">
+        <a href={tab('connexion')} aria-current={mode === 'connexion' ? 'page' : undefined}>Connexion</a>
+        <a href={tab('inscription')} aria-current={mode === 'inscription' ? 'page' : undefined}>Créer un compte</a>
+      </nav>
+      {error && <p class="pmsg err" role="alert">{error}</p>}
+      {info && <p class="pmsg ok" role="status">{info}</p>}
+      <form method="post" class="pform">
+        <input type="hidden" name="mode" value={mode} />
+        {mode === 'inscription' && <label>Nom et prénom<input name="name" required maxlength="80" autocomplete="name" /></label>}
+        <label>E-mail<input type="email" name="email" required value={email} autocomplete="email" /></label>
+        {mode === 'inscription' && <label>Téléphone (Mobile Money) <span class="muted">facultatif</span><input type="tel" name="phone" maxlength="30" autocomplete="tel" placeholder="07 00 00 00 00" /></label>}
+        {mode !== 'oubli' && <label>Mot de passe<input type="password" name="password" required minlength={mode === 'inscription' ? 8 : 1} autocomplete={mode === 'inscription' ? 'new-password' : 'current-password'} /></label>}
+        <button class="btn btn-fg" type="submit">{mode === 'inscription' ? 'Créer mon compte' : mode === 'oubli' ? 'Recevoir le lien' : 'Me connecter'}</button>
+      </form>
+      {mode === 'connexion' && <a class="plink" href={tab('oubli')}>Mot de passe oublié ?</a>}
+      {mode === 'oubli' && <a class="plink" href={tab('connexion')}>← Retour à la connexion</a>}
+    </div>
+  </section>
+</Portal>
+)}

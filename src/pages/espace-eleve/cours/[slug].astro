@@ -1,0 +1,85 @@
+---
+// Lecteur de cours : vidéo de la leçon, liste des leçons, progression
+export const prerender = false;
+import Portal from '../../../components/academy/Portal.astro';
+import { portalReady } from '../../../lib/env';
+import { currentUser } from '../../../lib/supabase';
+import { myEnrollments, unlockedCourses } from '../../../lib/access';
+import { privatePage, loginUrl, isAdmin } from '../../../lib/portal';
+import { signedEmbed } from '../../../lib/video';
+import { COURSES, allLessons, fcfa } from '../../../data/academy';
+
+privatePage(Astro);
+if (!portalReady()) return Astro.redirect('/espace-eleve', 303);
+const c = COURSES.find((x) => x.slug === Astro.params.slug);
+if (!c) return Astro.redirect('/espace-eleve', 303);
+const lessons = allLessons(c);
+const key = Astro.url.searchParams.get('lecon') || lessons[0].key;
+const self = `/espace-eleve/cours/${c.slug}?lecon=${key}`;
+const { sb, user } = await currentUser(Astro.request, Astro.cookies);
+if (!user) return Astro.redirect(loginUrl(self), 303);
+
+const admin = isAdmin(user.email);
+const hasAccess = admin || unlockedCourses(await myEnrollments(sb, user.id)).has(c.slug);
+const idx = Math.max(0, lessons.findIndex((l) => l.key === key));
+const lesson = lessons[idx];
+const { data: prog } = await sb.from('lesson_progress').select('lesson').eq('user_id', user.id).eq('course', c.slug);
+const done = new Set((prog || []).map((p) => p.lesson));
+const canWatch = hasAccess || !!lesson.free;
+const embed = canWatch && lesson.ready && lesson.video ? signedEmbed(lesson.video) : null;
+const prev = lessons[idx - 1], next = lessons[idx + 1];
+const pct = Math.round((lessons.filter((l) => done.has(l.key)).length / lessons.length) * 100);
+const buy = c.status === 'ouvert' && c.priceFcfa ? `/espace-eleve/acheter?item=course:${c.slug}` : `/formations/${c.slug}`;
+---
+<Portal title={c.title} user={user} admin={admin}>
+  <section class="wrap pplayer">
+    <div class="pp-main">
+      <nav class="crumbs pcrumbs"><a href="/espace-eleve">Mes cours</a><span>›</span><span>{c.title}</span></nav>
+      <div class="pvideo">
+        {embed ? (
+          <iframe src={embed} title={lesson.title} loading="lazy" allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+        ) : (
+          <div class="pv-empty">
+            {!canWatch ? (
+              <><span aria-hidden="true">🔒</span><b>Leçon réservée aux inscrits</b><span>Débloque tout le cours pour regarder cette leçon.</span><a class="btn btn-accent" href={buy}>{c.status === 'ouvert' && c.priceFcfa ? `Débloquer pour ${fcfa(c.priceFcfa)}` : 'Voir le cours'}</a></>
+            ) : (
+              <><span aria-hidden="true">🎬</span><b>Vidéo en préparation</b><span>Cette leçon sera mise en ligne très bientôt. Tu seras prévenu(e).</span></>
+            )}
+          </div>
+        )}
+      </div>
+      <div class="pp-info">
+        <span class="muted">Module {lesson.mi + 1} · {lesson.module}</span>
+        <h1>{lesson.title}</h1>
+        <div class="prow">
+          {hasAccess && (
+            <form method="post" action="/api/progression">
+              <input type="hidden" name="course" value={c.slug} /><input type="hidden" name="lesson" value={lesson.key} />
+              <input type="hidden" name="done" value={done.has(lesson.key) ? '0' : '1'} /><input type="hidden" name="next" value={next && !done.has(lesson.key) ? next.key : lesson.key} />
+              <button class:list={['btn', done.has(lesson.key) ? 'btn-line' : 'btn-fg']} type="submit">{done.has(lesson.key) ? '✓ Terminée' : next ? 'Terminer et continuer →' : 'Marquer comme terminée'}</button>
+            </form>
+          )}
+          {prev && <a class="btn btn-line" href={`/espace-eleve/cours/${c.slug}?lecon=${prev.key}`}>← Précédente</a>}
+          {next && <a class="btn btn-line" href={`/espace-eleve/cours/${c.slug}?lecon=${next.key}`}>Suivante →</a>}
+        </div>
+        {canWatch && lesson.resources && lesson.resources.length > 0 && (
+          <div class="pres"><b>Ressources</b>{lesson.resources.map((r) => <a href={r.url} target="_blank" rel="noopener noreferrer">⬇ {r.label}</a>)}</div>
+        )}
+      </div>
+    </div>
+    <aside class="pp-side" aria-label="Leçons du cours">
+      <div class="pp-sidehead"><b>{c.title}</b><span class="pprog" style={`--p:${pct}%`}><i></i></span><span class="muted">{pct} % terminé</span></div>
+      {c.modules.map((m, mi) => (
+        <div class="pp-mod">
+          <span class="pp-modt">{mi + 1}. {m.title}</span>
+          {lessons.filter((l) => l.mi === mi).map((l) => (
+            <a href={`/espace-eleve/cours/${c.slug}?lecon=${l.key}`} aria-current={l.key === lesson.key ? 'page' : undefined} class:list={{ done: done.has(l.key) }}>
+              <span class="ic" aria-hidden="true">{done.has(l.key) ? '✓' : !hasAccess && !l.free ? '🔒' : l.ready ? '▶' : '○'}</span>
+              <span>{l.title}</span>{l.free && !hasAccess && <em>Aperçu</em>}
+            </a>
+          ))}
+        </div>
+      ))}
+    </aside>
+  </section>
+</Portal>

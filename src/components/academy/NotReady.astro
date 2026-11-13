@@ -1,0 +1,12 @@
+---
+import Portal from './Portal.astro';
+import { SITE } from '../../data/site';
+---
+<Portal title="Bientôt ouvert">
+  <section class="wrap pcenter">
+    <span class="eyebrow">Espace élève</span>
+    <h1 class="display">Ouverture très bientôt.</h1>
+    <p class="muted">L’espace élève de Dak Studio School est en cours d’installation. Tu pourras bientôt y créer ton compte, acheter un cours et regarder tes vidéos.</p>
+    <div class="prow"><a class="btn btn-fg" href="/formations">Voir les formations</a><a class="btn btn-line" href={`${SITE.whatsapp}?text=${encodeURIComponent('Bonjour Dak, je veux être prévenu(e) de l’ouverture de l’espace élève.')}`} target="_blank" rel="noopener noreferrer">Être prévenu(e)</a></div>
+  </section>
+</Portal>

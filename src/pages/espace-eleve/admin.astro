@@ -1,0 +1,89 @@
+---
+// Administration de l'école (réservée aux e-mails listés dans ADMIN_EMAILS) :
+// chiffres, derniers paiements, élèves, et accès donnés à la main (paiement en espèces, cadeau…)
+export const prerender = false;
+import Portal from '../../components/academy/Portal.astro';
+import { portalReady } from '../../lib/env';
+import { currentUser, adminClient } from '../../lib/supabase';
+import { parseItem, itemTitle } from '../../lib/access';
+import { privatePage, loginUrl, isAdmin } from '../../lib/portal';
+import { COURSES, TRACKS, fcfa } from '../../data/academy';
+
+privatePage(Astro);
+if (!portalReady()) return Astro.redirect('/espace-eleve', 303);
+const { user } = await currentUser(Astro.request, Astro.cookies);
+if (!user) return Astro.redirect(loginUrl('/espace-eleve/admin'), 303);
+if (!isAdmin(user.email)) return Astro.redirect('/espace-eleve', 303);
+
+const db = adminClient();
+let msg = '', err = '';
+if (Astro.request.method === 'POST') {
+  const f = await Astro.request.formData();
+  const action = String(f.get('action'));
+  const email = String(f.get('email') || '').trim().toLowerCase();
+  const item = String(f.get('item') || '');
+  if (!parseItem(item)) err = 'Formation inconnue.';
+  else {
+    const { data: prof } = await db.from('profiles').select('id').eq('email', email).maybeSingle();
+    if (!prof) err = `Aucun compte élève avec l’adresse ${email}. L’élève doit d’abord créer son compte.`;
+    else if (action === 'grant') {
+      const { error } = await db.from('enrollments').upsert({ user_id: prof.id, item, source: 'manuel' }, { onConflict: 'user_id,item' });
+      msg = error ? '' : `Accès ouvert pour ${email}.`; if (error) err = 'Enregistrement impossible.';
+    } else if (action === 'revoke') {
+      await db.from('enrollments').delete().eq('user_id', prof.id).eq('item', item);
+      msg = `Accès retiré pour ${email}.`;
+    }
+  }
+}
+
+const [{ data: pays }, { data: enr }, { count: students }] = await Promise.all([
+  db.from('payments').select('transaction_id, user_id, item, amount, status, payment_method, created_at').order('created_at', { ascending: false }).limit(50),
+  db.from('enrollments').select('user_id, item, source, created_at').order('created_at', { ascending: false }).limit(200),
+  db.from('profiles').select('id', { count: 'exact', head: true }),
+]);
+const ids = [...new Set([...(pays || []).map((p) => p.user_id), ...(enr || []).map((e) => e.user_id)])];
+const { data: profs } = ids.length ? await db.from('profiles').select('id, email, full_name, phone').in('id', ids) : { data: [] };
+const who = new Map((profs || []).map((p) => [p.id, p]));
+const accepted = (pays || []).filter((p) => p.status === 'ACCEPTED');
+const revenue = accepted.reduce((n, p) => n + p.amount, 0);
+const items = [...TRACKS.map((t) => ({ v: `track:${t.slug}`, l: `Parcours ${t.title}` })), ...COURSES.map((c) => ({ v: `course:${c.slug}`, l: c.title }))];
+const label = (raw: string) => { const it = parseItem(raw); return it ? itemTitle(it) : raw; };
+const statusFr: Record<string, string> = { ACCEPTED: 'Payé', PENDING: 'En attente', REFUSED: 'Refusé' };
+---
+<Portal title="Administration" user={user} admin active="admin">
+  <section class="wrap pdash">
+    <header class="phead"><span class="eyebrow">Administration</span><h1 class="display">Dak Studio School</h1></header>
+    {msg && <p class="pmsg ok" role="status">{msg}</p>}
+    {err && <p class="pmsg err" role="alert">{err}</p>}
+
+    <div class="ab-figs pfigs">
+      <div><span class="display">{students || 0}</span><span class="muted">comptes élèves</span></div>
+      <div><span class="display">{(enr || []).length}</span><span class="muted">accès ouverts</span></div>
+      <div><span class="display">{accepted.length}</span><span class="muted">paiements reçus</span></div>
+      <div><span class="display" style="font-size:clamp(26px,3vw,40px)">{fcfa(revenue) || '0 FCFA'}</span><span class="muted">encaissés (50 derniers)</span></div>
+    </div>
+
+    <h2>Donner ou retirer un accès</h2>
+    <form method="post" class="pform padmin">
+      <label>E-mail de l’élève<input type="email" name="email" required /></label>
+      <label>Formation<select name="item">{items.map((i) => <option value={i.v}>{i.l}</option>)}</select></label>
+      <div class="prow"><button class="btn btn-fg" name="action" value="grant" type="submit">Ouvrir l’accès</button><button class="btn btn-line" name="action" value="revoke" type="submit">Retirer</button></div>
+    </form>
+
+    <h2 style="margin-top:56px">Derniers paiements</h2>
+    <div class="ptable-wrap"><table class="ptable">
+      <thead><tr><th>Date</th><th>Élève</th><th>Formation</th><th>Montant</th><th>Moyen</th><th>Statut</th></tr></thead>
+      <tbody>{(pays || []).map((p) => (
+        <tr><td>{new Date(p.created_at).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' })}</td><td>{who.get(p.user_id)?.email}</td><td>{label(p.item)}</td><td>{fcfa(p.amount)}</td><td>{p.payment_method || '—'}</td><td><span class:list={['pstat', p.status]}>{statusFr[p.status] || p.status}</span></td></tr>
+      ))}</tbody>
+    </table></div>
+
+    <h2 style="margin-top:56px">Élèves inscrits</h2>
+    <div class="ptable-wrap"><table class="ptable">
+      <thead><tr><th>Élève</th><th>Téléphone</th><th>Formation</th><th>Origine</th><th>Depuis</th></tr></thead>
+      <tbody>{(enr || []).map((e) => { const p = who.get(e.user_id); return (
+        <tr><td>{p?.full_name || '—'}<br /><span class="muted">{p?.email}</span></td><td>{p?.phone || '—'}</td><td>{label(e.item)}</td><td>{e.source === 'manuel' ? 'Accès manuel' : 'Paiement'}</td><td>{new Date(e.created_at).toLocaleDateString('fr-FR')}</td></tr>
+      ); })}</tbody>
+    </table></div>
+  </section>
+</Portal>

@@ -3,7 +3,7 @@ import Base from '../../layouts/Base.astro';
 import Level from '../../components/academy/Level.astro';
 import CourseCard from '../../components/academy/CourseCard.astro';
 import { SITE, clip } from '../../data/site';
-import { COURSES, lessonCount, tracksOf, type Course } from '../../data/academy';
+import { COURSES, lessonCount, tracksOf, fcfa, type Course } from '../../data/academy';
 import '../../styles/academy.css';
 export function getStaticPaths() {
   return COURSES.map((c) => ({ params: { slug: c.slug }, props: { c } }));
@@ -13,9 +13,9 @@ const site = Astro.site!.toString().replace(/\/$/, '');
 const url = `${site}/formations/${c.slug}`;
 const tracks = tracksOf(c);
 const others = COURSES.filter((o) => o.slug !== c.slug && (o.topic === c.topic || tracks.some((t) => t.courses.includes(o.slug)))).slice(0, 3);
-const open = c.status === 'ouvert';
+const open = c.status === 'ouvert' && !!c.priceFcfa;
 const waMsg = open ? `Bonjour Dak, je m'inscris au cours « ${c.title} ».` : `Bonjour Dak, je veux être prévenu(e) de l'ouverture du cours « ${c.title} ».`;
-const cta = c.buyUrl || `${SITE.whatsapp}?text=${encodeURIComponent(waMsg)}`;
+const cta = open ? `/espace-eleve/acheter?item=course:${c.slug}` : `${SITE.whatsapp}?text=${encodeURIComponent(waMsg)}`;
 const ld = [
   { '@type': 'BreadcrumbList', itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Formations', item: `${site}/formations` },
@@ -79,8 +79,8 @@ const ld = [
     </div>
 
     <aside class="cbuy" aria-label="Inscription">
-      <span class="price">{open && c.price ? c.price : 'Tarif bientôt annoncé'}</span>
-      <p class="note">{open ? 'Places limitées par session.' : 'Les vidéos sont en préparation. Inscris-toi sur la liste d’attente : tu seras prévenu(e) en premier, avec un tarif de lancement.'}</p>
+      <span class="price">{open ? fcfa(c.priceFcfa) : 'Tarif bientôt annoncé'}</span>
+      <p class="note">{open ? 'Paiement sécurisé par Mobile Money (Orange, MTN, Moov, Wave) ou carte. Accès immédiat et à vie dans ton espace élève.' : 'Les vidéos sont en préparation. Inscris-toi sur la liste d’attente : tu seras prévenu(e) en premier, avec un tarif de lancement.'}</p>
       <dl>
         <dt>Niveau</dt><dd>{c.level}</dd>
         <dt>Format</dt><dd>{c.format}</dd>
@@ -88,8 +88,8 @@ const ld = [
         <dt>Leçons</dt><dd>{lessonCount(c)}</dd>
         <dt>Projet final</dt><dd>Inclus</dd>
       </dl>
-      <a href={cta} target="_blank" rel="noopener noreferrer" class="btn btn-fg">{open ? 'Je m’inscris →' : 'Rejoindre la liste d’attente →'}</a>
-      <span class="portal"><span aria-hidden="true">🎓</span>Espace élève en ligne bientôt : tes vidéos et ta progression au même endroit.</span>
+      {open ? <a href={cta} class="btn btn-fg">Acheter ce cours →</a> : <a href={cta} target="_blank" rel="noopener noreferrer" class="btn btn-fg">Rejoindre la liste d’attente →</a>}
+      <a class="portal" href="/espace-eleve"><span aria-hidden="true">🎓</span>Déjà inscrit(e) ? Ouvre ton espace élève : tes vidéos et ta progression au même endroit.</a>
     </aside>
   </div>
 

@@ -1,0 +1,52 @@
+---
+// Retour de l'élève après la page de paiement CinetPay (en GET ou en POST selon le moyen de paiement)
+export const prerender = false;
+import Portal from '../../../components/academy/Portal.astro';
+import { portalReady, paymentsReady } from '../../../lib/env';
+import { adminClient, currentUser } from '../../../lib/supabase';
+import { settle } from '../../../lib/settle';
+import { parseItem, itemTitle } from '../../../lib/access';
+import { privatePage } from '../../../lib/portal';
+import { courseBySlug } from '../../../data/academy';
+import { SITE } from '../../../data/site';
+
+privatePage(Astro);
+if (!portalReady() || !paymentsReady()) return Astro.redirect('/espace-eleve', 303);
+let tx = Astro.url.searchParams.get('tx') || '';
+if (!tx && Astro.request.method === 'POST') { try { tx = String((await Astro.request.formData()).get('transaction_id') || ''); } catch {} }
+// après un POST venu de CinetPay, on repasse en GET : un rafraîchissement ne renverra rien
+if (Astro.request.method === 'POST') return Astro.redirect(`/espace-eleve/paiement/retour?tx=${encodeURIComponent(tx)}`, 303);
+
+const status = tx ? await settle(tx) : 'UNKNOWN';
+const { data: pay } = tx ? await adminClient().from('payments').select('item').eq('transaction_id', tx).maybeSingle() : { data: null };
+const item = parseItem(pay?.item);
+const first = item ? (item.kind === 'course' ? item.course.slug : courseBySlug(item.track.courses[0]).slug) : '';
+const { user } = await currentUser(Astro.request, Astro.cookies);
+---
+<Portal title="Paiement" user={user}>
+  <section class="wrap pcenter">
+    {status === 'ACCEPTED' ? (
+      <>
+        <span class="pbig" aria-hidden="true">🎉</span>
+        <h1 class="display">Paiement reçu, bienvenue !</h1>
+        <p class="muted">{item ? itemTitle(item) : 'Ta formation'} est maintenant dans ton espace élève.</p>
+        <div class="prow"><a class="btn btn-fg" href={first ? `/espace-eleve/cours/${first}` : '/espace-eleve'}>Commencer le cours →</a><a class="btn btn-line" href="/espace-eleve">Mon espace</a></div>
+      </>
+    ) : status === 'PENDING' ? (
+      <>
+        <span class="pbig" aria-hidden="true">⏳</span>
+        <h1 class="display">Paiement en cours de validation.</h1>
+        <p class="muted">Avec Mobile Money, la confirmation peut prendre quelques minutes. Ton accès s’ouvrira tout seul : actualise cette page ou reviens dans ton espace élève.</p>
+        <div class="prow"><a class="btn btn-fg" href={`/espace-eleve/paiement/retour?tx=${encodeURIComponent(tx)}`}>Actualiser</a><a class="btn btn-line" href="/espace-eleve">Mon espace</a></div>
+      </>
+    ) : (
+      <>
+        <span class="pbig" aria-hidden="true">😕</span>
+        <h1 class="display">Le paiement n’a pas abouti.</h1>
+        <p class="muted">Aucun montant n’a été validé. Tu peux réessayer, ou m’écrire si ton compte a été débité.</p>
+        <div class="prow">{item && <a class="btn btn-fg" href={`/espace-eleve/acheter?item=${pay?.item}`}>Réessayer</a>}<a class="btn btn-line" href={`${SITE.whatsapp}?text=${encodeURIComponent(`Bonjour Dak, problème de paiement (référence ${tx}).`)}`} target="_blank" rel="noopener noreferrer">M’écrire sur WhatsApp</a></div>
+      </>
+    )}
+    {tx && <p class="muted" style="font-size:13px">Référence : {tx}</p>}
+  </section>
+</Portal>

@@ -28,6 +28,7 @@ const waitlist = `${SITE.whatsapp}?text=${encodeURIComponent("Bonjour Dak, je ve
     <div data-reveal=".45" style="display:flex;gap:16px;flex-wrap:wrap">
       <span class="magnetic"><a href="#parcours" class="btn btn-fg">Voir les parcours ↓</a></span>
       <span class="magnetic"><a href="#cours" class="btn btn-line">Tous les cours</a></span>
+      <span class="magnetic"><a href="/espace-eleve" class="btn btn-line">🎓 Espace élève</a></span>
     </div>
   </section>
 
@@ -77,10 +78,6 @@ const waitlist = `${SITE.whatsapp}?text=${encodeURIComponent("Bonjour Dak, je ve
 
 
 <style is:global>
-  .ab-figs { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-  @media (max-width: 700px) { .ab-figs { grid-template-columns: repeat(2, 1fr); } }
-  .ab-figs > div { display: flex; flex-direction: column; gap: 6px; padding: 28px 8px; }
-  .ab-figs .display { font-size: clamp(40px, 5vw, 72px); font-weight: 600; letter-spacing: -0.04em; }
   .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 16px; }
   .step { position: relative; overflow: hidden; min-height: 240px; padding: 28px; border-radius: 24px; border: 1px solid var(--line); display: flex; flex-direction: column; justify-content: space-between; gap: 24px; transition: color .45s ease; }
   .step .fill { position: absolute; inset: 0; background: var(--grad); transform: translateY(101%); transition: transform .55s cubic-bezier(.7,0,.2,1); }

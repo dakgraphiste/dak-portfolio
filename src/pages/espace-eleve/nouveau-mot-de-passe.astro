@@ -1,0 +1,38 @@
+---
+export const prerender = false;
+import Portal from '../../components/academy/Portal.astro';
+import NotReady from '../../components/academy/NotReady.astro';
+import { portalReady } from '../../lib/env';
+import { currentUser } from '../../lib/supabase';
+import { privatePage, loginUrl } from '../../lib/portal';
+
+privatePage(Astro);
+if (!portalReady()) return Astro.rewrite('/espace-eleve');
+const { sb, user } = await currentUser(Astro.request, Astro.cookies);
+if (!user) return Astro.redirect(loginUrl('/espace-eleve/nouveau-mot-de-passe'), 303);
+let error = '';
+if (Astro.request.method === 'POST') {
+  const f = await Astro.request.formData();
+  const p = String(f.get('password') || ''), p2 = String(f.get('password2') || '');
+  if (p.length < 8) error = 'Au moins 8 caractères.';
+  else if (p !== p2) error = 'Les deux mots de passe ne sont pas identiques.';
+  else {
+    const { error: e } = await sb.auth.updateUser({ password: p });
+    if (!e) return Astro.redirect('/espace-eleve?info=mdp', 303);
+    error = 'Impossible de changer le mot de passe. Redemande un lien.';
+  }
+}
+---
+<Portal title="Nouveau mot de passe" user={user}>
+  <section class="wrap pauth">
+    <div class="pauth-side"><span class="eyebrow">Espace élève</span><h1 class="display">Nouveau mot de passe.</h1></div>
+    <div class="pcard">
+      {error && <p class="pmsg err" role="alert">{error}</p>}
+      <form method="post" class="pform">
+        <label>Nouveau mot de passe<input type="password" name="password" required minlength="8" autocomplete="new-password" /></label>
+        <label>Encore une fois<input type="password" name="password2" required minlength="8" autocomplete="new-password" /></label>
+        <button class="btn btn-fg" type="submit">Enregistrer</button>
+      </form>
+    </div>
+  </section>
+</Portal>

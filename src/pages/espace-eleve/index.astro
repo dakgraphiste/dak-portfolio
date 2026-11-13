@@ -1,0 +1,87 @@
+---
+// Tableau de bord de l'élève : ses cours, sa progression, ses paiements
+export const prerender = false;
+import Portal from '../../components/academy/Portal.astro';
+import NotReady from '../../components/academy/NotReady.astro';
+import Level from '../../components/academy/Level.astro';
+import { portalReady } from '../../lib/env';
+import { currentUser } from '../../lib/supabase';
+import { myEnrollments, unlockedCourses, parseItem, itemTitle } from '../../lib/access';
+import { privatePage, loginUrl, isAdmin } from '../../lib/portal';
+import { COURSES, allLessons, fcfa } from '../../data/academy';
+
+privatePage(Astro);
+const ready = portalReady();
+let data: null | { name: string; email: string; mine: { c: (typeof COURSES)[number]; done: number; total: number; nextKey: string }[]; payments: any[]; admin: boolean; others: typeof COURSES } = null;
+let user = null;
+if (ready) {
+  const r = await currentUser(Astro.request, Astro.cookies);
+  user = r.user;
+  if (!user) return Astro.redirect(loginUrl('/espace-eleve'), 303);
+  const items = await myEnrollments(r.sb, user.id);
+  const unlocked = unlockedCourses(items);
+  const { data: prog } = await r.sb.from('lesson_progress').select('course, lesson').eq('user_id', user.id);
+  const { data: pays } = await r.sb.from('payments').select('transaction_id, item, amount, status, created_at').eq('user_id', user.id).order('created_at', { ascending: false }).limit(10);
+  const doneBy = new Map<string, Set<string>>();
+  (prog || []).forEach((p) => { if (!doneBy.has(p.course)) doneBy.set(p.course, new Set()); doneBy.get(p.course)!.add(p.lesson); });
+  const mine = COURSES.filter((c) => unlocked.has(c.slug)).map((c) => {
+    const ls = allLessons(c), d = doneBy.get(c.slug) || new Set();
+    return { c, done: ls.filter((l) => d.has(l.key)).length, total: ls.length, nextKey: (ls.find((l) => !d.has(l.key)) || ls[0]).key };
+  });
+  data = {
+    name: (user.user_metadata?.full_name as string) || user.email || '', email: user.email || '', mine,
+    payments: pays || [], admin: isAdmin(user.email), others: COURSES.filter((c) => !unlocked.has(c.slug)).slice(0, 3),
+  };
+}
+const info = Astro.url.searchParams.get('info') === 'mdp' ? 'Mot de passe modifié.' : '';
+const statusFr: Record<string, string> = { ACCEPTED: 'Payé', PENDING: 'En attente', REFUSED: 'Refusé' };
+---
+{!ready || !data ? <NotReady /> : (
+<Portal title="Mes cours" user={user} admin={data.admin} active="home">
+  <section class="wrap pdash">
+    {info && <p class="pmsg ok" role="status">{info}</p>}
+    <header class="phead">
+      <span class="eyebrow">Espace élève</span>
+      <h1 class="display">Salut {data.name.split(' ')[0]} 👋</h1>
+      <p class="muted">{data.mine.length ? 'Reprends là où tu t’es arrêté(e).' : 'Tu n’as pas encore de cours. Choisis ta première formation dans le catalogue.'}</p>
+    </header>
+
+    {data.mine.length > 0 && (
+      <div class="pcourses">
+        {data.mine.map(({ c, done, total, nextKey }) => (
+          <a class="pcourse" href={`/espace-eleve/cours/${c.slug}?lecon=${nextKey}`}>
+            <img src={c.img} alt="" loading="lazy" />
+            <div>
+              <Level level={c.level} />
+              <b>{c.title}</b>
+              <span class="pprog" style={`--p:${total ? Math.round((done / total) * 100) : 0}%`}><i></i></span>
+              <span class="muted">{done} / {total} leçons · {total ? Math.round((done / total) * 100) : 0} %</span>
+            </div>
+            <span class="pgo">{done === 0 ? 'Commencer' : done === total ? 'Revoir' : 'Continuer'} →</span>
+          </a>
+        ))}
+      </div>
+    )}
+
+    {data.others.length > 0 && (
+      <div>
+        <div class="section-title" style="margin-top:56px"><h2>À découvrir</h2><a class="muted" href="/formations">Tout le catalogue →</a></div>
+        <div class="pmini">{data.others.map((c) => <a href={`/formations/${c.slug}`}><img src={c.img} alt="" loading="lazy" /><span><b>{c.title}</b><span class="muted">{c.level} · {c.status === 'ouvert' && c.priceFcfa ? fcfa(c.priceFcfa) : 'Bientôt'}</span></span></a>)}</div>
+      </div>
+    )}
+
+    {data.payments.length > 0 && (
+      <div>
+        <h2 style="margin-top:56px">Mes paiements</h2>
+        <table class="ptable">
+          <thead><tr><th>Date</th><th>Formation</th><th>Montant</th><th>Statut</th></tr></thead>
+          <tbody>{data.payments.map((p) => { const it = parseItem(p.item); return (
+            <tr><td>{new Date(p.created_at).toLocaleDateString('fr-FR')}</td><td>{it ? itemTitle(it) : p.item}</td><td>{fcfa(p.amount)}</td><td><span class:list={['pstat', p.status]}>{statusFr[p.status] || p.status}</span></td></tr>
+          ); })}</tbody>
+        </table>
+      </div>
+    )}
+    <p class="muted" style="margin-top:48px;font-size:14px">Connecté(e) avec {data.email} · <a class="accent" href="/espace-eleve/nouveau-mot-de-passe">Changer mon mot de passe</a></p>
+  </section>
+</Portal>
+)}

@@ -1,8 +1,9 @@
 // Dak Studio School : parcours, cours, niveaux et leçons.
 // ─ Pour ajouter un cours : copier un bloc de COURSES, changer le slug (adresse : /formations/<slug>).
 // ─ Quand une vidéo est tournée : passer la leçon en `ready: true` (et `free: true` pour une leçon offerte en aperçu).
-// ─ Quand les inscriptions ouvrent : `status: 'ouvert'` et un `price` (ex. '25 000 FCFA').
-//   Plus tard, `buyUrl` pourra pointer vers la page de paiement / le portail élève.
+// ─ Vidéo : mettre l'identifiant Bunny Stream de la leçon dans `video` (Bunny → Stream → la vidéo → « Video ID »).
+// ─ Quand les inscriptions ouvrent : `status: 'ouvert'` et un `priceFcfa` (ex. 25000, multiple de 5).
+//   Le bouton de la fiche devient alors « Acheter » : paiement CinetPay puis accès dans l'espace élève.
 import { img } from './site';
 
 export type Level = 'Débutant' | 'Intermédiaire' | 'Avancé';
@@ -12,16 +13,16 @@ export const LEVEL_DOTS: Record<Level, number> = { 'Débutant': 1, 'Intermédiai
 export type Topic = 'Design' | 'Brand' | 'Publicité' | 'Retouche' | 'Packaging';
 export const TOPICS: Topic[] = ['Design', 'Brand', 'Publicité', 'Retouche', 'Packaging'];
 
-export type Lesson = { title: string; duration?: string; ready?: boolean; free?: boolean };
+export type Lesson = { title: string; duration?: string; ready?: boolean; free?: boolean; video?: string; resources?: { label: string; url: string }[] };
 export type Module = { title: string; lessons: Lesson[] };
 export type Course = {
   slug: string; title: string; topic: Topic; level: Level; format: 'En ligne' | 'Présentiel' | 'Atelier';
   duration: string; img: string; short: string; description: string;
   outcomes: string[]; prerequisites: string[]; software: string[]; project: string;
   modules: Module[];
-  status: 'bientot' | 'ouvert'; price?: string; buyUrl?: string;
+  status: 'bientot' | 'ouvert'; priceFcfa?: number;
 };
-export type Track = { slug: string; title: string; tagline: string; description: string; img: string; courses: string[]; career: string };
+export type Track = { slug: string; title: string; tagline: string; description: string; img: string; courses: string[]; career: string; priceFcfa?: number };
 
 const L = (...titles: string[]): Lesson[] => titles.map((title) => ({ title }));
 
@@ -176,3 +177,8 @@ export const courseBySlug = (s: string) => COURSES.find((c) => c.slug === s)!;
 export const lessonCount = (c: Course) => c.modules.reduce((n, m) => n + m.lessons.length, 0);
 export const tracksOf = (c: Course) => TRACKS.filter((t) => t.courses.includes(c.slug));
 export const hours = (d: string) => Number(d.replace(/[^0-9.]/g, '')) || 0;
+
+/** Identifiant stable d'une leçon dans un cours : « module-leçon », ex. '2-1'. */
+export const lessonKey = (mi: number, li: number) => `${mi + 1}-${li + 1}`;
+export const allLessons = (c: Course) => c.modules.flatMap((m, mi) => m.lessons.map((l, li) => ({ ...l, key: lessonKey(mi, li), module: m.title, mi, li })));
+export const fcfa = (n?: number) => (n ? `${n.toLocaleString('fr-FR').replace(/\u202f|\u00a0/g, ' ')} FCFA` : '');

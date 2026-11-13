@@ -1,0 +1,66 @@
+---
+// Récapitulatif avant paiement, puis envoi vers la page de paiement CinetPay
+export const prerender = false;
+import Portal from '../../components/academy/Portal.astro';
+import NotReady from '../../components/academy/NotReady.astro';
+import { portalReady, paymentsReady } from '../../lib/env';
+import { currentUser, adminClient } from '../../lib/supabase';
+import { parseItem, itemTitle, itemPrice, itemOpen, myEnrollments, unlockedCourses } from '../../lib/access';
+import { privatePage, loginUrl } from '../../lib/portal';
+import { initPayment, newTransactionId } from '../../lib/cinetpay';
+import { courseBySlug, fcfa, lessonCount } from '../../data/academy';
+
+privatePage(Astro);
+if (!portalReady()) return Astro.rewrite('/espace-eleve');
+const raw = Astro.url.searchParams.get('item');
+const item = parseItem(raw);
+if (!item || !itemOpen(item) || !itemPrice(item)) return Astro.redirect('/formations', 303);
+const self = `/espace-eleve/acheter?item=${raw}`;
+const { sb, user } = await currentUser(Astro.request, Astro.cookies);
+if (!user) return Astro.redirect(`${loginUrl(self)}&mode=inscription`, 303);
+
+// déjà inscrit : on évite un double paiement
+const unlocked = unlockedCourses(await myEnrollments(sb, user.id));
+const courses = item.kind === 'course' ? [item.course] : item.track.courses.map(courseBySlug);
+const already = courses.every((c) => unlocked.has(c.slug));
+if (already) return Astro.redirect(`/espace-eleve/cours/${courses[0].slug}`, 303);
+
+const price = itemPrice(item);
+let error = '';
+if (Astro.request.method === 'POST') {
+  if (!paymentsReady()) error = 'Le paiement en ligne n’est pas encore activé. Écris-moi sur WhatsApp pour t’inscrire.';
+  else {
+    const tx = newTransactionId();
+    const { error: dbErr } = await adminClient().from('payments').insert({ transaction_id: tx, user_id: user.id, item: raw, amount: price, status: 'PENDING' });
+    if (dbErr) error = 'Impossible de préparer le paiement. Réessaie dans un instant.';
+    else {
+      const name = String(user.user_metadata?.full_name || '').trim().split(/\s+/);
+      const res = await initPayment({
+        transactionId: tx, amount: price, description: itemTitle(item),
+        notifyUrl: new URL('/api/cinetpay/notification', Astro.url.origin).toString(),
+        returnUrl: new URL(`/espace-eleve/paiement/retour?tx=${tx}`, Astro.url.origin).toString(),
+        customer: { name: name.slice(1).join(' ') || name[0] || '', surname: name[0] || '', email: user.email || '', phone: String(user.user_metadata?.phone || '') },
+      });
+      if (res.ok) return Astro.redirect(res.url, 303);
+      error = `Le service de paiement a refusé la demande (${res.error}). Réessaie ou écris-moi sur WhatsApp.`;
+    }
+  }
+}
+---
+<Portal title="Paiement" user={user}>
+  <section class="wrap pauth">
+    <div class="pauth-side">
+      <span class="eyebrow">Récapitulatif</span>
+      <h1 class="display">{itemTitle(item)}</h1>
+      <ul class="precap">{courses.map((c) => <li><img src={c.img} alt="" /><span><b>{c.title}</b><span class="muted">{c.level} · {c.duration} · {lessonCount(c)} leçons</span></span></li>)}</ul>
+    </div>
+    <div class="pcard">
+      {error && <p class="pmsg err" role="alert">{error}</p>}
+      <span class="eyebrow">Total</span>
+      <span class="ptotal">{fcfa(price)}</span>
+      <ul class="pperks"><li>Accès immédiat et à vie</li><li>Vidéos, ressources et projet final</li><li>Suivi de ta progression</li></ul>
+      <form method="post"><button class="btn btn-fg" type="submit" style="width:100%;justify-content:center">Payer {fcfa(price)} →</button></form>
+      <p class="muted" style="font-size:13px;margin:0">Paiement sécurisé par CinetPay : Orange Money, MTN MoMo, Moov Money, Wave ou carte bancaire. Tu reviendras ici automatiquement après le paiement.</p>
+    </div>
+  </section>
+</Portal>

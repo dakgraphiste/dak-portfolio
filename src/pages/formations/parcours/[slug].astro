@@ -2,7 +2,7 @@
 import Base from '../../../layouts/Base.astro';
 import CourseCard from '../../../components/academy/CourseCard.astro';
 import { SITE, clip } from '../../../data/site';
-import { TRACKS, courseBySlug, lessonCount, hours, type Track } from '../../../data/academy';
+import { TRACKS, courseBySlug, lessonCount, hours, fcfa, type Track } from '../../../data/academy';
 import '../../../styles/academy.css';
 export function getStaticPaths() {
   return TRACKS.map((t) => ({ params: { slug: t.slug }, props: { t } }));
@@ -12,7 +12,8 @@ const courses = t.courses.map(courseBySlug);
 const site = Astro.site!.toString().replace(/\/$/, '');
 const total = courses.reduce((n, c) => n + hours(c.duration), 0);
 const lessons = courses.reduce((n, c) => n + lessonCount(c), 0);
-const wa = `${SITE.whatsapp}?text=${encodeURIComponent(`Bonjour Dak, le parcours « ${t.title} » m'intéresse.`)}`;
+const open = !!t.priceFcfa && courses.every((c) => c.status === 'ouvert');
+const wa = open ? `/espace-eleve/acheter?item=track:${t.slug}` : `${SITE.whatsapp}?text=${encodeURIComponent(`Bonjour Dak, le parcours « ${t.title} » m'intéresse.`)}`;
 const ld = [
   { '@type': 'BreadcrumbList', itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Formations', item: `${site}/formations` },
@@ -41,11 +42,11 @@ const ld = [
       <section class="cproj"><span class="eyebrow">Débouchés</span><p>{t.career}</p></section>
     </div>
     <aside class="cbuy" aria-label="Inscription au parcours">
-      <span class="price">Tarif bientôt annoncé</span>
+      <span class="price">{open ? fcfa(t.priceFcfa) : 'Tarif bientôt annoncé'}</span>
       <p class="note">Le parcours complet coûtera moins cher que les cours pris séparément. Rejoins la liste d’attente pour être prévenu(e) en premier.</p>
       <dl><dt>Cours</dt><dd>{courses.length}</dd><dt>Leçons</dt><dd>{lessons}</dd><dt>Durée totale</dt><dd>{total} h</dd><dt>Projets</dt><dd>{courses.length} projets finaux</dd></dl>
-      <a href={wa} target="_blank" rel="noopener noreferrer" class="btn btn-fg">Rejoindre la liste d’attente →</a>
-      <span class="portal"><span aria-hidden="true">🎓</span>Espace élève en ligne bientôt.</span>
+      {open ? <a href={wa} class="btn btn-fg">Acheter le parcours →</a> : <a href={wa} target="_blank" rel="noopener noreferrer" class="btn btn-fg">Rejoindre la liste d’attente →</a>}
+      <a class="portal" href="/espace-eleve"><span aria-hidden="true">🎓</span>Déjà inscrit(e) ? Ouvre ton espace élève.</a>
     </aside>
   </div>
 </Base>
