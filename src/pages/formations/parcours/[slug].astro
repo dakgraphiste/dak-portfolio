@@ -1,0 +1,51 @@
+---
+import Base from '../../../layouts/Base.astro';
+import CourseCard from '../../../components/academy/CourseCard.astro';
+import { SITE, clip } from '../../../data/site';
+import { TRACKS, courseBySlug, lessonCount, hours, type Track } from '../../../data/academy';
+import '../../../styles/academy.css';
+export function getStaticPaths() {
+  return TRACKS.map((t) => ({ params: { slug: t.slug }, props: { t } }));
+}
+const { t } = Astro.props as { t: Track };
+const courses = t.courses.map(courseBySlug);
+const site = Astro.site!.toString().replace(/\/$/, '');
+const total = courses.reduce((n, c) => n + hours(c.duration), 0);
+const lessons = courses.reduce((n, c) => n + lessonCount(c), 0);
+const wa = `${SITE.whatsapp}?text=${encodeURIComponent(`Bonjour Dak, le parcours « ${t.title} » m'intéresse.`)}`;
+const ld = [
+  { '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Formations', item: `${site}/formations` },
+    { '@type': 'ListItem', position: 2, name: `Parcours ${t.title}`, item: `${site}/formations/parcours/${t.slug}` }] },
+  { '@type': 'ItemList', name: `Parcours ${t.title}`, itemListElement: courses.map((c, i) => ({ '@type': 'ListItem', position: i + 1, url: `${site}/formations/${c.slug}`, name: c.title })) }
+];
+---
+<Base title={`Parcours ${t.title} — formation design`} description={clip(`${t.description} ${courses.length} cours, ${total} h de contenu.`)} image={t.img} jsonld={ld}>
+  <section class="chero" style="min-height:70vh">
+    <img src={t.img} alt="" fetchpriority="high" />
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Fil d'Ariane"><a href="/formations">Formations</a><span>›</span><span>Parcours</span></nav>
+      <span class="eyebrow" style="color:#FF9A6A">Parcours</span>
+      <h1>{t.title}</h1>
+      <p class="lead">{t.description}</p>
+      <div class="cfacts"><span>{courses.length} cours</span><span>{lessons} leçons</span><span>{total} h</span><span>{courses[0].level} → {courses[courses.length - 1].level}</span></div>
+    </div>
+  </section>
+
+  <div class="wrap clayout">
+    <div class="cmain">
+      <section>
+        <h2>Les étapes</h2>
+        <div class="path">{courses.map((c, i) => <div class="pstep" data-n={i + 1}><CourseCard c={c} step={i + 1} /></div>)}</div>
+      </section>
+      <section class="cproj"><span class="eyebrow">Débouchés</span><p>{t.career}</p></section>
+    </div>
+    <aside class="cbuy" aria-label="Inscription au parcours">
+      <span class="price">Tarif bientôt annoncé</span>
+      <p class="note">Le parcours complet coûtera moins cher que les cours pris séparément. Rejoins la liste d’attente pour être prévenu(e) en premier.</p>
+      <dl><dt>Cours</dt><dd>{courses.length}</dd><dt>Leçons</dt><dd>{lessons}</dd><dt>Durée totale</dt><dd>{total} h</dd><dt>Projets</dt><dd>{courses.length} projets finaux</dd></dl>
+      <a href={wa} target="_blank" rel="noopener noreferrer" class="btn btn-fg">Rejoindre la liste d’attente →</a>
+      <span class="portal"><span aria-hidden="true">🎓</span>Espace élève en ligne bientôt.</span>
+    </aside>
+  </div>
+</Base>

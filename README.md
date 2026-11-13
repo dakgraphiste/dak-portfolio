@@ -72,3 +72,11 @@ En cas d'erreur, Vercel garde l'ancienne version en ligne. On peut revenir en ar
 ## Mise en ligne
 
 Le dépôt GitHub est relié à Vercel : chaque `git push` sur `main` met le site à jour automatiquement.
+
+## Formations (Dak Studio School)
+
+Tout se trouve dans `src/data/academy.ts` :
+- **Cours** (`COURSES`) : titre, thème, niveau (Débutant / Intermédiaire / Avancé), durée, modules et leçons. Adresse : `/formations/<slug>`.
+- **Parcours** (`TRACKS`) : liste de cours qui s'enchaînent. Adresse : `/formations/parcours/<slug>`.
+- Vidéo tournée : passer la leçon en `ready: true` (`free: true` pour un aperçu gratuit).
+- Ouverture des inscriptions : `status: 'ouvert'` et `price: '25 000 FCFA'`. Plus tard, `buyUrl` pourra pointer vers le paiement / le portail élève.

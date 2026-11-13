@@ -1,0 +1,109 @@
+---
+import Base from '../../layouts/Base.astro';
+import Level from '../../components/academy/Level.astro';
+import CourseCard from '../../components/academy/CourseCard.astro';
+import { SITE, clip } from '../../data/site';
+import { COURSES, lessonCount, tracksOf, type Course } from '../../data/academy';
+import '../../styles/academy.css';
+export function getStaticPaths() {
+  return COURSES.map((c) => ({ params: { slug: c.slug }, props: { c } }));
+}
+const { c } = Astro.props as { c: Course };
+const site = Astro.site!.toString().replace(/\/$/, '');
+const url = `${site}/formations/${c.slug}`;
+const tracks = tracksOf(c);
+const others = COURSES.filter((o) => o.slug !== c.slug && (o.topic === c.topic || tracks.some((t) => t.courses.includes(o.slug)))).slice(0, 3);
+const open = c.status === 'ouvert';
+const waMsg = open ? `Bonjour Dak, je m'inscris au cours « ${c.title} ».` : `Bonjour Dak, je veux être prévenu(e) de l'ouverture du cours « ${c.title} ».`;
+const cta = c.buyUrl || `${SITE.whatsapp}?text=${encodeURIComponent(waMsg)}`;
+const ld = [
+  { '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Formations', item: `${site}/formations` },
+    { '@type': 'ListItem', position: 2, name: c.title, item: url }] },
+  { '@type': 'Course', name: c.title, description: c.description, url, inLanguage: 'fr', educationalLevel: c.level, timeRequired: `PT${c.duration.replace(/[^0-9]/g, '')}H`,
+    teaches: c.outcomes, coursePrerequisites: c.prerequisites, image: site + c.img.split('?')[0],
+    provider: { '@type': 'Organization', name: 'Dak Studio School', sameAs: site },
+    hasCourseInstance: { '@type': 'CourseInstance', courseMode: c.format === 'En ligne' ? 'online' : 'onsite', instructor: { '@id': `${site}/#davy` } } }
+];
+---
+<Base title={`${c.title} — formation ${c.level.toLowerCase()}`} description={clip(`${c.short} Cours ${c.level.toLowerCase()} de ${c.duration}, ${lessonCount(c)} leçons, par Dak Studio School.`)} image={c.img} jsonld={ld}>
+  <section class="chero">
+    <img src={c.img} alt="" fetchpriority="high" />
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Fil d'Ariane"><a href="/formations">Formations</a><span>›</span>{tracks[0] && <><a href={`/formations/parcours/${tracks[0].slug}`}>Parcours {tracks[0].title}</a><span>›</span></>}<span>{c.topic}</span></nav>
+      <Level level={c.level} light />
+      <h1>{c.title}</h1>
+      <p class="lead">{c.short}</p>
+      <div class="cfacts"><span>{c.topic}</span><span>{c.format}</span><span>{c.duration}</span><span>{c.modules.length} modules · {lessonCount(c)} leçons</span>{!open && <span style="background:#FF5A1F;border-color:#FF5A1F;color:#0A0A0A">Bientôt disponible</span>}</div>
+    </div>
+  </section>
+
+  <div class="wrap clayout">
+    <div class="cmain">
+      <section><h2>Le cours</h2><p style="margin:0;font-size:18px;line-height:1.65">{c.description}</p></section>
+
+      <section><h2>Ce que tu sauras faire</h2><ul class="outs">{c.outcomes.map((o) => <li>{o}</li>)}</ul></section>
+
+      <section>
+        <h2>Programme</h2>
+        <div class="curr">
+          {c.modules.map((m, i) => (
+            <details open={i === 0}>
+              <summary><span class="n">{String(i + 1).padStart(2, '0')}</span><span class="t">{m.title}</span><span class="c">{m.lessons.length} leçons</span></summary>
+              <ol>{m.lessons.map((l) => (
+                <li class:list={{ free: l.free }}>
+                  <span class="ico" aria-hidden="true">{l.ready ? (l.free ? '▶' : '🔒') : '○'}</span>
+                  <span>{l.title}</span>
+                  <span class="st">{l.ready ? (l.free ? 'Aperçu gratuit' : (l.duration || 'Réservé aux inscrits')) : 'En préparation'}</span>
+                </li>
+              ))}</ol>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section class="cproj"><span class="eyebrow">Projet final</span><p>{c.project}</p></section>
+
+      <section class="req">
+        <div><b>Prérequis</b><ul>{c.prerequisites.map((p) => <li>{p}</li>)}</ul></div>
+        <div><b>Logiciels</b><span class="soft">{c.software.map((s) => <span>{s}</span>)}</span></div>
+      </section>
+
+      <section>
+        <h2>Ton formateur</h2>
+        <div class="trainer">
+          <img src="/images/davy-480.webp" alt="Davy Aymard Kouassi" loading="lazy" />
+          <div><b>{SITE.name}</b><span class="muted">{SITE.role} · Abidjan</span><span>Plus de 7 ans de projets pour Budweiser, TotalEnergies, La Vache qui rit, Yango et de nombreuses marques africaines. <a class="accent" href="/a-propos">Mon parcours →</a></span></div>
+        </div>
+      </section>
+    </div>
+
+    <aside class="cbuy" aria-label="Inscription">
+      <span class="price">{open && c.price ? c.price : 'Tarif bientôt annoncé'}</span>
+      <p class="note">{open ? 'Places limitées par session.' : 'Les vidéos sont en préparation. Inscris-toi sur la liste d’attente : tu seras prévenu(e) en premier, avec un tarif de lancement.'}</p>
+      <dl>
+        <dt>Niveau</dt><dd>{c.level}</dd>
+        <dt>Format</dt><dd>{c.format}</dd>
+        <dt>Durée</dt><dd>{c.duration}</dd>
+        <dt>Leçons</dt><dd>{lessonCount(c)}</dd>
+        <dt>Projet final</dt><dd>Inclus</dd>
+      </dl>
+      <a href={cta} target="_blank" rel="noopener noreferrer" class="btn btn-fg">{open ? 'Je m’inscris →' : 'Rejoindre la liste d’attente →'}</a>
+      <span class="portal"><span aria-hidden="true">🎓</span>Espace élève en ligne bientôt : tes vidéos et ta progression au même endroit.</span>
+    </aside>
+  </div>
+
+  {tracks.length > 0 && (
+    <section class="wrap" style="padding-bottom:72px">
+      <div class="section-title"><h2>Dans le parcours</h2></div>
+      {tracks.map((t) => <a class="tcard2" style="min-height:260px" href={`/formations/parcours/${t.slug}`}><img src={t.img} alt="" loading="lazy" /><span class="eyebrow">Parcours · {t.courses.length} cours</span><h3>{t.title}</h3><p>{t.tagline} →</p></a>)}
+    </section>
+  )}
+
+  {others.length > 0 && (
+    <section class="wrap" style="padding-bottom:110px">
+      <div class="section-title"><h2>Tu aimeras aussi</h2><a href="/formations#cours" class="muted">Tous les cours →</a></div>
+      <div class="cgrid">{others.map((o) => <CourseCard c={o} />)}</div>
+    </section>
+  )}
+</Base>

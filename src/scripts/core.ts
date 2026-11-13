@@ -180,6 +180,33 @@ document.querySelectorAll<HTMLElement>('[data-filter-scope]').forEach((scope) =>
   if (start) apply(start, false);
 });
 
+/* ---------- formations : filtres croisés niveau × thème ---------- */
+{
+  // filtres croisés niveau × thème
+  const root = document.querySelector<HTMLElement>('[data-academy]');
+  if (root) {
+    const state: Record<string, string> = { level: 'Tous', topic: 'Tous' };
+    const cards = [...root.querySelectorAll<HTMLElement>('.ccard')];
+    const count = root.querySelector('[data-acount]'), empty = root.querySelector<HTMLElement>('[data-aempty]');
+    const apply = () => {
+      let n = 0;
+      cards.forEach((c) => {
+        const ok = (state.level === 'Tous' || c.dataset.level === state.level) && (state.topic === 'Tous' || c.dataset.topic === state.topic);
+        c.hidden = !ok; if (ok) n++;
+      });
+      if (count) count.textContent = `(${n})`;
+      if (empty) empty.hidden = n > 0;
+    };
+    root.querySelectorAll<HTMLButtonElement>('[data-af]').forEach((b) => b.addEventListener('click', () => {
+      const k = b.dataset.af!; state[k] = b.dataset.v!;
+      root.querySelectorAll<HTMLButtonElement>(`[data-af="${k}"]`).forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+      apply();
+    }));
+    const q = new URLSearchParams(location.search);
+    for (const k of ['level', 'topic']) { const v = q.get(k); const b = v && root.querySelector<HTMLButtonElement>(`[data-af="${k}"][data-v="${v}"]`); if (b) b.click(); }
+  }
+}
+
 /* ---------- compteurs qui défilent jusqu'à leur valeur ---------- */
 document.querySelectorAll<HTMLElement>('[data-countup]').forEach((el) => {
   const end = Number(el.dataset.countup || 0);

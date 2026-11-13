@@ -74,7 +74,7 @@ const AGENCE = 'Direction artistique · agence SimplyBlack';
 const version = (name: string) => {
   try { return createHash('md5').update(readFileSync(`public/images/projets/${name}.webp`)).digest('hex').slice(0, 8); } catch { return '1'; }
 };
-const img = (name: string) => `/images/projets/${name}.webp?v=${version(name)}`;
+export const img = (name: string) => `/images/projets/${name}.webp?v=${version(name)}`;
 const crops = (name: string, n = 3) => Array.from({ length: n }, (_, k) => img(`${name}-c${k + 1}`));
 
 type In = Omit<Project, 'cover' | 'gallery' | 'poster' | 'behance' | 'year' | 'role' | 'brief' | 'concept' | 'challenge'> &
@@ -399,11 +399,4 @@ export const catSlug = (c: string) => c.normalize('NFD').replace(/[\u0300-\u036f
 // Marques accompagnées (en agence chez SimplyBlack et en freelance)
 export const CLIENTS = ['Budweiser', 'TotalEnergies', 'La Vache qui rit', 'Yango', 'FanMilk', 'Bonnet Rouge', 'Mitsubishi', 'Bavaria', 'SuperClean', 'Air Elegance', 'Orika', "Chap'n", 'Lumora', 'Pakinou', 'Trajolou', 'Abodjama', 'Bronzé', 'KPALO', 'Santé Afrique', 'Les Délices Africains'];
 
-export const COURSES = [
-  { title: 'Brand identity : du brief à la charte graphique', modules: ["Analyser un brief et définir la plateforme de marque", "Recherches, moodboard et pistes créatives", "Construire le logo et ses déclinaisons", "Couleurs, typographies et système graphique", "Monter la charte et la présenter au client"], desc: 'La méthode complète pour créer une identité cohérente : brief, recherches, logo, couleurs, typographies et charte.', level: 'Tous niveaux', format: 'En ligne', img: '/images/projets/chapn-brand.webp' },
-  { title: 'Retouche photo professionnelle', modules: ["Préparer son image : formats, calques, non destructif", "Peau naturelle : nettoyage, dodge & burn", "Lumière et volumes", "Colorimétrie et étalonnage", "Retouche produit et export pour le web et l'impression"], desc: 'Peau naturelle, lumière et couleurs : les techniques de retouche beauté et produit sur Photoshop.', level: 'Débutant', format: 'Présentiel', img: '/images/projets/retouche-2.webp' },
-  { title: "Création d'affiches qui marquent", modules: ["Comprendre le message et la cible", "Composition et hiérarchie de l'information", "Typographie expressive", "Couleurs, images et contraste", "Déclinaisons print, réseaux et grand format"], desc: 'Hiérarchie, typographie, couleurs : concevoir des affiches lisibles qui attirent l’œil, en print comme sur écran.', level: 'Débutant', format: 'En ligne', img: '/images/projets/king-fish.webp' },
-  { title: 'Design pour les réseaux sociaux', modules: ["Construire un gabarit de marque", "Concevoir une série de posts cohérente", "Formats : post, carrousel, story", "Planifier un content calendar", "Exporter et livrer à un client"], desc: 'Créer des posts cohérents et efficaces pour une marque : gabarits, séries, formats et déclinaisons.', level: 'Débutant', format: 'En ligne', img: '/images/projets/placali-chap.webp' },
-  { title: 'Packaging et visuels publicitaires', modules: ["Lire et préparer une dieline", "Habiller le packaging : faces, mentions, codes", "Contrôle avant impression", "Mettre le produit en scène (mockup, KV)", "Décliner la campagne publicitaire"], desc: 'Concevoir un emballage qui se démarque en rayon, puis le visuel publicitaire qui le met en scène.', level: 'Intermédiaire', format: 'Atelier', img: '/images/projets/freeandize.webp' },
-  { title: "Et bien d'autres : formation sur mesure", modules: ["Un échange pour définir tes objectifs", "Un programme construit pour toi ou ton équipe", "Des exercices sur tes propres projets", "Un suivi après la formation"], desc: 'Un besoin précis ou une équipe à former ? On construit ensemble un programme adapté à ton niveau et à tes objectifs.', level: 'Tous niveaux', format: 'Atelier', img: '/images/projets/lumora-brand.webp' }
-];
+// Les formations sont dans src/data/academy.ts

@@ -1,0 +1,94 @@
+---
+import Base from '../../layouts/Base.astro';
+import Mascot from '../../components/Mascot.astro';
+import CourseCard from '../../components/academy/CourseCard.astro';
+import { SITE } from '../../data/site';
+import { COURSES, TRACKS, LEVELS, TOPICS, courseBySlug, lessonCount, hours } from '../../data/academy';
+import '../../styles/academy.css';
+
+const site = Astro.site!.toString().replace(/\/$/, '');
+const totalLessons = COURSES.reduce((n, c) => n + lessonCount(c), 0);
+const totalHours = COURSES.reduce((n, c) => n + hours(c.duration), 0);
+const ld = [{ '@type': 'ItemList', name: 'Formations Dak Studio School', itemListElement: COURSES.map((c, i) => ({ '@type': 'ListItem', position: i + 1, url: `${site}/formations/${c.slug}`, name: c.title })) }];
+const steps = [
+  ['01', 'Choisis ton parcours', 'Un parcours complet ou un cours à la carte, selon ton niveau.'],
+  ['02', 'Réserve ta place', 'Inscription par WhatsApp en attendant le paiement en ligne.'],
+  ['03', 'Apprends à ton rythme', 'Vidéos, exercices concrets et retours personnalisés.'],
+  ['04', 'Repars avec un projet', 'Un travail fini à mettre dans ton portfolio.']
+];
+const waitlist = `${SITE.whatsapp}?text=${encodeURIComponent("Bonjour Dak, je veux être prévenu(e) de l'ouverture des formations Dak Studio School.")}`;
+---
+<Base title="Formations en design graphique à Abidjan et en ligne" description="Dak Studio School : parcours et cours de design graphique, brand identity, affiches, réseaux sociaux, retouche photo et packaging, du niveau débutant à avancé." image="/images/og/formations.jpg" jsonld={ld}>
+  <section class="wrap" style="padding-top:150px;padding-bottom:72px;display:flex;flex-wrap:wrap;gap:48px;align-items:flex-end;justify-content:space-between">
+    <div style="flex:1 1 640px;min-width:0;display:flex;flex-direction:column;gap:28px">
+      <span class="eyebrow" data-reveal>Dak Studio School · en ligne et à Abidjan</span>
+      <h1 class="display" data-lines style="font-size:clamp(52px,8.5vw,132px);font-weight:600"><span class="line-mask"><span>Apprends le</span></span><span class="line-mask"><span>design avec <span class="accent">moi.</span></span></span></h1>
+      <p class="muted" data-reveal=".3" style="margin:0;max-width:580px;font-size:19px;line-height:1.55">Des parcours complets et des cours à la carte, du niveau débutant à avancé, construits à partir de vrais projets clients.</p>
+    </div>
+    <div data-reveal=".45" style="display:flex;gap:16px;flex-wrap:wrap">
+      <span class="magnetic"><a href="#parcours" class="btn btn-fg">Voir les parcours ↓</a></span>
+      <span class="magnetic"><a href="#cours" class="btn btn-line">Tous les cours</a></span>
+    </div>
+  </section>
+
+  <section class="wrap" style="padding-bottom:40px">
+    <div class="ab-figs">
+      <div><span class="display" data-countup={TRACKS.length}>{TRACKS.length}</span><span class="muted">parcours</span></div>
+      <div><span class="display" data-countup={COURSES.length}>{COURSES.length}</span><span class="muted">cours</span></div>
+      <div><span class="display" data-countup={totalLessons}>{totalLessons}</span><span class="muted">leçons</span></div>
+      <div><span class="display"><span data-countup={totalHours}>{totalHours}</span> h</span><span class="muted">de contenu</span></div>
+    </div>
+  </section>
+
+  <section id="parcours" class="wrap" style="padding-top:56px;padding-bottom:96px">
+    <div class="section-title"><h2>Les parcours</h2><span class="muted">Plusieurs cours qui s'enchaînent, du débutant à l'avancé</span></div>
+    <div class="tgrid">
+      {TRACKS.map((t) => (
+        <a class="tcard2" href={`/formations/parcours/${t.slug}`} data-cursor="Parcours">
+          <img src={t.img} alt="" loading="lazy" />
+          <span class="eyebrow">Parcours · {t.courses.length} cours</span>
+          <h3>{t.title}</h3>
+          <p>{t.tagline}</p>
+          <span class="tsteps">{t.courses.map((s, i) => <span>{i + 1}. {courseBySlug(s).level}</span>)}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section id="cours" class="wrap" style="padding-bottom:96px" data-academy>
+    <div class="section-title" style="align-items:flex-start">
+      <h2>Tous les cours <span class="muted" data-acount>({COURSES.length})</span></h2>
+      <div class="afilters">
+        <div class="row" role="group" aria-label="Filtrer par niveau"><span class="lab">Niveau</span>{['Tous', ...LEVELS].map((l, i) => <button type="button" class="chip" data-af="level" data-v={l} aria-pressed={i === 0 ? 'true' : 'false'}>{l}</button>)}</div>
+        <div class="row" role="group" aria-label="Filtrer par thème"><span class="lab">Thème</span>{['Tous', ...TOPICS].map((l, i) => <button type="button" class="chip" data-af="topic" data-v={l} aria-pressed={i === 0 ? 'true' : 'false'}>{l}</button>)}</div>
+      </div>
+    </div>
+    <div class="cgrid">{COURSES.map((c) => <CourseCard c={c} />)}</div>
+    <p class="aempty" data-aempty hidden>Aucun cours pour cette combinaison. <a href={`${SITE.whatsapp}?text=${encodeURIComponent('Bonjour Dak, je cherche une formation sur mesure.')}`} target="_blank" rel="noopener noreferrer" class="accent">Demande une formation sur mesure →</a></p>
+  </section>
+
+  <section class="wrap" style="padding-bottom:112px">
+    <div class="section-title"><h2>Comment ça se passe</h2></div>
+    <div class="steps">{steps.map(([n, t, d]) => <div class="step"><span class="fill"></span><span class="num">{n}</span><span class="st"><b>{t}</b><span>{d}</span></span></div>)}</div>
+  </section>
+
+  <div class="cta-band"><Mascot pose={4} bubble="On apprend ensemble ?" /><p>Ouverture bientôt</p><span class="magnetic"><a href={waitlist} target="_blank" rel="noopener noreferrer" class="btn" style="background:#0A0A0A;color:#fff">Être prévenu(e) →</a></span></div>
+</Base>
+
+
+<style is:global>
+  .ab-figs { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  @media (max-width: 700px) { .ab-figs { grid-template-columns: repeat(2, 1fr); } }
+  .ab-figs > div { display: flex; flex-direction: column; gap: 6px; padding: 28px 8px; }
+  .ab-figs .display { font-size: clamp(40px, 5vw, 72px); font-weight: 600; letter-spacing: -0.04em; }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 16px; }
+  .step { position: relative; overflow: hidden; min-height: 240px; padding: 28px; border-radius: 24px; border: 1px solid var(--line); display: flex; flex-direction: column; justify-content: space-between; gap: 24px; transition: color .45s ease; }
+  .step .fill { position: absolute; inset: 0; background: var(--grad); transform: translateY(101%); transition: transform .55s cubic-bezier(.7,0,.2,1); }
+  .step:hover .fill { transform: translateY(0); }
+  .step:hover { color: #fff; }
+  .step .num, .step .st { position: relative; }
+  .step .num { color: var(--accent-text); font-weight: 600; }
+  .step:hover .num { color: #fff; }
+  .step .st { display: flex; flex-direction: column; gap: 10px; font-size: 16px; line-height: 1.5; }
+  .step .st b { font-family: var(--font-display); font-size: 26px; font-weight: 600; letter-spacing: -0.02em; }
+</style>

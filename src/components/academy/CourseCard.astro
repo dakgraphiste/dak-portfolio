@@ -1,0 +1,21 @@
+---
+import { srcset } from '../../data/site';
+import { lessonCount, type Course } from '../../data/academy';
+import Level from './Level.astro';
+interface Props { c: Course; step?: number }
+const { c, step } = Astro.props;
+---
+<a href={`/formations/${c.slug}`} class="ccard" data-level={c.level} data-topic={c.topic} data-cursor="Voir">
+  <span class="cvis">
+    <img src={c.img} srcset={srcset(c.img)} sizes="(max-width: 860px) 100vw, 420px" alt="" loading="lazy" />
+    <span class="ctopic">{c.topic}</span>
+    {step && <span class="cstep">Étape {step}</span>}
+    {c.status === 'bientot' && <span class="csoon">Bientôt</span>}
+  </span>
+  <span class="cbody">
+    <Level level={c.level} />
+    <b>{c.title}</b>
+    <span class="cshort">{c.short}</span>
+    <span class="cmeta"><span>{c.format}</span><span>{c.duration}</span><span>{lessonCount(c)} leçons</span><span class="carr">→</span></span>
+  </span>
+</a>
