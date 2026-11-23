@@ -6,15 +6,19 @@ Fenêtre à 4 onglets (**Retouche · Effets · Texte · Assets**), thème **clai
 
 > Ce dossier contient deux versions : le **script** (`script/Dak Retouch.jsx`, recommandé, aucune installation Creative Cloud) et un **plugin UXP** (`manifest.json`, `index.*`) pour plus tard.
 
-## Installation sur Mac
+## Installation : actions Photoshop (recommandé)
 1. Décompresser `Dak-Retouch-Mac.zip`.
-2. Dans le dossier **Dak Retouch** : **clic droit → Ouvrir** sur `Installer Dak Retouch.command`, puis **Ouvrir**.
-3. Le script copie `Dak Retouch.jsx` dans le dossier **Presets/Scripts** de chaque Photoshop installé (mot de passe du Mac demandé si besoin) et les assets dans `Documents/Dak Retouch/assets`.
-4. Redémarrer Photoshop → **Fichier → Scripts → Dak Retouch**.
+2. **Double-cliquer sur `Dak Retouch.atn`** : Photoshop s'ouvre et ajoute le jeu **Dak Retouch** au panneau **Actions** (Fenêtre → Actions).
+   Sinon : panneau Actions → menu ☰ → **Charger des actions…** → `Dak Retouch.atn`.
+3. Mode bouton (plus pratique) : panneau Actions → menu ☰ → **Mode Bouton**.
 
-**Sans rien installer** : Photoshop → **Fichier → Scripts → Parcourir…** → choisir `Dak Retouch.jsx`.
+Les actions sont calibrées pour des images d'environ **3000 px** de grand côté (affiche A3 à 300 dpi ≈ 4960 px : les effets seront un peu plus fins). Les sélections (sol, vignette, fumées) s'adaptent à toutes les tailles.
 
-**Raccourci clavier** : Édition → Raccourcis clavier → Menus de l'application → Fichier → Scripts → Dak Retouch.
+**Avant les actions Signature, Contours et Rim light** : sélectionner le calque du joueur (détouré de préférence).
+
+**Textes et assets** : les actions ne peuvent pas lire de champs ni choisir de fichiers. Pour ça, utiliser le script : Fichier → Scripts → Parcourir… → `Script (textes et assets)/Dak Retouch.jsx`.
+
+Reconstruire les actions : `python3 outils/dak-retouch-photoshop/actions/construire_actions.py`
 
 ## Utilisation
 - Ouvrir une image, lancer le script, cliquer sur les boutons : la fenêtre reste ouverte et l'image se met à jour.
