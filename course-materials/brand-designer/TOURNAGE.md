@@ -12,6 +12,7 @@ Document pour Dak (non publié sur le site). Une vidéo par leçon, **6 à 10 mi
 ## Les fondamentaux du design graphique (Débutant)
 
 ### 1-1 · Ce qui fait un bon visuel
+- **Déjà prête** : vidéo de cours avec voix off (2 min 39), en ligne. À retourner avec ta propre voix si tu le souhaites.
 - **Accroche** : « Un bon visuel se lit en 3 secondes. »
 - **Annonce** : dans cette leçon, tu vas apprendre à comprendre qu'un visuel est un **message**, pas une décoration, savoir juger un visuel avec trois questions simples.
 - **Points à dérouler** :

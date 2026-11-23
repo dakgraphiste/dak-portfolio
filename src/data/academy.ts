@@ -42,7 +42,7 @@ export const COURSES: Course[] = [
     prerequisites: ['Aucun : on part de zéro', 'Un ordinateur avec Photoshop et Illustrator (version d’essai possible)'], software: ['Photoshop', 'Illustrator'],
     project: 'Une série de 3 affiches pour un événement de ton choix.',
     modules: [
-      { title: 'Voir comme un designer', lessons: L('Ce qui fait un bon visuel', 'Les grandes règles de composition', 'Analyser des affiches qui marchent') },
+      { title: 'Voir comme un designer', lessons: [{ title: 'Ce qui fait un bon visuel', duration: '2 min 39', ready: true, free: true, videoSrc: '/videos/lecon-01-bon-visuel.mp4', poster: '/videos/lecon-01-bon-visuel.jpg' }, ...L('Les grandes règles de composition', 'Analyser des affiches qui marchent')] },
       { title: 'Typographie', lessons: L('Familles et graisses', 'Associer deux polices', 'Hiérarchie et lisibilité') },
       { title: 'Couleur', lessons: L('Le cercle chromatique', 'Créer une palette', 'Contraste et accessibilité') },
       { title: 'Prendre en main les outils', lessons: [...L('Photoshop : l’essentiel', 'Illustrator : l’essentiel'), { title: 'Exporter pour le web et l’impression', resources: [FICHE.export] }] },
