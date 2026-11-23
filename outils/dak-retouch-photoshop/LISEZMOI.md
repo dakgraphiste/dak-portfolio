@@ -67,5 +67,5 @@ Les champs texte, les polices, l'onglet et le thème sont mémorisés d'une sess
 
 ## Recréer le paquet .ccx
 ```bash
-cd outils/dak-retouch-photoshop && rm -f Dak-Retouch.ccx && zip -r Dak-Retouch.ccx manifest.json index.html index.js styles.css icons
+cd outils/dak-retouch-photoshop && rm -f Dak-Retouch.ccx && zip -r -D -X Dak-Retouch.ccx manifest.json index.html index.js styles.css icons
 ```
