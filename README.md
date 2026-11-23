@@ -116,3 +116,11 @@ Adresse : `/espace-eleve`. Tant que les réglages ci-dessous ne sont pas faits, 
 **5. Ouvrir la vente d'un cours** : dans `src/data/academy.ts`, `status: 'ouvert'` et `priceFcfa: 25000` (et `priceFcfa` sur un parcours pour le vendre en entier).
 
 Fonctionnement : l'élève crée son compte, paie sur CinetPay, et l'accès s'ouvre dès que le serveur a vérifié le paiement directement auprès de CinetPay (montant compris). Dans `/espace-eleve/admin`, tu vois les paiements et les élèves, et tu peux ouvrir un accès à la main (paiement en espèces, bourse…).
+
+## Gestion freelance (outil privé)
+
+`gestion/index.html` : tableau de bord pour les clients en freelance (projets, devis, factures proforma, factures, encaissements, dépenses, factures en attente). Il n'est **pas** publié avec le site : c'est un fichier à ouvrir dans le navigateur (double-clic).
+
+- Les données restent dans le navigateur de l'appareil. Faire **Paramètres → Exporter la sauvegarde** régulièrement ; **Restaurer** pour les récupérer sur un autre appareil.
+- Devis et factures : bouton **PDF / Imprimer**, puis « Enregistrer en PDF ».
+- **Charger des exemples** (Paramètres) pour découvrir l'outil, **Tout effacer** pour repartir de zéro.
