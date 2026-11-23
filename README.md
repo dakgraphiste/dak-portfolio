@@ -119,8 +119,9 @@ Fonctionnement : l'élève crée son compte, paie sur CinetPay, et l'accès s'ou
 
 ## Gestion freelance (outil privé)
 
-`gestion/index.html` : tableau de bord pour les clients en freelance (projets, devis, factures proforma, factures, encaissements, dépenses, factures en attente). Il n'est **pas** publié avec le site : c'est un fichier à ouvrir dans le navigateur (double-clic).
+`gestion/index.html` : tableau de bord pour l'activité freelance et les revenus (projets, devis, proformas, factures, encaissements, salaire, autres revenus, dépenses, bilan annuel). Il n'est **pas** publié avec le site.
 
-- Les données restent dans le navigateur de l'appareil. Faire **Paramètres → Exporter la sauvegarde** régulièrement ; **Restaurer** pour les récupérer sur un autre appareil.
-- Devis et factures : bouton **PDF / Imprimer**, puis « Enregistrer en PDF ».
+- **Version en ligne (recommandée)** : publiée comme page privée sur le compte Claude. Les données sont enregistrées dans le compte, et on les retrouve sur téléphone comme sur ordinateur.
+- **Version fichier** : ouvrir `gestion/index.html` dans Chrome ou Safari. Les données restent alors dans ce navigateur : faire **Paramètres → Exporter la sauvegarde** régulièrement.
+- Devis et factures : bouton **Télécharger le PDF**.
 - **Charger des exemples** (Paramètres) pour découvrir l'outil, **Tout effacer** pour repartir de zéro.
