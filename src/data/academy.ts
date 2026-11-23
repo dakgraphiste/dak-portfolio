@@ -57,7 +57,7 @@ export const COURSES: Course[] = [
     prerequisites: ['Connaître les bases d’Illustrator', 'Idéalement : avoir suivi « Les fondamentaux du design graphique »'], software: ['Illustrator', 'Photoshop'],
     project: 'L’identité complète d’une marque fictive, du logo à la charte de 20 pages.',
     modules: [
-      { title: 'Le brief et la stratégie', lessons: [{ title: 'Lire un brief client', resources: [FICHE.brief] }, { title: 'Plateforme de marque : mission, valeurs, ton', resources: [FICHE.plateforme] }, ...L('Étudier la concurrence')] },
+      { title: 'Le brief et la stratégie', lessons: [{ title: 'Lire un brief client', duration: '2 min 31', ready: true, free: true, videoSrc: '/videos/brand-01-lire-un-brief.mp4', poster: '/videos/brand-01-lire-un-brief.jpg', resources: [FICHE.brief] }, { title: 'Plateforme de marque : mission, valeurs, ton', resources: [FICHE.plateforme] }, ...L('Étudier la concurrence')] },
       { title: 'Recherches et pistes', lessons: L('Moodboard et références', 'Croquis et mots clés', 'Choisir les pistes à présenter') },
       { title: 'Le logo', lessons: L('Construire le symbole', 'Le logotype et la typographie', 'Déclinaisons et zones de protection') },
       { title: 'Le système graphique', lessons: L('Palette de couleurs', 'Typographies de marque', 'Éléments graphiques et iconographie') },

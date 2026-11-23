@@ -178,6 +178,7 @@ Document pour Dak (non publié sur le site). Une vidéo par leçon, **6 à 10 mi
 ## Brand identity : du brief à la charte graphique (Intermédiaire)
 
 ### 1-1 · Lire un brief client
+- **Déjà prête** : vidéo de cours avec voix off (2 min 31), en ligne.
 - **Accroche** : « Le brief, c'est le contrat créatif. »
 - **Annonce** : dans cette leçon, tu vas apprendre à extraire d'un brief les informations qui comptent vraiment, repérer ce qui manque et poser les bonnes questions.
 - **Points à dérouler** :
