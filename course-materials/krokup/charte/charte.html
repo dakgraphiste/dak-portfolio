@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>Krok'up — Charte graphique</title>
+<style>
+@font-face{font-family:Luckiest;src:url(fonts/luckiest.woff2)}
+@font-face{font-family:Nunito;font-weight:400;src:url(fonts/nunito-400.woff2)}
+@font-face{font-family:Nunito;font-weight:700;src:url(fonts/nunito-700.woff2)}
+@font-face{font-family:Nunito;font-weight:800;src:url(fonts/nunito-800.woff2)}
+@font-face{font-family:Nunito;font-weight:900;src:url(fonts/nunito-900.woff2)}
+@page{size:1600px 900px;margin:0}
+:root{--t:#FA4D00;--c:#48261D;--l:#FFEDE3;--b:#CAE7F7;--y:#FFF370;--h:#FFB024;--p:#E40517}
+*{box-sizing:border-box}html,body{margin:0;padding:0}body{font-family:Nunito,sans-serif;color:var(--c)}
+.pg{position:relative;width:1600px;height:900px;overflow:hidden;page-break-after:always;background:var(--l);padding:80px 90px}
+.pg.t{background:var(--t);color:#fff}.pg.c{background:var(--c);color:var(--l)}.pg.w{background:#fff}.pg.b{background:var(--b)}
+.lk{font-family:Luckiest,sans-serif;font-weight:400;line-height:.92;letter-spacing:.01em}
+h1{font-family:Luckiest;font-weight:400;font-size:84px;margin:0 0 26px;line-height:.95}
+h2{font-family:Luckiest;font-weight:400;font-size:30px;margin:0 0 10px;color:var(--t)}
+.pg.t h2,.pg.c h2{color:var(--y)}
+p{font-size:22px;line-height:1.55;margin:0 0 14px;max-width:720px}
+.num{position:absolute;right:90px;bottom:50px;font-weight:900;font-size:16px;letter-spacing:.14em;opacity:.6}
+.sec{position:absolute;left:90px;bottom:50px;font-weight:900;font-size:16px;letter-spacing:.14em;text-transform:uppercase;opacity:.6}
+.full{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cap{position:absolute;left:90px;bottom:80px;padding:14px 22px;border-radius:14px;background:rgba(72,38,29,.86);color:#fff;font-weight:800;font-size:22px;max-width:760px}
+.cap b{color:var(--y);font-family:Luckiest;font-weight:400;font-size:28px;display:block;margin-bottom:4px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;height:100%}
+.chip{display:inline-block;padding:10px 22px;border-radius:999px;background:var(--t);color:#fff;font-family:Luckiest;font-size:34px;margin:0 10px 12px 0}
+.mask{background:var(--fill);-webkit-mask:url(img/logo_a.svg) center/contain no-repeat;mask:url(img/logo_a.svg) center/contain no-repeat}
+table{border-collapse:collapse;font-size:19px}td,th{padding:9px 14px;text-align:left;border-bottom:1px solid rgba(72,38,29,.15)}th{font-size:14px;letter-spacing:.1em;text-transform:uppercase;opacity:.7}
+</style></head><body>
+
+<!-- 1 couverture -->
+<section class="pg t">
+  <img src="img/logo_b.svg" style="position:absolute;left:90px;top:70px;width:400px;transform:rotate(-5deg)">
+  <img src="img/chips.png" style="position:absolute;right:-60px;top:80px;width:760px">
+  <div style="position:absolute;left:90px;bottom:90px"><div class="lk" style="font-size:110px">Charte<br>graphique</div><p style="font-weight:800;margin-top:18px">Identité visuelle · version 1.0 · 2026</p></div>
+  <div class="num">dak.graphiste</div>
+</section>
+
+<!-- 2 sommaire -->
+<section class="pg">
+  <h1>Sommaire</h1>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 80px;font-size:28px;font-weight:800;margin-top:30px">
+    <div>01 · La marque</div><div>06 · Les onomatopées</div><div>02 · Le logo</div><div>07 · Motifs et stickers</div><div>03 · Les règles du logo</div><div>08 · Direction photo</div><div>04 · Les couleurs</div><div>09 · Packaging</div><div>05 · Les typographies</div><div>10 · Communication et merch</div>
+  </div>
+  <img src="img/onomatopees.svg" style="position:absolute;right:90px;bottom:90px;width:360px;opacity:.9">
+  <div class="num">02</div>
+</section>
+
+<!-- 3 la marque -->
+<section class="pg c">
+  <div class="sec">01 · La marque</div>
+  <h2>Mission</h2><p class="lk" style="font-size:62px;line-height:1;max-width:1100px;color:#fff">Rendre chaque pause plus fun et plus croustillante.</p>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:60px">
+    <div><h2>Promesse</h2><p>Le croquant qui fait du bruit.</p></div>
+    <div><h2>Cible</h2><p>Les 15-30 ans urbains, qui grignotent entre amis, devant un match ou à la sortie des cours.</p></div>
+    <div><h2>Positionnement</h2><p>La marque de snacks la plus expressive du rayon : un personnage plutôt qu'un simple paquet.</p></div>
+  </div>
+  <div class="num">03</div>
+</section>
+
+<!-- 4 valeurs et ton -->
+<section class="pg">
+  <div class="sec">01 · La marque</div>
+  <h1>Valeurs et ton</h1>
+  <div><span class="chip">Gourmandise</span><span class="chip" style="background:var(--c)">Partage</span><span class="chip" style="background:var(--h);color:var(--c)">Énergie</span><span class="chip" style="background:var(--b);color:var(--c)">Bonne humeur</span></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-top:40px">
+    <div><h2>Personnalité</h2><p>Le pote drôle de la bande, toujours partant, un peu bruyant, jamais méchant.</p><h2 style="margin-top:20px">Ton de voix</h2><p>Familier, joueur, sonore. On tutoie, on fait des phrases courtes, on ose les onomatopées.</p></div>
+    <div style="background:#fff;border-radius:24px;padding:30px 34px"><h2>On dit</h2><p>« Le croc qui fait CRAC ! »<br>« Un paquet, toute la bande. »<br>« 3 saveurs. 0 silence. »</p><h2 style="margin-top:16px;color:var(--c)">On ne dit pas</h2><p>« Produit de qualité supérieure élaboré selon un savoir-faire… »</p></div>
+  </div>
+  <div class="num">04</div>
+</section>
+
+<!-- 5 moodboard -->
+<section class="pg w" style="padding:0">
+  <img class="full" src="mockjpg/moodboard.jpg" style="object-fit:contain;padding:60px 60px 140px">
+  <div class="sec" style="bottom:60px">01 · Moodboard de départ</div>
+  <p style="position:absolute;left:90px;bottom:90px;font-weight:800">Moments de plaisir, lettrages épais et arrondis, palette qui donne faim.</p>
+  <div class="num">05</div>
+</section>
+
+<!-- 6 logo principal -->
+<section class="pg">
+  <div class="sec">02 · Le logo</div>
+  <div class="two"><div style="display:flex;justify-content:center"><img src="img/logo_a.svg" style="width:560px"></div>
+  <div><h1>Le logo principal</h1><p>Un lettrage sur mesure, épais et rebondi, empilé en deux syllabes : <b>KRO / KUP</b>. Le « p » final se termine en sourire gourmand, avec une goutte : la signature de la marque.</p><p>Version principale à utiliser par défaut, sur fond clair (Linen ou blanc).</p></div></div>
+  <div class="num">06</div>
+</section>
+
+<!-- 7 versions -->
+<section class="pg">
+  <div class="sec">02 · Le logo</div>
+  <h1>Les versions</h1>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:10px">
+    <div style="background:#fff;border-radius:22px;height:430px;display:flex;align-items:center;justify-content:center"><img src="img/logo_a.svg" style="width:78%"></div>
+    <div style="background:var(--t);border-radius:22px;height:430px;display:flex;align-items:center;justify-content:center"><img src="img/logo_b.svg" style="width:78%"></div>
+    <div style="background:var(--l);border:2px solid #e8d6cc;border-radius:22px;height:430px;display:flex;align-items:center;justify-content:center"><img src="img/logo_mono_choco.svg" style="width:78%"></div>
+    <div style="background:var(--c);border-radius:22px;height:430px;display:flex;align-items:center;justify-content:center"><img src="img/logo_mono_white.svg" style="width:78%"></div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:16px;font-weight:800;font-size:19px"><span>Principale · fonds clairs</span><span>Inversée · fond Tangelo</span><span>Monochrome Chocolate</span><span>Monochrome blanc</span></div>
+  <div class="num">07</div>
+</section>
+
+<!-- 8 zone de protection et taille minimale -->
+<section class="pg w">
+  <div class="sec">03 · Les règles du logo</div>
+  <div class="two">
+    <div style="display:flex;justify-content:center"><div style="position:relative;padding:70px;border:3px dashed var(--t);border-radius:12px"><img src="img/logo_a.svg" style="width:360px;display:block"><span style="position:absolute;left:12px;top:12px;font-weight:900;color:var(--t);font-size:22px">X</span><span style="position:absolute;right:12px;bottom:12px;font-weight:900;color:var(--t);font-size:22px">X</span></div></div>
+    <div><h1>Zone de protection</h1><p>Aucun élément (texte, image, bord du support) ne doit entrer dans la zone de protection. <b>X = la hauteur du « o »</b> du logo, tout autour.</p>
+    <h2 style="margin-top:30px">Taille minimale</h2><p>Impression : 18 mm de large. Écran : 64 px de large. En dessous, utiliser le symbole ou la version simplifiée sans contour.</p>
+    <div style="display:flex;gap:30px;align-items:flex-end;margin-top:10px"><img src="img/logo_a.svg" style="width:160px"><img src="img/logo_a.svg" style="width:96px"><img src="img/logo_a.svg" style="width:64px"></div></div>
+  </div>
+  <div class="num">08</div>
+</section>
+
+<!-- 9 interdits -->
+<section class="pg">
+  <div class="sec">03 · Les règles du logo</div>
+  <h1>À ne pas faire</h1>
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:18px">
+    <div style="background:#fff;border-radius:18px;height:300px;display:flex;align-items:center;justify-content:center;overflow:hidden"><img src="img/logo_a.svg" style="width:70%;transform:scaleX(1.5)"></div>
+    <div style="background:#fff;border-radius:18px;height:300px;display:flex;align-items:center;justify-content:center"><img src="img/logo_a.svg" style="width:62%;transform:rotate(35deg)"></div>
+    <div style="background:#fff;border-radius:18px;height:300px;display:flex;align-items:center;justify-content:center"><img src="img/logo_a.svg" style="width:68%;filter:hue-rotate(160deg)"></div>
+    <div style="border-radius:18px;height:300px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative"><img class="full" src="mockjpg/moodboard.jpg"><img src="img/logo_a.svg" style="width:62%;position:relative"></div>
+    <div style="background:#fff;border-radius:18px;height:300px;display:flex;align-items:center;justify-content:center"><img src="img/logo_a.svg" style="width:62%;filter:drop-shadow(16px 16px 6px rgba(0,0,0,.6)) blur(.6px)"></div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:18px;margin-top:14px;font-weight:800;font-size:18px"><span>✕ Déformer</span><span>✕ Faire pivoter</span><span>✕ Changer les couleurs</span><span>✕ Poser sur un fond chargé</span><span>✕ Ajouter des effets</span></div>
+  <div class="num">09</div>
+</section>
+
+<!-- 10 couleurs principales -->
+<section class="pg w" style="padding:0">
+  <div style="display:grid;grid-template-columns:2.2fr 1.3fr 1fr 1fr;height:100%">
+    <div style="background:var(--t);color:#fff;padding:80px 50px;display:flex;flex-direction:column;justify-content:flex-end"><div class="lk" style="font-size:64px">Tangelo</div><p style="font-weight:800">HEX #FA4D00<br>RVB 250 77 0<br>CMJN 0 80 100 0*<br>Couleur signature</p></div>
+    <div style="background:var(--c);color:#fff;padding:80px 40px;display:flex;flex-direction:column;justify-content:flex-end"><div class="lk" style="font-size:48px">Chocolate</div><p style="font-weight:800">HEX #48261D<br>RVB 72 38 29<br>CMJN 40 75 80 65*<br>Textes, contours</p></div>
+    <div style="background:var(--l);padding:80px 34px;display:flex;flex-direction:column;justify-content:flex-end"><div class="lk" style="font-size:42px">Linen</div><p style="font-weight:800">HEX #FFEDE3<br>RVB 255 237 227<br>CMJN 0 7 10 0*<br>Fonds clairs</p></div>
+    <div style="background:var(--b);padding:80px 34px;display:flex;flex-direction:column;justify-content:flex-end"><div class="lk" style="font-size:42px">Botticelli</div><p style="font-weight:800">HEX #CAE7F7<br>RVB 202 231 247<br>CMJN 20 0 2 0*<br>Touche fraîche</p></div>
+  </div>
+  <div style="position:absolute;left:50px;top:50px;color:#fff" class="lk"><span style="font-size:40px">Les couleurs principales</span></div>
+  <div class="num" style="color:var(--c)">10</div>
+</section>
+
+<!-- 11 accents et proportions -->
+<section class="pg">
+  <div class="sec">04 · Les couleurs</div>
+  <h1>Accents et proportions</h1>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px">
+    <div style="background:var(--y);border-radius:22px;padding:30px 30px 24px;height:220px;display:flex;flex-direction:column;justify-content:flex-end"><b class="lk" style="font-size:34px">Butter</b><span style="font-weight:800">#FFF370 · reflets du logo</span></div>
+    <div style="background:var(--h);border-radius:22px;padding:30px 30px 24px;height:220px;display:flex;flex-direction:column;justify-content:flex-end"><b class="lk" style="font-size:34px">Honey</b><span style="font-weight:800">#FFB024 · contour du logo</span></div>
+    <div style="background:var(--p);color:#fff;border-radius:22px;padding:30px 30px 24px;height:220px;display:flex;flex-direction:column;justify-content:flex-end"><b class="lk" style="font-size:34px">Piment</b><span style="font-weight:800">#E40517 · langue, saveur piment</span></div>
+  </div>
+  <h2 style="margin-top:40px;color:var(--c)">Règle 60 · 30 · 10</h2>
+  <div style="display:flex;height:70px;border-radius:16px;overflow:hidden;font-weight:900;font-size:20px"><div style="flex:6;background:var(--t);color:#fff;display:flex;align-items:center;padding-left:20px">60 % Tangelo ou Linen</div><div style="flex:3;background:var(--c);color:#fff;display:flex;align-items:center;padding-left:20px">30 % Chocolate</div><div style="flex:1;background:var(--y);display:flex;align-items:center;padding-left:14px">10 % accent</div></div>
+  <p style="font-size:15px;margin-top:18px;opacity:.7">* Valeurs CMJN indicatives : à valider avec un BAT de l'imprimeur.</p>
+  <div class="num">11</div>
+</section>
+
+<!-- 12 typographies -->
+<section class="pg">
+  <div class="sec">05 · Les typographies</div>
+  <div class="two">
+    <div><div class="lk" style="font-size:150px;color:var(--t)">Aa</div><h2 style="color:var(--c);font-size:40px">Luckiest Guy</h2><p>Titrage et accroches, toujours en capitales, peu de mots. Ronde, grasse et joyeuse : elle prolonge le lettrage du logo.</p><div class="lk" style="font-size:44px">ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>0123456789 ! ? É À</div></div>
+    <div><div style="font-size:150px;font-weight:900;color:var(--c);line-height:1">Aa</div><h2 style="color:var(--c);font-size:40px">Nunito</h2><p>Textes, mentions, ingrédients, prix. Arrondie et très lisible, en Regular, Bold et Black.</p><p style="font-size:30px;font-weight:400">Regular · <b style="font-weight:700">Bold</b> · <b style="font-weight:900">Black</b></p><table><tr><th>Niveau</th><th>Police</th><th>Usage</th></tr><tr><td>H1</td><td>Luckiest Guy</td><td>Accroche</td></tr><tr><td>H2</td><td>Nunito Black</td><td>Sous-titre</td></tr><tr><td>Texte</td><td>Nunito Regular</td><td>Paragraphes</td></tr><tr><td>Mentions</td><td>Nunito Bold, petit</td><td>Poids, légal</td></tr></table></div>
+  </div>
+  <div class="num">12</div>
+</section>
+
+<!-- 13 onomatopées -->
+<section class="pg c">
+  <div class="sec">06 · Les onomatopées</div>
+  <div class="two"><div><h1 style="color:#fff">Un langage<br>de marque</h1><p>Le croquant s'entend : <b>MIAMMM</b>, <b>CRAC</b>, <b>HUMMMM</b> deviennent la signature typographique de Krok'up. On les pose en grand, légèrement penchées, avec un contour Chocolate.</p><p>Une seule onomatopée par visuel. Toujours en lien avec le moment montré (CRAC = le croc, MIAMMM = le plaisir, HUMMMM = la gourmandise).</p></div>
+  <div style="background:var(--l);border-radius:28px;padding:40px;display:flex;justify-content:center"><img src="img/onomatopees.svg" style="width:90%"></div></div>
+  <div class="num">13</div>
+</section>
+
+<!-- 14 motif et stickers -->
+<section class="pg" style="padding:0">
+  <img src="out/motif.png" style="position:absolute;left:0;top:0;width:800px;height:900px;object-fit:cover">
+  <div style="position:absolute;left:800px;top:0;right:0;bottom:0;background:var(--b);display:flex;align-items:center;justify-content:center"><img src="out/stickers.png" style="width:92%"></div>
+  <div style="position:absolute;left:60px;top:60px;background:var(--c);color:#fff;padding:18px 26px;border-radius:16px"><span class="lk" style="font-size:40px">Motif et stickers</span></div>
+  <div class="num">14</div>
+</section>
+
+<!-- 15 direction photo -->
+<section class="pg" style="padding:0">
+  <img src="mockjpg/m2_main.jpg" style="position:absolute;left:0;top:0;width:640px;height:900px;object-fit:cover">
+  <div style="position:absolute;left:640px;top:0;right:0;bottom:0;padding:80px 70px">
+    <div class="sec" style="left:70px">08 · Direction photo</div>
+    <h1>Direction photo</h1>
+    <p><b>Des vrais moments</b> : on croque, on rit, on partage. Des visages expressifs, la rue, la lumière chaude de fin de journée.</p>
+    <p><b>Le produit en mouvement</b> : chips qui volent, éclats, miettes. Gros plans gourmands.</p>
+    <p><b>Couleurs</b> : fonds Tangelo, Linen ou Botticelli ; peaux et chips mises en valeur par une lumière dorée.</p>
+    <img src="img/chips.png" style="position:absolute;right:40px;bottom:60px;width:360px">
+  </div>
+  <div class="num">15</div>
+</section>
+
+<!-- 16 packaging à plat -->
+<section class="pg">
+  <div class="sec">09 · Packaging</div>
+  <h1>La gamme</h1>
+  <div style="display:flex;gap:40px;justify-content:center">
+    <div style="text-align:center"><img src="out/pack_nature.png" style="height:520px;border-radius:12px;box-shadow:0 20px 40px rgba(0,0,0,.2)"><p style="font-weight:900;margin:14px auto 0">Nature salé · Tangelo</p></div>
+    <div style="text-align:center"><img src="out/pack_piment.png" style="height:520px;border-radius:12px;box-shadow:0 20px 40px rgba(0,0,0,.2)"><p style="font-weight:900;margin:14px auto 0">Piment rouge · Piment</p></div>
+    <div style="text-align:center"><img src="out/pack_bbq.png" style="height:520px;border-radius:12px;box-shadow:0 20px 40px rgba(0,0,0,.2)"><p style="font-weight:900;margin:14px auto 0">Barbecue · Chocolate</p></div>
+  </div>
+  <div class="num">16</div>
+</section>
+
+<!-- 17 packaging mockup -->
+<section class="pg" style="padding:0"><img class="full" src="mockjpg/m1_studio.jpg"><div class="cap"><b>Packaging</b>Une couleur par saveur, le même système : logo en haut, onomatopée, pastille, bandeau saveur.</div><div class="num" style="color:#fff">17</div></section>
+<!-- 18 rayon -->
+<section class="pg" style="padding:0"><img class="full" src="mockjpg/m3_rayon.jpg"><div class="cap"><b>En rayon</b>Trois couleurs franches : la gamme se repère de loin et se range par saveur.</div><div class="num" style="color:#fff">18</div></section>
+
+<!-- 19 réseaux sociaux -->
+<section class="pg b">
+  <div class="sec">10 · Communication</div>
+  <h1>Réseaux sociaux</h1>
+  <div style="display:flex;gap:26px;align-items:flex-start">
+    <img src="out/post_crac.png" style="width:300px;border-radius:14px"><img src="out/post_partage.png" style="width:300px;border-radius:14px;margin-top:40px;box-shadow:0 18px 40px rgba(72,38,29,.25)"><img src="out/post_saveurs.png" style="width:300px;border-radius:14px">
+    <img src="mockjpg/m6_phone.jpg" style="width:420px;height:560px;object-fit:cover;border-radius:22px;margin-left:10px;margin-top:-60px">
+  </div>
+  <div class="num">19</div>
+</section>
+
+<!-- 20 merch -->
+<section class="pg" style="padding:0">
+  <img src="mockjpg/m4_tshirt.jpg" style="position:absolute;left:0;top:0;width:640px;height:900px;object-fit:cover">
+  <img src="mockjpg/m5_merch.jpg" style="position:absolute;left:640px;top:0;width:960px;height:900px;object-fit:cover">
+  <div class="cap" style="left:670px"><b>Merch</b>T-shirt Tangelo, casquette Chocolate brodée, tote bag et stickers : la bande porte la marque.</div>
+  <div class="num" style="color:#fff">20</div>
+</section>
+
+<!-- 21 affichage -->
+<section class="pg" style="padding:0"><img class="full" src="mockjpg/m7_billboard.jpg"><div class="cap"><b>Affichage</b>4×3 et abribus : accroche courte, les trois paquets, logo en bas à droite.</div><div class="num" style="color:#fff">21</div></section>
+
+<!-- 22 fin -->
+<section class="pg t">
+  <img src="img/logo_b.svg" style="position:absolute;left:50%;top:150px;width:460px;transform:translateX(-50%) rotate(-4deg)">
+  <div style="position:absolute;left:0;right:0;bottom:150px;text-align:center"><div class="lk" style="font-size:64px">MIAMMM !</div><p style="margin:18px auto 0;font-weight:800;text-align:center">Identité visuelle conçue par Davy Aymard Kouassi · dak.graphiste</p></div>
+</section>
+</body></html>

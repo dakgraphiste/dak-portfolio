@@ -96,6 +96,10 @@ const PORTFOLIO: Project[] = [
     brief: "Chap'n est une fintech pensée pour les jeunes entrepreneurs et freelances d'Afrique de l'Ouest. Le nom vient du nouchi ivoirien « chap'n » = vite : une promesse assumée, la vitesse n'est pas un argument marketing, c'est le produit.",
     concept: "Une palette Indigo Bloom (#5E2BBF), Chartreuse (#C9F35B), noir et Porcelain, et un symbole unique qui fusionne l'éclair, le mouvement et l'échange : « Envoie. Reçois. Chap'n. »",
     challenge: "Dire trois choses avec une seule forme : l'éclair (vitesse), le mouvement (rapidité) et la transaction (envoi/réception), sans superposer plusieurs pictogrammes." }),
+  make({ slug: 'krokup', title: "Krok'up — Brand identity", client: "Krok'up", category: 'Identité', categoryLabel: 'Identité visuelle & packaging', deliverables: 'Logo, charte graphique, packaging, réseaux sociaux, merch, affichage', image: 'krokup', year: '2026',
+    brief: "Krok'up est une marque de snacks croustillants qui se lance auprès des 15-30 ans urbains. Le défi : exister dans un rayon saturé de marques de chips qui se ressemblent toutes.",
+    concept: "Faire entendre le croquant. Un lettrage sur mesure, épais et rebondi, dont le « p » se termine en sourire gourmand, une palette Tangelo et Chocolate, et des onomatopées (MIAMMM, CRAC, HUMMMM) qui deviennent le langage de la marque, du paquet au panneau 4×3.",
+    challenge: "Créer une identité assez expressive pour se démarquer en rayon, mais assez systématique pour se décliner sur trois saveurs, les réseaux sociaux, le merch et l'affichage." }),
   make({ slug: 'lumora', title: 'Lumora — Brand identity', client: 'Lumora', category: 'Identité', categoryLabel: 'Identité visuelle', deliverables: 'Logo, palette, identité visuelle, déclinaisons', image: 'lumora-brand',
     behance: 'https://www.behance.net/gallery/243408119/Lumora-Branding-Visual-Identity',
     brief: "Lumora™ est une entreprise polyvalente qui regroupe plusieurs secteurs essentiels : agriculture et élevage, immobilier, mobilier et import-export. L'objectif : une identité solide, cohérente et moderne, capable de représenter cette diversité tout en inspirant confiance et stabilité.",
@@ -305,6 +309,27 @@ const STAGE: Record<string, Partial<Project>> = {
     ],
     brand: { logo: 'chapn-logo', symbol: 'chapn-symbole', values: ['Vitesse', 'Mouvement', 'Envoie', 'Reçois', "Chap'n"],
     palette: [{ name: 'Indigo Bloom', hex: '#5E2BBF' }, { name: 'Chartreuse', hex: '#C9F35B' }, { name: 'Noir', hex: '#000000' }, { name: 'Porcelain', hex: '#F7F7EF' }] } },
+  krokup: { theme: { p1: '#FA4D00', p2: '#FFEDE3' },
+    slides: [
+      { src: img('krokup-bh-01'), caption: "Couverture de la charte graphique" },
+      { src: img('krokup-bh-02'), caption: "Valeurs et ton de voix" },
+      { src: img('krokup-bh-03'), caption: "Le logo principal" },
+      { src: img('krokup-bh-04'), caption: "Les versions du logo" },
+      { src: img('krokup-bh-05'), caption: "Zone de protection et taille minimale" },
+      { src: img('krokup-bh-06'), caption: "Ce qu'il ne faut pas faire" },
+      { src: img('krokup-bh-07'), caption: "Les couleurs principales" },
+      { src: img('krokup-bh-08'), caption: "Les typographies" },
+      { src: img('krokup-bh-09'), caption: "Les onomatopées, un langage de marque" },
+      { src: img('krokup-bh-10'), caption: "Motif et stickers" },
+      { src: img('krokup-bh-11'), caption: "La gamme : trois saveurs" },
+      { src: img('krokup-bh-12'), caption: "Packaging en studio" },
+      { src: img('krokup-bh-13'), caption: "En rayon" },
+      { src: img('krokup-bh-14'), caption: "Réseaux sociaux" },
+      { src: img('krokup-bh-15'), caption: "Merch" },
+      { src: img('krokup-bh-16'), caption: "Affichage 4×3" },
+    ],
+    brand: { logo: 'krokup-logo', values: ['Gourmandise', 'Partage', 'Énergie', 'Bonne humeur', 'CRAC !'],
+      palette: [{ name: 'Tangelo', hex: '#FA4D00' }, { name: 'Chocolate', hex: '#48261D' }, { name: 'Linen', hex: '#FFEDE3' }, { name: 'Botticelli', hex: '#CAE7F7' }, { name: 'Honey', hex: '#FFB024' }] } },
   lumora: { theme: { p1: '#8E2222', p2: '#FD5F54' },
     slides: [
       { src: img('lumora-bh-01'), caption: "Lumora, l'identité" },
@@ -377,6 +402,7 @@ const SECRET: Record<string, [string, string][]> = {
   "bronze": [["Univers", "Senteurs de luxe et bougies parfumées"], ["Livrables", "Logo et packaging"]],
   "posters-coupe-du-monde-2026": [["Fil conducteur", "« D'Abidjan to the World »"], ["Équipe", "Les Éléphants"]],
   "posters-can-2025": [["Inspiration", "Les animés"], ["Thème", "Duels et confrontations"]],
+  "krokup": [["Gamme", "Nature salé, Piment rouge, Barbecue"], ["Signature", "Le « p » qui sourit"], ["Cri de ralliement", "3 saveurs. 0 silence."]],
   "sante-afrique": [["Numéros", "Du n° 19 au n° 23"], ["Dossiers", "Toxicomanie, santé maternelle, cosmétologie"]],
   "couvertures-de-livres": [["Signature", "DVK.GRVPHISTE — Welcome to my world"], ["Titres", "Éclipsé, Dérive"]],
   "delices-africains": [["Offre", "Tous les plats à 12,50 €"], ["Bonus", "Un jus de bissap offert"]],
@@ -388,7 +414,7 @@ const SECRET: Record<string, [string, string][]> = {
 
 // Ordre d'affichage : grandes marques et projets d'agence d'abord
 const ORDER = ['budweiser', 'totalenergies-rentree', 'la-vache-qui-rit', 'yango', 'fanmilk', 'totalenergies-pakinou', 'mitsubishi-destinator', 'bonnet-rouge',
-  'air-elegance-can', 'totalenergies-quartz', 'bavaria-smalt', 'superclean', 'bonnet-rouge-fetes', 'chapn', 'orika', 'lumora', 'pakinou', 'pakinou-campagne',
+  'air-elegance-can', 'totalenergies-quartz', 'bavaria-smalt', 'superclean', 'bonnet-rouge-fetes', 'chapn', 'krokup', 'orika', 'lumora', 'pakinou', 'pakinou-campagne',
   'danone', 'trajolou', 'abodjama', 'bronze', 'sante-afrique', 'couvertures-de-livres', 'posters-coupe-du-monde-2026', 'posters-can-2025', 'posters-football', 'fantastik-creol', 'fete-independance', 'delices-africains', 'retouche-avant-apres'];
 const rank = (s: string) => { const i = ORDER.indexOf(s); return i < 0 ? 999 : i; };
 export const PROJECTS: Project[] = [...PORTFOLIO, ...BEHANCE].map((p) => ({ ...p, ...STAGE[p.slug], secret: SECRET[p.slug] })).sort((a, b) => rank(a.slug) - rank(b.slug));

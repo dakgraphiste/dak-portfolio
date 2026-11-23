@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Luckiest;src:url(fonts/luckiest.woff2) format('woff2')}
+@font-face{font-family:Nunito;font-weight:400;src:url(fonts/nunito-400.woff2)}
+@font-face{font-family:Nunito;font-weight:700;src:url(fonts/nunito-700.woff2)}
+@font-face{font-family:Nunito;font-weight:800;src:url(fonts/nunito-800.woff2)}
+@font-face{font-family:Nunito;font-weight:900;src:url(fonts/nunito-900.woff2)}
+:root{--tangelo:#FA4D00;--choco:#48261D;--linen:#FFEDE3;--botti:#CAE7F7;--butter:#FFF370;--honey:#FFB024;--piment:#E40517}
+*{box-sizing:border-box}body{margin:0;background:#888;font-family:Nunito,sans-serif;display:flex;flex-wrap:wrap;gap:40px;padding:40px}
+.lk{font-family:Luckiest,sans-serif;letter-spacing:.01em;line-height:.9}
+
+/* ---------- paquet de chips, face avant 1000x1400 ---------- */
+.pack{position:relative;width:1000px;height:1400px;overflow:hidden;background:var(--bg);color:#fff}
+.pack .crimp{position:absolute;left:0;right:0;height:70px;background:repeating-linear-gradient(90deg,rgba(0,0,0,.12) 0 6px,transparent 6px 14px),var(--bg2)}
+.pack .crimp.t{top:0}.pack .crimp.b{bottom:0}
+.pack .rays{position:absolute;left:50%;top:560px;width:1800px;height:1800px;margin:-900px 0 0 -900px;background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.09) 0 6deg,transparent 6deg 18deg);border-radius:50%}
+.pack .pattern{position:absolute;inset:70px 0;opacity:.09;font-family:Luckiest;font-size:46px;line-height:1.5;color:#fff;word-spacing:30px;transform:rotate(-12deg) scale(1.4);white-space:normal}
+.pack .logo{position:absolute;left:50%;top:130px;width:640px;transform:translateX(-50%) rotate(-4deg);filter:drop-shadow(0 18px 0 rgba(0,0,0,.18))}
+.pack .crac{position:absolute;right:60px;top:700px;font-size:118px;color:var(--butter);transform:rotate(10deg);-webkit-text-stroke:10px var(--choco);paint-order:stroke fill;text-shadow:0 10px 0 var(--choco)}
+.pack .chips{position:absolute;left:150px;width:700px;bottom:215px;z-index:1}
+.pack .logo,.pack .crac,.pack .tag,.pack .flav{z-index:3}
+.pack .flav{position:absolute;left:50%;bottom:150px;transform:translateX(-50%) rotate(-3deg);padding:22px 56px 18px;border-radius:999px;background:var(--linen);color:var(--choco);font-size:84px;box-shadow:0 12px 0 var(--choco);white-space:nowrap}
+.pack .flav small{display:block;font-family:Nunito;font-weight:900;font-size:26px;letter-spacing:.18em;text-align:center;color:var(--tangelo);margin-bottom:6px}
+.pack .tag{position:absolute;left:60px;top:760px;width:170px;height:170px;border-radius:50%;background:var(--butter);color:var(--choco);display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(-12deg);font-weight:900;font-size:22px;line-height:1.1;text-align:center;border:7px solid var(--choco)}
+.pack .tag b{font-family:Luckiest;font-size:44px;font-weight:400}
+.pack .info{position:absolute;left:0;right:0;bottom:84px;display:flex;justify-content:space-between;padding:0 70px;font-weight:800;font-size:26px;letter-spacing:.06em;text-transform:uppercase;opacity:.92}
+.nature{--bg:var(--tangelo);--bg2:#D94300}
+.piment{--bg:var(--piment);--bg2:#B50311}
+.bbq{--bg:var(--choco);--bg2:#2F1812}
+.bbq .flav small{color:var(--honey)}
+
+/* ---------- posts réseaux 1080x1350 ---------- */
+.post{position:relative;width:1080px;height:1350px;overflow:hidden;background:var(--bg,var(--tangelo));color:var(--fg,#fff)}
+.post .big{position:absolute;left:70px;right:70px;top:110px;font-family:Luckiest;font-size:190px;line-height:.86;-webkit-text-stroke:12px var(--choco);paint-order:stroke fill;text-shadow:0 14px 0 var(--choco)}
+.post .sub{position:absolute;left:70px;bottom:100px;font-weight:900;font-size:44px;line-height:1.15;max-width:640px}
+.post .lg{position:absolute;right:60px;bottom:70px;width:250px}
+.post .chips{position:absolute;right:-60px;top:470px;width:760px;transform:rotate(-8deg)}
+.p2{--bg:var(--botti);--fg:var(--choco)}
+.p2 .big{color:var(--tangelo);font-size:150px}
+.p3{--bg:var(--choco)}
+.p3 .big{color:var(--butter)}
+.p3 .q{position:absolute;left:70px;right:70px;top:520px;font-size:64px;font-weight:900;line-height:1.15}
+.p3 .q span{color:var(--honey)}
+.packs3{position:absolute;left:60px;right:60px;top:440px;display:flex;justify-content:center;gap:24px}
+.packs3 img{width:300px;border-radius:14px;box-shadow:0 24px 40px rgba(0,0,0,.45)}
+.packs3 img:nth-child(1){transform:rotate(-7deg) translateY(30px)}.packs3 img:nth-child(3){transform:rotate(7deg) translateY(30px)}
+
+/* ---------- planche de stickers 1600x1000 ---------- */
+.stick{position:relative;width:1600px;height:1000px;background:transparent}
+.st{position:absolute;filter:drop-shadow(0 0 0 #fff) drop-shadow(0 6px 10px rgba(0,0,0,.25))}
+.st.word{font-family:Luckiest;font-size:120px;color:var(--tangelo);-webkit-text-stroke:22px #fff;paint-order:stroke fill;}
+.st.word i{font-style:normal;-webkit-text-stroke:0}
+.badge{width:300px;height:300px;border-radius:50%;background:var(--tangelo);border:16px solid #fff;display:flex;align-items:center;justify-content:center;color:#fff;font-family:Luckiest;font-size:58px;text-align:center;line-height:.95;box-shadow:0 8px 14px rgba(0,0,0,.25)}
+
+/* ---------- motif 1200x1200 ---------- */
+.pat{width:1200px;height:1200px;background:var(--linen);position:relative;overflow:hidden}
+.pat span{position:absolute;font-family:Luckiest;color:var(--tangelo)}
+</style></head>
+<body>
+
+<!-- 3 saveurs -->
+<section class="pack nature" data-board="pack_nature">
+  <div class="crimp t"></div><div class="rays"></div>
+  <div class="pattern">MIAMMM CRAC HUMMMM MIAMMM CRAC HUMMMM MIAMMM CRAC HUMMMM MIAMMM CRAC HUMMMM MIAMMM CRAC HUMMMM MIAMMM CRAC HUMMMM MIAMMM CRAC HUMMMM MIAMMM CRAC HUMMMM MIAMMM CRAC</div>
+  <img class="logo" src="img/logo_a.svg"><div class="crac lk">CRAC !</div>
+  <div class="tag"><b>100%</b>croustillant</div>
+  <img class="chips" src="img/chips.png">
+  <div class="flav lk"><small>Chips de pommes de terre</small>Nature salé</div>
+  <div class="info"><span>Poids net 45 g</span><span>Fait en Côte d'Ivoire</span></div>
+  <div class="crimp b"></div>
+</section>
+
+<section class="pack piment" data-board="pack_piment">
+  <div class="crimp t"></div><div class="rays"></div>
+  <div class="pattern">MIAMMM CRAC HUMMMM MIAMMM CRAC HUMMMM MIAMMM CRAC HUMMMM MIAMMM CRAC HUMMMM MIAMMM CRAC HUMMMM MIAMMM CRAC HUMMMM MIAMMM CRAC HUMMMM MIAMMM CRAC HUMMMM MIAMMM CRAC</div>
+  <img class="logo" src="img/logo_b.svg"><div class="crac lk">ÇA PIQUE !</div>
+  <div class="tag"><b>FORT</b>au vrai piment</div>
+  <img class="chips" src="img/chips.png">
+  <div class="flav lk"><small>Chips de pommes de terre</small>Piment rouge</div>
+  <div class="info"><span>Poids net 45 g</span><span>Fait en Côte d'Ivoire</span></div>
+  <div class="crimp b"></div>
+</section>
+
+<section class="pack bbq" data-board="pack_bbq">
+  <div class="crimp t"></div><div class="rays"></div>
+  <div class="pattern">MIAMMM CRAC HUMMMM MIAMMM CRAC HUMMMM MIAMMM CRAC HUMMMM MIAMMM CRAC HUMMMM MIAMMM CRAC HUMMMM MIAMMM CRAC HUMMMM MIAMMM CRAC HUMMMM MIAMMM CRAC HUMMMM MIAMMM CRAC</div>
+  <img class="logo" src="img/logo_a.svg"><div class="crac lk">HUMMMM !</div>
+  <div class="tag"><b>FUMÉ</b>au feu de bois</div>
+  <img class="chips" src="img/chips.png">
+  <div class="flav lk"><small>Chips de pommes de terre</small>Barbecue</div>
+  <div class="info"><span>Poids net 45 g</span><span>Fait en Côte d'Ivoire</span></div>
+  <div class="crimp b"></div>
+</section>
+
+<!-- posts -->
+<section class="post" data-board="post_crac">
+  <div class="big">LE CROC<br>QUI FAIT<br>CRAC !</div>
+  <img class="chips" src="img/chips.png">
+  <div class="sub">Nouveau : Krok'up débarque dans tes pauses.</div>
+  <img class="lg" src="img/logo_a.svg">
+</section>
+<section class="post p2" data-board="post_partage">
+  <div class="big">UN PAQUET,<br>TOUTE LA<br>BANDE.</div>
+  <img class="chips" src="img/chips.png" style="top:470px">
+  <div class="sub">Krok'up se partage. Enfin… on essaie.</div>
+  <img class="lg" src="img/logo_b.svg">
+</section>
+<section class="post p3" data-board="post_saveurs">
+  <div class="big">3 SAVEURS.<br>0 SILENCE.</div>
+  <div class="packs3"><img src="out/pack_nature.png"><img src="out/pack_piment.png"><img src="out/pack_bbq.png"></div>
+  <div class="sub">Laquelle fait le plus de bruit ?</div>
+  <img class="lg" src="img/logo_a.svg">
+</section>
+
+<!-- stickers -->
+<section class="stick" data-board="stickers" data-transparent>
+  <img class="st" src="img/logo_a.svg" style="left:40px;top:40px;width:430px;transform:rotate(-8deg)">
+  <img class="st" src="img/logo_b.svg" style="left:1130px;top:520px;width:420px;transform:rotate(7deg)">
+  <div class="st word lk" style="left:520px;top:80px;transform:rotate(6deg)">CRAC&nbsp;!</div>
+  <div class="st word lk" style="left:560px;top:330px;color:var(--choco);transform:rotate(-5deg)">MIAMMM</div>
+  <div class="st word lk" style="left:60px;top:640px;color:var(--honey);transform:rotate(-4deg)">HUMMMM</div>
+  <div class="st badge" style="left:1210px;top:80px;transform:rotate(12deg)">CRAC<br>CLUB</div>
+  <div class="st badge" style="left:760px;top:600px;background:var(--choco);transform:rotate(-10deg)">0%<br>SILENCE</div>
+</section>
+
+<!-- motif -->
+<section class="pat" data-board="motif" id="pat"></section>
+<script>
+  // motif d'onomatopées en quinconce (graine fixe, rendu reproductible)
+  const pat = document.getElementById('pat'); const words = ['CRAC', 'MIAMMM', 'HUMMMM']; let k = 0;
+  for (let y = -40; y < 1240; y += 150) for (let x = (y / 150) % 2 ? -120 : 0; x < 1240; x += 330) {
+    const s = document.createElement('span'); s.textContent = words[k++ % 3];
+    s.style.cssText = `left:${x}px;top:${y}px;font-size:${k % 2 ? 64 : 52}px;transform:rotate(${k % 2 ? -8 : 6}deg);color:${['#FA4D00', '#48261D', '#FFB024'][k % 3]}`;
+    pat.appendChild(s);
+  }
+</script>
+</body></html>
