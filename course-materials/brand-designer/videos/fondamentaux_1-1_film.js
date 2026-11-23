@@ -186,7 +186,7 @@ const SLIDES = [
     if (outro > 0) {
       const e = sp(t, END - 3.9, SPRING.bouncy);
       ctx.save(); ctx.translate(W / 2, H / 2 - 30); ctx.scale(e, e);
-      text(ctx, 'dak', -40, 40, font(150, 800, D), C.w, 'right'); ctx.beginPath(); ctx.arc(-8, 26, 16, 0, Math.PI * 2); ctx.fillStyle = C.o; ctx.fill(); text(ctx, 'graphiste', 24, 40, font(150, 800, D), C.w, 'left');
+      ctx.font = font(110, 800, D); const wd = ctx.measureText('dak').width, wg = ctx.measureText('graphiste').width, x0 = -(wd + 34 + wg) / 2; text(ctx, 'dak', x0, 40, font(110, 800, D), C.w, 'left'); ctx.beginPath(); ctx.arc(x0 + wd + 17, 30, 13, 0, Math.PI * 2); ctx.fillStyle = C.o; ctx.fill(); text(ctx, 'graphiste', x0 + wd + 34, 40, font(110, 800, D), C.w, 'left');
       ctx.restore();
       T(ctx, 'DAK STUDIO SCHOOL', W / 2, H / 2 + 110, 30, C.o, { align: 'center', a: ap(t, END - 3.2) });
     }
