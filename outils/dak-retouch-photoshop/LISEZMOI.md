@@ -30,11 +30,23 @@ Panneau de retouche « affiche sport » en un clic, organisé en 4 onglets (**Re
 | Peau | Séparation de fréquences, Peau douce (masque noir : peindre en blanc), Texture de peau, Reflets sueur |
 | Lumière & volume | Booster lumières, Ombres profondes, Ouvrir les ombres, Dodge & Burn auto, Calque D&B manuel, Contraste S |
 | Finitions | Vignette, Halo lumineux |
+| **Effets** : signature | Sol en perspective inclinée (↘ ou ↗) : sol texturé, grille de fuite, horizon doré, ombre du joueur, signature le long de la pente, placé derrière le joueur |
 | **Effets** : contours lumineux | Lueur contour, Éclair, Rim light, en Or, Crème, Feu ou Électrique |
 | **Effets** : ambiance | Fumigène, Brume au sol, Étincelles, Light leak, Traînée lumineuse, en Rouge, Orange, Or, Bleu ou Blanc |
 | **Effets** : textures | Grain argentique, Film rayé, Papier usé |
 | **Texte** | Nom du joueur (prénom + NOM), Numéro géant, Bloc match (équipes, date, heure, stade), Titre géant derrière le joueur |
 | **Assets** | Ta bibliothèque de PNG/PSD/SVG (logos, fumigènes, étincelles…) placés en un clic comme objets dynamiques |
+
+## Pack d'assets fourni (dossier `assets/`)
+
+13 éléments 2K générés pour le plugin. Dans l'onglet **Assets** → « Choisir le dossier » → sélectionner `assets`.
+
+| Fichier | Mode de fusion appliqué |
+|---|---|
+| fumigene-rouge, fumigene-rouge-sol, fumigene-or, fumigene-bleu, smoke-blanc | Écran |
+| sparks-or, braises-feu, eclair-or, eclair-bleu, flare-orange, light-leak-rouge | Écran |
+| overlay-poussiere-rayures | Écran |
+| texture-papier-creme | Produit |
 
 Les champs texte, les polices, l'onglet et le thème sont mémorisés d'une session à l'autre.
 

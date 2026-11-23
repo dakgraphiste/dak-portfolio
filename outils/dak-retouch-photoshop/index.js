@@ -33,6 +33,7 @@ let glowColor = "or";
 // Couleurs des effets (fumigènes, étincelles, traînées…).
 const FX_COLORS = { rouge: "#d8191f", orange: "#ff6a1a", or: "#e3b768", bleu: "#3d7bff", blanc: "#ffffff" };
 let fxColor = "rouge";
+let tilt = "descend"; // sol incliné : "descend" (plus bas à droite) ou "monte"
 
 /* ------------------------------------------------------------------ */
 /* Briques batchPlay                                                   */
@@ -826,7 +827,8 @@ R.blocMatch = async (doc) => {
 /* Bibliothèque d'assets (logos, fumigènes PNG, textures…)              */
 /* ------------------------------------------------------------------ */
 const ASSET_EXT = /\.(png|jpe?g|psd|psb|tiff?|webp|svg|ai|pdf)$/i;
-const LIGHT_ASSET = /(fumi|smoke|spark|etincel|flare|light|lueur|feu|fire|flame|leak|glow|bokeh|eclair|lightning)/i;
+const LIGHT_ASSET = /(fumi|smoke|spark|etincel|flare|light|lueur|feu|fire|flame|leak|glow|bokeh|eclair|lightning|braise|ember|poussiere|dust|overlay)/i;
+const PAPER_ASSET = /(papier|paper)/i;
 
 async function placeAsset(doc, entry) {
   await selectTop();
@@ -836,8 +838,136 @@ async function placeAsset(doc, entry) {
   l.name = entry.name.replace(ASSET_EXT, "");
   // Les éléments lumineux sur fond noir se fondent automatiquement.
   if (LIGHT_ASSET.test(entry.name)) await setActive({ blend: "screen" });
+  else if (PAPER_ASSET.test(entry.name)) await setActive({ blend: "multiply" });
   return [l];
 }
+
+/* ------------------------------------------------------------------ */
+/* Signature graphique : sol en perspective inclinée                   */
+/* ------------------------------------------------------------------ */
+const pt = (x, y) => ({ _obj: "paint", horizontal: px(x), vertical: px(y) });
+
+async function polygon(points, add = false) {
+  await bp({
+    _obj: add ? "addTo" : "set",
+    _target: [{ _ref: "channel", _property: "selection" }],
+    to: { _obj: "polygon", points: points.map(([x, y]) => pt(x, y)) },
+    antiAlias: true,
+  });
+}
+
+R.solIncline = async (doc) => {
+  const w = doc.width, h = doc.height;
+  const player = playerLayer(doc);
+  // Bord supérieur du sol : une ligne en biais d'un bord à l'autre.
+  const yA = h * 0.7, yB = h * 0.8;
+  const [yL, yR] = tilt === "descend" ? [yA, yB] : [yB, yA];
+  const edgeY = (x) => yL + ((yR - yL) * x) / w;
+  const ground = [[-w * 0.05, edgeY(-w * 0.05)], [w * 1.05, edgeY(w * 1.05)], [w * 1.05, h * 1.05], [-w * 0.05, h * 1.05]];
+  const layers = [];
+
+  await selectTop();
+
+  // 1. Le sol : chocolat très sombre, texture bitume.
+  const sol = await emptyLayer(doc, "Sol");
+  await polygon(ground);
+  await fillColor("#140c09");
+  await deselect();
+  sol.transparentPixelsLocked = true;
+  await sol.applyAddNoise(scaled(doc, 9, 3, 25), constants.NoiseDistribution.GAUSSIAN, true);
+  await sol.applyGaussianBlur(scaled(doc, 0.8, 0.3, 4));
+  sol.transparentPixelsLocked = false;
+  layers.push(sol);
+
+  // 2. Grille en perspective : lignes de fuite vers un point posé sur l'horizon,
+  //    et lignes transversales parallèles au bord, de plus en plus serrées vers l'horizon.
+  const lines = await emptyLayer(doc, "Lignes de perspective");
+  const vp = [w * 0.5, edgeY(w * 0.5) - h * 0.06];
+  const thick = Math.max(1, w * 0.002);
+  let first = true;
+  for (let i = 0; i <= 16; i++) {
+    const bx = -w * 1.6 + (w * 4.2 * i) / 16;
+    await polygon([vp, [bx - thick, h * 1.05], [bx + thick, h * 1.05]], !first);
+    first = false;
+  }
+  for (const d of [0.012, 0.03, 0.058, 0.1, 0.16, 0.25]) {
+    const off = h * d, t2 = Math.max(1, thick * (0.4 + d * 4));
+    await polygon([[-w * 0.05, edgeY(-w * 0.05) + off - t2], [w * 1.05, edgeY(w * 1.05) + off - t2], [w * 1.05, edgeY(w * 1.05) + off + t2], [-w * 0.05, edgeY(-w * 0.05) + off + t2]], true);
+  }
+  await fillColor(GOLD.champagne);
+  await polygon(ground);
+  await maskFromSelection();
+  await deselect();
+  await selectLayer(lines);
+  await setActive({ blend: "softLight", opacity: 40 });
+  layers.push(lines);
+
+  // 3. Reflet doré qui court le long du bord.
+  const band = (t0, t1) => [[-w * 0.05, edgeY(-w * 0.05) + t0], [w * 1.05, edgeY(w * 1.05) + t0], [w * 1.05, edgeY(w * 1.05) + t1], [-w * 0.05, edgeY(-w * 0.05) + t1]];
+  const reflet = await emptyLayer(doc, "Reflet du sol");
+  await polygon(band(0, h * 0.05));
+  await fillColor(GOLD.or);
+  await deselect();
+  await reflet.applyGaussianBlur(scaled(doc, 40, 8, 250));
+  await setActive({ blend: "softLight", opacity: 50 });
+  layers.push(reflet);
+
+  // 4. Ligne d'horizon lumineuse (fil + halo).
+  const fil = await emptyLayer(doc, "Ligne d'horizon");
+  await polygon(band(-h * 0.0012, h * 0.0012));
+  await fillColor(GOLD.champagne);
+  await deselect();
+  await fil.applyGaussianBlur(scaled(doc, 1, 0.3, 5));
+  await setActive({ blend: "linearDodge" });
+  const halo = await fil.duplicate();
+  halo.name = "Halo d'horizon";
+  await selectLayer(halo);
+  await halo.applyGaussianBlur(scaled(doc, 22, 5, 200));
+  await setActive({ blend: "screen", opacity: 80 });
+  layers.push(fil, halo);
+
+  // 5. Ombre portée sous le joueur (ou au centre du bord).
+  let cx = w / 2, cy = edgeY(w / 2) + h * 0.04;
+  if (player) {
+    const b = player.bounds;
+    cx = (b.left + b.right) / 2;
+    cy = Math.max(edgeY(cx) + h * 0.02, Math.min(b.bottom, h * 0.98));
+  }
+  await selectTop();
+  const ombre = await emptyLayer(doc, "Ombre portée");
+  await bp({
+    _obj: "set",
+    _target: [{ _ref: "channel", _property: "selection" }],
+    to: { _obj: "ellipse", top: px(cy - h * 0.025), left: px(cx - w * 0.28), bottom: px(cy + h * 0.025), right: px(cx + w * 0.28) },
+    antiAlias: true,
+  });
+  await fillBlack();
+  await deselect();
+  await ombre.applyGaussianBlur(scaled(doc, 30, 6, 200));
+  await setActive({ blend: "multiply", opacity: 75 });
+  layers.push(ombre);
+
+  // 6. Signature écrite le long de la pente.
+  const sig = field("txtSignature", "DAK.GRAPHISTE");
+  if (sig) {
+    const x = tilt === "descend" ? w * 0.8 : w * 0.2;
+    const t = await text(doc, {
+      name: "Signature",
+      contents: sig.toUpperCase(),
+      sizePx: h * 0.012, cx: x, cy: edgeY(x) + h * 0.022, maxW: w * 0.35,
+      font: fontText(), tracking: 500, hex: GOLD.champagne, opacity: 70,
+    });
+    const angle = (Math.atan2(yR - yL, w) * 180) / Math.PI;
+    await t.rotate(angle);
+    layers.push(t);
+  }
+
+  const g = await group(doc, layers, "Signature · Sol incliné");
+  if (g && player) {
+    try { await g.move(player, constants.ElementPlacement.PLACEAFTER); } catch (e) { /* reste au-dessus */ }
+  }
+  return layers;
+};
 
 /* ---------- Recette complète ---------- */
 R.afficheSport = async (doc) => {
@@ -890,6 +1020,7 @@ const LABELS = {
   numero: "Numéro géant",
   nomJoueur: "Nom du joueur",
   blocMatch: "Bloc match",
+  solIncline: "Signature · Sol incliné",
 };
 
 const TIPS = {
@@ -900,6 +1031,7 @@ const TIPS = {
   contourLumineux: "Baisse l'intensité ou masque le bas du corps pour un rendu plus naturel.",
   fumigene: "Ctrl+T pour placer, masque pour dégager le visage.",
   trainee: "Ctrl+T pour l'orienter en diagonale.",
+  solIncline: "Sélectionne le joueur avant : le sol passe derrière lui et l'ombre se cale sous ses pieds.",
   titreGeant: "Astuce : sélectionne le calque du joueur avant, le titre passe derrière lui.",
   numero: "Astuce : sélectionne le calque du joueur avant, le numéro passe derrière lui.",
 };
@@ -1068,6 +1200,7 @@ function swatches(attr, onPick) {
   });
 }
 swatches("data-fx", (v) => { fxColor = v; });
+swatches("data-tilt", (v) => { tilt = v; });
 
 swatches("data-glow", (v) => { glowColor = v; });
 

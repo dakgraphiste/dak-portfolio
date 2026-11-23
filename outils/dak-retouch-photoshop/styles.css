@@ -175,6 +175,15 @@ h2 {
 
 .btn-hero:hover { background-color: var(--accent-strong); }
 
+.btn-sig {
+  font-weight: bold;
+  color: var(--hero-text);
+  background-color: var(--accent);
+  border-color: var(--accent-strong);
+}
+
+.btn-sig:hover { background-color: var(--accent-strong); }
+
 .btn.asset {
   flex: 1 1 120px;
   overflow: hidden;
