@@ -1,0 +1,218 @@
+---
+// CV en ligne (format « bento ») : même contenu que le PDF, imprimable sur une page A4
+import QRCode from 'qrcode';
+import Base from '../layouts/Base.astro';
+import { SITE, CLIENTS } from '../data/site';
+import { CV } from '../data/cv';
+
+const site = Astro.site!.toString().replace(/\/$/, '');
+const qr = await QRCode.toString(`${site}/projets`, { type: 'svg', margin: 0, color: { dark: '#0A0A0A', light: '#0000' } });
+const ld = [{
+  '@type': 'ProfilePage', url: `${site}/cv`, mainEntity: {
+    '@id': `${site}/#davy`, '@type': 'Person', name: SITE.name, jobTitle: CV.title,
+    alumniOf: CV.education.map((e) => ({ '@type': 'EducationalOrganization', name: e.school })),
+    worksFor: { '@type': 'Organization', name: CV.experience[0].company },
+    knowsLanguage: ['fr', 'en'], skills: [...CV.skills.map((s) => s.name), ...CV.ai].join(', '),
+  },
+}];
+---
+<Base title={`CV — ${SITE.name}, ${CV.title}`} description={`CV de ${SITE.name} (Dak.graphiste) : ${CV.title} à Abidjan, plus de ${CV.years} ans en agence. Expériences, compétences, outils et formation.`} image="/images/og/a-propos.jpg" jsonld={ld}>
+  <div class="cvp wrap">
+    <div class="cv-actions noprint">
+      <span class="eyebrow">CV · mis à jour en {new Date().getFullYear()}</span>
+      <div class="prow">
+        {SITE.cv && <a class="btn btn-fg" href={SITE.cv} download>Télécharger le PDF ↓</a>}
+        <a class="btn btn-line" href="/contact">Me contacter</a>
+      </div>
+    </div>
+
+    <article class="bento">
+      <header class="b b-id">
+        <img src="/images/davy.webp" srcset="/images/davy-480.webp 480w, /images/davy.webp 900w" sizes="220px" alt={`Portrait de ${SITE.name}`} width="900" height="1349" />
+        <div class="id-t">
+          <span class="id-tag">Disponible pour missions & agences</span>
+          <h1>{SITE.name}</h1>
+          <p class="id-role">{CV.title}</p>
+          <p class="id-sum">{CV.summary}</p>
+        </div>
+      </header>
+
+      <section class="b b-contact">
+        <h2>Contact</h2>
+        <ul>
+          <li><span>Tél.</span><a href={SITE.phoneHref}>{SITE.phone}</a></li>
+          <li><span>E-mail</span><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
+          <li><span>Portfolio</span><a href={`${site}/projets`}>{site.replace(/^https?:\/\//, '')}</a></li>
+          <li><span>Behance</span><a href={SITE.behance}>behance.net/davyaymard</a></li>
+          <li><span>Ville</span>{CV.location}</li>
+        </ul>
+      </section>
+
+      <section class="b b-stats">
+        <div><b>{CV.years}+</b><span>ans en agence</span></div>
+        <div><b>{CLIENTS.length}</b><span>marques</span></div>
+        <div><b>3</b><span>pays</span></div>
+      </section>
+
+      <section class="b b-exp">
+        <h2>Expérience</h2>
+        <ol class="tl">
+          {CV.experience.map((e) => (
+            <li>
+              <span class="tl-d">{e.from} – {e.to}</span>
+              <b>{e.role}</b>
+              <span class="tl-c">{e.company} · {e.place}</span>
+              <ul>{e.points.map((p) => <li>{p}</li>)}</ul>
+            </li>
+          ))}
+        </ol>
+        <div class="side"><span class="tl-d">{CV.side.year}</span><b>{CV.side.role}</b><span>{CV.side.company}</span></div>
+      </section>
+
+      <section class="b b-skills">
+        <h2>Logiciels</h2>
+        {CV.skills.map((s, i) => <div class="bar" style={`--v:${s.level}%;--i:${i}`}><span>{s.name}</span><i></i></div>)}
+        <h3>Création assistée par IA</h3>
+        <div class="chips2">{CV.ai.map((a) => <span>{a}</span>)}</div>
+      </section>
+
+      <section class="b b-soft">
+        <h2>Savoir-être</h2>
+        {CV.softSkills.map((s, i) => <div class="bar" style={`--v:${s.level}%;--i:${i + 4}`}><span>{s.name}</span><i></i></div>)}
+      </section>
+
+      <section class="b b-lang">
+        <h2>Langues</h2>
+        <div class="rings">{CV.languages.map((l) => (
+          <div class="ring" style={`--v:${l.level}`}><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15.9" /><circle class="fg" cx="18" cy="18" r="15.9" pathLength="100" /></svg><b>{l.level}%</b><span>{l.name}<br /><em>{l.note}</em></span></div>
+        ))}</div>
+      </section>
+
+      <section class="b b-edu">
+        <h2>Formation</h2>
+        {CV.education.map((e) => <div class="edu"><span class="tl-d">{e.year}</span><b>{e.title}</b><span>{e.school}</span></div>)}
+      </section>
+
+      <section class="b b-clients">
+        <h2>Ils m’ont fait confiance</h2>
+        <p>{CLIENTS.slice(0, 14).join(' · ')}</p>
+      </section>
+
+      <section class="b b-hob">
+        <h2>Centres d’intérêt</h2>
+        <div class="hob">{CV.hobbies.map(([i, n]) => <span><em aria-hidden="true">{i}</em>{n}</span>)}</div>
+      </section>
+
+      <section class="b b-qr">
+        <div class="qr" set:html={qr} aria-hidden="true"></div>
+        <span>Scanne pour voir<br /><b>le portfolio</b></span>
+      </section>
+    </article>
+  </div>
+</Base>
+
+<style is:global>
+  .cvp { padding-top: 120px; padding-bottom: 110px; }
+  .cv-actions { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
+  .bento { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px;
+    grid-template-areas: "id id contact" "stats exp exp" "skills exp exp" "soft lang edu" "hob clients qr"; }
+  .b-id { grid-area: id; } .b-contact { grid-area: contact; } .b-stats { grid-area: stats; } .b-exp { grid-area: exp; } .b-skills { grid-area: skills; }
+  .b-soft { grid-area: soft; } .b-lang { grid-area: lang; } .b-edu { grid-area: edu; } .b-clients { grid-area: clients; } .b-hob { grid-area: hob; } .b-qr { grid-area: qr; }
+  .b { border-radius: 26px; padding: 26px; background: var(--card); box-shadow: 0 0 0 1px var(--line); min-width: 0; }
+  .b h2 { margin: 0 0 16px; font-family: var(--font-display); font-size: 15px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-text); }
+  .b h3 { margin: 18px 0 10px; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .b-id { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 26px; align-items: center; background: #0A0A0A; color: #fff; box-shadow: none; position: relative; overflow: hidden; }
+  .b-id::after { content: ''; position: absolute; right: -120px; top: -120px; width: 340px; height: 340px; border-radius: 50%; background: var(--accent); filter: blur(110px); opacity: .45; pointer-events: none; }
+  .b-id img { width: 100%; height: auto; aspect-ratio: 4/5; object-fit: cover; object-position: 50% 12%; border-radius: 20px; }
+  .id-t { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 10px; }
+  .id-tag { align-self: flex-start; padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,.1); font-size: 12px; font-weight: 600; }
+  .id-tag::before { content: '● '; color: #3DDC84; }
+  .b-id h1 { margin: 0; font-family: var(--font-display); font-size: clamp(34px, 4.2vw, 58px); line-height: .95; letter-spacing: -0.04em; }
+  .id-role { margin: 0; font-size: 18px; font-weight: 700; color: #FF7A3D; }
+  .id-sum { margin: 0; font-size: 14.5px; line-height: 1.6; color: rgba(255,255,255,.78); }
+  .b-contact { }
+  .b-contact ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 11px; font-size: 14px; }
+  .b-contact li { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 8px; overflow-wrap: anywhere; }
+  .b-contact li span { color: var(--muted); }
+  .b-stats { align-content: center; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; background: var(--grad); color: #fff; box-shadow: none; }
+  .b-stats div { display: flex; flex-direction: column; gap: 2px; }
+  .b-stats b { font-family: var(--font-display); font-size: 40px; line-height: 1; letter-spacing: -0.03em; }
+  .b-stats span { font-size: 13px; opacity: .9; }
+  .b-exp { }
+  .tl { list-style: none; margin: 0; padding: 0 0 0 22px; position: relative; display: flex; flex-direction: column; gap: 20px; }
+  .tl::before { content: ''; position: absolute; left: 4px; top: 6px; bottom: 6px; width: 2px; background: linear-gradient(var(--accent), var(--line)); }
+  .tl > li { position: relative; display: flex; flex-direction: column; gap: 3px; }
+  .tl > li::before { content: ''; position: absolute; left: -22px; top: 5px; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 25%, transparent); }
+  .tl b { font-family: var(--font-display); font-size: 21px; letter-spacing: -0.02em; }
+  .tl-d { font-size: 12px; font-weight: 700; letter-spacing: .06em; color: var(--accent-text); }
+  .tl-c { color: var(--muted); font-size: 14px; }
+  .tl ul { margin: 6px 0 0; padding-left: 18px; color: var(--muted); font-size: 14px; line-height: 1.55; }
+  .side { margin-top: 20px; padding: 16px 18px; border-radius: 18px; background: #0A0A0A; color: #fff; display: flex; flex-direction: column; gap: 3px; }
+  .side .tl-d { color: #FF7A3D; } .side span:last-child { color: rgba(255,255,255,.7); font-size: 14px; }
+  .b-skills { }
+  .bar { display: flex; flex-direction: column; gap: 6px; margin-bottom: 13px; font-size: 14px; font-weight: 600; }
+  .bar i { display: block; height: 7px; border-radius: 7px; background: var(--line); position: relative; overflow: hidden; }
+  .bar i::after { content: ''; position: absolute; inset: 0; width: var(--v); border-radius: 7px; background: var(--grad); transform-origin: left; animation: cvbar 1.4s cubic-bezier(.2,.8,.1,1) calc(.3s + var(--i) * .08s) both; }
+  @keyframes cvbar { from { transform: scaleX(0); } }
+  html.reduced .bar i::after { animation: none; }
+  .chips2 { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chips2 span { padding: 6px 11px; border-radius: 999px; font-size: 13px; font-weight: 600; box-shadow: 0 0 0 1px var(--line); }
+  .b-soft { }
+  .b-lang { }
+  .rings { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .ring { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; font-size: 13px; }
+  .ring svg { width: 92px; height: 92px; transform: rotate(-90deg); }
+  .ring circle { fill: none; stroke: var(--line); stroke-width: 3; }
+  .ring circle.fg { stroke: var(--accent); stroke-linecap: round; stroke-dasharray: var(--v) 100; animation: cvring 1.6s ease-out .4s both; }
+  @keyframes cvring { from { stroke-dasharray: 0 100; } }
+  .ring b { position: absolute; top: 34px; font-family: var(--font-display); font-size: 18px; }
+  .ring em { font-style: normal; color: var(--muted); }
+  .b-edu { display: flex; flex-direction: column; gap: 14px; }
+  .b-edu h2 { margin-bottom: 2px; }
+  .edu { display: flex; flex-direction: column; gap: 2px; }
+  .edu b { font-family: var(--font-display); font-size: 17px; }
+  .edu span:last-child { color: var(--muted); font-size: 14px; }
+  .b-clients { }
+  .b-clients p { margin: 0; font-size: 15px; line-height: 1.7; font-weight: 600; }
+  .b-hob { }
+  .hob { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .hob span { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 4px; border-radius: 14px; background: var(--bg); font-size: 12px; font-weight: 600; text-align: center; }
+  .hob em { font-style: normal; font-size: 22px; }
+  .b-qr { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-align: center; font-size: 13px; background: #fff; color: #0A0A0A; }
+  .qr { width: 110px; height: 110px; } .qr svg { width: 100%; height: 100%; }
+  @media (max-width: 1000px) {
+    .bento { grid-template-columns: 1fr 1fr; grid-template-areas: "id id" "contact stats" "exp exp" "skills soft" "lang edu" "clients clients" "hob qr"; }
+  }
+  @media (max-width: 640px) {
+    .bento { grid-template-columns: 1fr; grid-template-areas: "id" "stats" "contact" "exp" "skills" "soft" "lang" "edu" "clients" "hob" "qr"; }
+    .b-id { grid-template-columns: 1fr; } .b-id img { max-width: 220px; }
+  }
+
+  /* impression / PDF : une page A4, thème clair */
+  @media print {
+    @page { size: A4; margin: 9mm; }
+    html, body { background: #fff !important; color: #111 !important; }
+    .site-header, .mobile-nav, .site-footer, .wa-float, .cursor, .noprint, .sr-only { display: none !important; }
+    #contenu, main { padding: 0 !important; }
+    .cvp { padding: 0 !important; max-width: none !important; margin: 0 !important; width: auto !important; zoom: 1.13; }
+    :root { --card: #F6F4F1; --line: #E4DED7; --muted: #5E5A57; --bg: #fff; --fg: #111; }
+    .bento { gap: 7px; grid-template-columns: repeat(3, 1fr); grid-template-areas: "id id contact" "stats exp exp" "skills exp exp" "soft lang edu" "hob clients qr"; }
+    .b { padding: 12px 14px; border-radius: 14px; box-shadow: none; break-inside: avoid; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .b-id { grid-template-columns: 118px 1fr; gap: 14px; }
+    .b-id h1 { font-size: 30px; } .id-role { font-size: 13px; } .id-sum { font-size: 9.6px; line-height: 1.5; } .id-tag { font-size: 8.5px; padding: 3px 8px; }
+    .b h2 { font-size: 9.5px; margin-bottom: 8px; } .b h3 { font-size: 8.5px; margin: 8px 0 6px; }
+    .b-contact { } .b-contact ul { font-size: 9.2px; gap: 5px; } .b-contact li { grid-template-columns: 50px 1fr; }
+    .b-stats { padding: 10px 14px; } .b-stats b { font-size: 22px; } .b-stats span { font-size: 8.5px; }
+    .b-exp { } .tl { gap: 8px; } .tl b { font-size: 12.5px; } .tl-d { font-size: 8px; } .tl-c, .tl ul { font-size: 9px; } .tl ul { margin-top: 2px; line-height: 1.4; }
+    .side { margin-top: 8px; padding: 8px 12px; } .side span:last-child { font-size: 9px; } .side b { font-size: 11px; }
+    .b-skills { } .bar { font-size: 9px; margin-bottom: 6px; gap: 3px; } .bar i { height: 4px; }
+    .chips2 span { font-size: 8.5px; padding: 3px 7px; }
+    .b-soft, .b-lang, .b-edu { } .ring svg { width: 52px; height: 52px; } .ring b { top: 18px; font-size: 11px; } .ring { font-size: 8.5px; gap: 2px; }
+    .b-edu { gap: 6px; } .edu b { font-size: 10.5px; } .edu span:last-child, .edu .tl-d { font-size: 8.5px; }
+    .b-clients { } .b-clients p { font-size: 9px; line-height: 1.5; }
+    .b-hob { } .hob { gap: 4px; } .hob span { font-size: 7.5px; padding: 4px 2px; gap: 1px; } .hob em { font-size: 13px; }
+    .b-qr { font-size: 8.5px; gap: 5px; box-shadow: none; border: 1px solid #E4DED7; } .qr { width: 62px; height: 62px; }
+    .bar i::after, .ring circle.fg { animation: none !important; }
+    .b-id::after { opacity: .35; }
+  }
+</style>

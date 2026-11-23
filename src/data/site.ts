@@ -17,7 +17,7 @@ export const SITE = {
   // Remplacer par l'identifiant Formspree (https://formspree.io) pour recevoir les messages du formulaire
   formAction: 'https://formspree.io/f/VOTRE_ID',
   // Mettre le nom du fichier déposé dans public/ (ex. '/cv-davy-aymard-kouassi.pdf') pour afficher le bouton
-  cv: '',
+  cv: '/cv-davy-aymard-kouassi.pdf',
   // Google Search Console : coller ici le code de la balise « google-site-verification » (sans guillemets autour)
   googleVerification: 'xWbfjBnfrkx4GvoEA--HWIY9XAY04riyTrkIi32ZG_c'
 };

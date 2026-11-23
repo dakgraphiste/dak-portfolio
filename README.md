@@ -116,3 +116,8 @@ Adresse : `/espace-eleve`. Tant que les réglages ci-dessous ne sont pas faits, 
 **5. Ouvrir la vente d'un cours** : dans `src/data/academy.ts`, `status: 'ouvert'` et `priceFcfa: 25000` (et `priceFcfa` sur un parcours pour le vendre en entier).
 
 Fonctionnement : l'élève crée son compte, paie sur CinetPay, et l'accès s'ouvre dès que le serveur a vérifié le paiement directement auprès de CinetPay (montant compris). Dans `/espace-eleve/admin`, tu vois les paiements et les élèves, et tu peux ouvrir un accès à la main (paiement en espèces, bourse…).
+
+## CV
+
+Le contenu du CV est dans `src/data/cv.ts`. Il alimente la page `/cv`, la page À propos et le PDF.
+Après une modification, lancer `npm run cv` pour régénérer `public/cv-davy-aymard-kouassi.pdf`, puis committer.

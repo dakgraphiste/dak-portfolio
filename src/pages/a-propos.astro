@@ -2,34 +2,31 @@
 import Base from '../layouts/Base.astro';
 import Mascot from '../components/Mascot.astro';
 import { SITE, PROJECTS, CLIENTS, sm, srcset, filled } from '../data/site';
+import { CV } from '../data/cv';
 const P = Object.fromEntries(PROJECTS.map((p) => [p.slug, p]));
 const expertises = ['Direction artistique', 'Identité visuelle & logo', 'Content calendars & réseaux sociaux', 'Key visuals & campagnes', 'Packaging & produit', 'Affiches & illustration', 'Motion design'];
-const tools = ['Illustrator', 'Photoshop', 'After Effects', 'Premiere Pro', 'IA générative'];
+const tools = ['Photoshop', 'Illustrator', 'InDesign', 'After Effects', 'Premiere Pro', ...CV.ai];
 const marq = ['Budweiser', 'TotalEnergies', 'La Vache qui rit', 'Yango', 'FanMilk', 'Bonnet Rouge', 'Mitsubishi', 'Bavaria', 'SuperClean', 'Air Elegance', 'Orika', "Chap'n"];
 const jobs = [
-  ['Aujourd’hui', 'Creative Director & Visual Strategist', 'Freelance · Dak.graphiste, Abidjan'],
-  ['Agence', 'Direction artistique', 'SimplyBlack, Abidjan · Budweiser, TotalEnergies, SuperClean…'],
-  ['[années]', '[Poste]', '[Entreprise / studio]'],
-  ['[années]', '[Poste ou stage]', '[Entreprise / studio]']
-].filter((j) => j.every(filled));
-const diplomas = [
-  ['[Année]', '[Diplôme]', '[École, ville]', '[Ce que tu y as appris, ta spécialisation, ton projet de fin d’études.]'],
-  ['[Année]', '[Diplôme]', '[École, ville]', '[Matières clés, projets marquants, prix.]'],
-  ['[Année]', '[Certification ou formation courte]', '[Organisme]', '[Ce que cette formation t’a apporté.]']
-].filter((d) => d.slice(0, 3).every(filled)); // la section n'apparaît que si un diplôme est rempli
+  ['Aujourd’hui', CV.title, 'Freelance · Dak.graphiste, Abidjan'],
+  ...CV.experience.map((e) => [`${e.from} – ${e.to}`, e.role, `${e.company} · ${e.place}`]),
+  [CV.side.year, CV.side.role, CV.side.company],
+];
+const diplomas = CV.education.map((e) => [e.year, e.title, e.school]);
 ---
 <Base title="À propos — Davy Aymard Kouassi, Creative Director" description="Davy Aymard Kouassi, alias Dak : Creative Director & Visual Strategist à Abidjan. Parcours, expertises, outils et diplômes." image="/images/og/a-propos.jpg">
   <section class="wrap ab-hero" data-mouse-scope>
     <div class="ab-text">
       <span class="eyebrow" data-reveal>À propos · CV · Abidjan</span>
       <h1 class="display" data-lines style="font-size:clamp(48px,7vw,104px);font-weight:600"><span class="line-mask"><span>Bonjour, je suis</span></span><span class="line-mask"><span>Davy, alias <span class="accent">Dak.</span></span></span></h1>
-      <p class="muted" data-reveal=".3" style="margin:0;max-width:560px;font-size:19px;line-height:1.55">Fort de plus de 7 ans d’expérience en design graphique et direction artistique, j’ai développé une approche créative ancrée dans la rigueur et l’audace visuelle. Basé à Abidjan, je maîtrise toute la chaîne créative, du concept au livrable final, sur des projets d’identité visuelle, de communication publicitaire et de motion design.</p>
+      <p class="muted" data-reveal=".3" style="margin:0;max-width:560px;font-size:19px;line-height:1.55">Fort de plus de 6 ans d’expérience en agence en design graphique et direction artistique, j’ai développé une approche créative ancrée dans la rigueur et l’audace visuelle. Basé à Abidjan, je maîtrise toute la chaîne créative, du concept au livrable final, sur des projets d’identité visuelle, de communication publicitaire et de motion design.</p>
       <div data-reveal=".45" style="display:flex;gap:12px;flex-wrap:wrap">
-        {SITE.cv && <a href={SITE.cv} class="btn btn-fg" download>Télécharger le CV (PDF) ↓</a>}
+        <a href="/cv" class="btn btn-fg">Voir mon CV →</a>
+        {SITE.cv && <a href={SITE.cv} class="btn btn-line" download>PDF ↓</a>}
         <a href="/contact" class="btn btn-line">Me contacter</a>
       </div>
       <div class="ab-stats" data-reveal=".6">
-        <div><span class="display">7+ ans</span><span class="muted">d'expérience</span></div>
+        <div><span class="display">{CV.years}+ ans</span><span class="muted">d'expérience</span></div>
         <div><span class="display">{PROJECTS.length}</span><span class="muted">projets présentés</span></div>
         <div><span class="display">{CLIENTS.length}</span><span class="muted">marques accompagnées</span></div>
       </div>
@@ -67,13 +64,8 @@ const diplomas = [
 
   {diplomas.length > 0 && (
   <section class="wrap" style="padding-bottom:110px">
-    <div class="section-title"><h2>Diplômes</h2><span class="muted">Clique pour déplier</span></div>
-    {diplomas.map(([y, t, s, d], i) => (
-      <details class="dip" open={i === 0}>
-        <summary><span class="muted">{y}</span><span class="dt"><b>{t}</b><span class="muted">{s}</span></span><span class="plus" aria-hidden="true">+</span></summary>
-        <p class="muted">{d}</p>
-      </details>
-    ))}
+    <h2 class="display ab-h2">Formation</h2>
+    {diplomas.map(([y, t, sc]) => <div class="ab-job ab-row"><span class="muted">{y}</span><span class="r">{t}</span><span class="muted">{sc}</span></div>)}
   </section>
   )}
 
