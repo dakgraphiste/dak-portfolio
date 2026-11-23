@@ -70,6 +70,13 @@ const themeVars = p.theme ? `--p1:${p.theme.p1};--p2:${p.theme.p2}` : '';
     </div>
   </section>
 
+  {p.video && (
+    <section class="cs-film wrap">
+      <div class="section-title"><h2>Le film <span class="muted">· {p.video.title}</span></h2><span class="muted">Avec le son, c'est mieux</span></div>
+      <video controls playsinline preload="none" poster={p.video.poster} src={p.video.src} aria-label={`${p.title} : film de l'étude de cas`}></video>
+    </section>
+  )}
+
   <Dossier p={p} num={String(index + 1).padStart(2, '0')} photos={boardPhotos} />
 
   {p.brand && (

@@ -63,6 +63,7 @@ export type Project = {
   theme?: { p1: string; p2: string; ink?: string }; // couleurs de la page du projet
   brand?: { logo: string; symbol?: string; palette: { name: string; hex: string }[]; values: string[] }; // identités visuelles
   posts?: string[]; // publications regroupées (réseaux sociaux, affiches, campagnes)
+  video?: { src: string; poster: string; title: string }; // film d'étude de cas (public/videos)
   compare?: { before: string; after: string }; // retouche : curseur avant / après
   slides?: { src: string; caption: string }[]; // extraits du dossier Behance (images 16:9 + légende)
   secret?: [string, string][]; // note « Top secret » du dossier : infos propres au projet
@@ -310,6 +311,7 @@ const STAGE: Record<string, Partial<Project>> = {
     brand: { logo: 'chapn-logo', symbol: 'chapn-symbole', values: ['Vitesse', 'Mouvement', 'Envoie', 'Reçois', "Chap'n"],
     palette: [{ name: 'Indigo Bloom', hex: '#5E2BBF' }, { name: 'Chartreuse', hex: '#C9F35B' }, { name: 'Noir', hex: '#000000' }, { name: 'Porcelain', hex: '#F7F7EF' }] } },
   krokup: { theme: { p1: '#FA4D00', p2: '#FFEDE3' },
+    video: { src: '/videos/krokup-etude-de-cas.mp4', poster: '/videos/krokup-etude-de-cas.jpg', title: 'Du brief au logo en 72 secondes' },
     slides: [
       { src: img('krokup-bh-01'), caption: "Couverture de la charte graphique" },
       { src: img('krokup-bh-02'), caption: "Valeurs et ton de voix" },

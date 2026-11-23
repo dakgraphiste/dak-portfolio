@@ -233,3 +233,7 @@ html.reduced .sc-frame img { transform: none; }
 .cmp-l { left: 18px; } .cmp-r { right: 18px; }
 .compare input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; margin: 0; }
 .compare:focus-within .cmp-knob { outline: 3px solid #fff; outline-offset: 3px; }
+
+/* film d'étude de cas */
+.cs-film { padding-top: 90px; padding-bottom: 30px; }
+.cs-film video { display: block; width: 100%; aspect-ratio: 16 / 9; border-radius: 26px; background: #000; box-shadow: 0 40px 80px -40px rgba(0,0,0,.6); }
