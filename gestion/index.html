@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -105,6 +106,57 @@ svg.i { width: 18px; height: 18px; flex: none; stroke: currentColor; fill: none;
 .pdf-host { position: fixed; left: -10000px; top: 0; width: 794px; pointer-events: none; }
 .pdf-host .paper { box-shadow: none; border-radius: 0; max-width: none; min-height: 1120px; }
 .toast.bad { background: var(--bad); color: #fff; }
+.toast.has-undo { pointer-events: auto; }
+.toast-undo { margin-left: 6px; background: none; border: 0; color: var(--accent); font: 700 14px var(--font-body); cursor: pointer; padding: 4px 6px; border-radius: 8px; }
+.toast-undo:hover { background: rgba(255,90,31,.15); }
+.pcard { position: relative; }
+.pcard .pt { padding-right: 30px; }
+.pc-move { position: absolute; top: 9px; right: 9px; width: 28px; height: 28px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--muted); display: grid; place-items: center; cursor: pointer; padding: 0; }
+.pc-move:hover { color: var(--fg); border-color: var(--line-2); }
+.move-grid { display: grid; gap: 8px; }
+.move-grid .btn { justify-content: flex-start; height: 46px; }
+.move-grid .btn.cur { border-color: var(--accent); }
+[hidden] { display: none !important; }
+.report { font-size: 11px; }
+.report h2 { font: 800 15px var(--font-display); margin: 22px 0 10px; color: #111; letter-spacing: -.01em; }
+.rp-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.rp-kpi { border: 1px solid #e8e8e8; border-radius: 8px; padding: 10px; color: #666; }
+.rp-kpi b { display: block; font: 800 12.5px var(--font-display); white-space: nowrap; color: #111; margin-top: 2px; }
+.rp-kpi.acc { background: var(--pc); border-color: var(--pc); color: #0A0A0A; } .rp-kpi.acc b { color: #0A0A0A; }
+.rp-t { width: 100%; border-collapse: collapse; font-size: 10.5px; }
+.rp-t th { text-align: left; border-bottom: 2px solid #111; padding: 6px 4px; font-size: 9px; text-transform: uppercase; letter-spacing: .06em; color: #111; }
+.rp-t td { border-bottom: 1px solid #eee; padding: 6px 4px; color: #222; }
+.rp-t .r { text-align: right; white-space: nowrap; }
+.rp-t tfoot td { font-weight: 700; border-top: 2px solid #111; border-bottom: 0; }
+.rp-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.ai-btn { color: var(--accent-text); }
+.ai-out { white-space: pre-line; font-size: 13px; color: var(--muted); }
+.timer-chip { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--accent); background: var(--accent-soft); color: var(--fg); font-weight: 600; font-size: 13px; cursor: pointer; white-space: nowrap; max-width: 260px; overflow: hidden; text-overflow: ellipsis; }
+.timer-chip .tc-stop { color: var(--accent-text); }
+.pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: pulse 1.4s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .3; } }
+@media (max-width: 900px) { .timer-chip .tc-name, .timer-chip .tc-stop { display: none; } .timer-chip { padding: 0 10px; } }
+.rate-big { font: 700 30px/1.1 var(--font-display); letter-spacing: -.02em; }
+.rate-row { display: flex; justify-content: space-between; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+.rate-row:last-child { border-bottom: 0; }
+.rate-row b { font-variant-numeric: tabular-nums; }
+.progress2 { display: flex; height: 10px; border-radius: 99px; background: var(--bg-2); overflow: hidden; margin: 8px 0 6px; }
+.progress2 i { display: block; height: 100%; }
+.progress2 .a { background: var(--accent); } .progress2 .b { background: repeating-linear-gradient(45deg, var(--accent-soft), var(--accent-soft) 4px, transparent 4px, transparent 8px); box-shadow: inset 0 0 0 1px var(--accent-soft); }
+.progress2.ok .a { background: var(--ok); } .progress2.over .a { background: var(--bad); } .progress2.warn .a { background: var(--warn); }
+.goal { display: grid; gap: 2px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.goal:last-child { border-bottom: 0; }
+.goal-h { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; }
+.goal-h b { font-variant-numeric: tabular-nums; }
+.seg { display: inline-flex; padding: 3px; gap: 3px; border-radius: 11px; background: var(--bg-2); }
+.seg button { border: 0; background: transparent; padding: 7px 16px; border-radius: 8px; font-weight: 600; color: var(--muted); cursor: pointer; }
+.seg button.on { background: var(--card); color: var(--fg); box-shadow: var(--shadow); }
+.fc-chart { width: 100%; height: auto; display: block; }
+.fc-chart text { fill: var(--muted); font-size: 11px; font-family: var(--font-body); }
+.fc-chart .grid-l { stroke: var(--line); }
+.cash-in { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.cash-in .in { max-width: 220px; font: 700 18px var(--font-display); }
+.amt-in { color: var(--ok); } .amt-out { color: var(--bad); }
 .split { display: flex; height: 10px; border-radius: 99px; overflow: hidden; background: var(--bg-2); margin: 10px 0 8px; }
 .split i { display: block; height: 100%; }
 .src-sal { --src: var(--info); } .src-fl { --src: var(--accent); } .src-au { --src: var(--warn); }
@@ -210,7 +262,7 @@ table.t { width: 100%; border-collapse: collapse; }
 .f { display: grid; gap: 14px; }
 .f2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .f3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-label.fl { display: grid; gap: 6px; font-size: 12px; font-weight: 600; color: var(--muted); min-width: 0; }
+label.fl { display: grid; gap: 6px; align-content: start; font-size: 12px; font-weight: 600; color: var(--muted); min-width: 0; }
 .in, select.in, textarea.in { width: 100%; height: 42px; padding: 0 12px; border-radius: 11px; border: 1px solid var(--line-2); background: var(--bg); color: var(--fg); outline: none; font-weight: 400; font-size: 14px; transition: border-color .2s, box-shadow .2s; min-width: 0; }
 textarea.in { height: auto; min-height: 80px; padding: 10px 12px; resize: vertical; }
 .in:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
@@ -273,6 +325,58 @@ dialog.modal[open] { animation: pop .25s var(--ease); }
 .pp-sign div { width: 45%; border-top: 1px solid #ccc; padding-top: 6px; }
 .pp-legal { margin-top: 22px; text-align: center; font-size: 10px; color: #999; }
 .pp-tot-wrap { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.pp-sub { white-space: pre-line; color: #555; }
+.pp-strong, .pp-words b { color: #111; }
+.pp-qr { display: flex; gap: 10px; align-items: center; margin-top: 12px; }
+.pp-qr img { width: 84px; height: 84px; image-rendering: pixelated; background: #fff; padding: 4px; border-radius: 6px; border: 1px solid #eee; }
+.pp-qr div { display: grid; gap: 2px; }
+.pp-qr span, .pp-small { color: #777; font-size: 10px; }
+.ps-minimal::before { display: none; }
+.ps-minimal .pp-kind h1 { color: #111; font-size: 24px; letter-spacing: .18em; }
+.ps-minimal .pp-kind .no { color: var(--pc); }
+.ps-minimal .pp-table th { background: none; color: #111; border-bottom: 2px solid #111; border-radius: 0 !important; padding-left: 0; }
+.ps-minimal .pp-table td { padding-left: 0; }
+.ps-minimal .pp-tot .grand { background: none; color: #111; border-top: 2px solid var(--pc); border-radius: 0; padding: 10px 0 0; }
+.ps-minimal .pp-obj { background: none; border-left: 3px solid var(--pc); border-radius: 0; }
+.ps-editorial { padding-left: 96px; }
+.ps-editorial::before { top: 0; bottom: 0; left: 0; right: auto; width: 46px; height: auto; }
+.ps-editorial .pp-kind h1 { font-size: 46px; color: #111; }
+.ps-editorial .pp-kind .no { color: var(--pc); font-size: 14px; }
+.ps-editorial .pp-table th { background: var(--pc); color: #0A0A0A; }
+.ps-editorial .pp-tot .grand { background: #111; color: #fff; }
+.ps-editorial .pp-obj { background: none; padding: 0 0 12px; border-bottom: 1px solid #ddd; border-radius: 0; font-size: 15px; }
+.ps-sombre { background: #141416; color: #E9E9EC; }
+.ps-sombre .pp-me, .ps-sombre .pp-sub, .ps-sombre .pp-foot, .ps-sombre .pp-sign, .ps-sombre .pp-words { color: #A9A9B0; }
+.ps-sombre .pp-strong, .ps-sombre .pp-words b, .ps-sombre .pp-client { color: #fff; }
+.ps-sombre .pp-obj { background: #1E1E22; }
+.ps-sombre .pp-table th { background: var(--pc); color: #0A0A0A; }
+.ps-sombre .pp-table td, .ps-sombre .pp-foot { border-color: #2A2A30; }
+.ps-sombre .pp-sign div { border-color: #3A3A40; }
+.ps-sombre .pp-lbl, .ps-sombre .pp-dates span:nth-child(odd), .ps-sombre .pp-legal, .ps-sombre .pp-qr span, .ps-sombre .pp-small { color: #85858C; }
+.ps-sombre .pp-draft { color: rgba(255,255,255,.05); }
+.style-pick { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; }
+.style-pick label { display: grid; gap: 8px; padding: 10px; border: 1px solid var(--line-2); border-radius: 14px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--fg); transition: border-color .2s, box-shadow .2s; }
+.style-pick input { position: absolute; opacity: 0; pointer-events: none; }
+.style-pick label:has(input:checked) { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.style-pick label:focus-within { box-shadow: 0 0 0 3px var(--accent-soft); }
+.sw { height: 64px; border-radius: 8px; background: #fff; border: 1px solid var(--line); position: relative; overflow: hidden; }
+.sw i { position: absolute; left: 8px; right: 8px; height: 5px; border-radius: 3px; background: #ddd; }
+.sw-classique::before { content: ''; position: absolute; inset: 0 0 auto; height: 5px; background: var(--accent); }
+.sw-classique i:nth-child(1) { top: 16px; right: 50%; background: #111; } .sw-classique i:nth-child(2) { top: 30px; height: 8px; background: #111; } .sw-classique i:nth-child(3) { top: 46px; left: 55%; height: 8px; background: var(--accent); }
+.sw-minimal i:nth-child(1) { top: 14px; right: 55%; background: #999; } .sw-minimal i:nth-child(2) { top: 30px; height: 2px; background: #111; } .sw-minimal i:nth-child(3) { top: 48px; left: 55%; height: 2px; background: var(--accent); }
+.sw-editorial::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 10px; background: var(--accent); }
+.sw-editorial i { left: 18px; } .sw-editorial i:nth-child(1) { top: 12px; height: 10px; right: 30%; background: #111; } .sw-editorial i:nth-child(2) { top: 32px; height: 7px; background: var(--accent); } .sw-editorial i:nth-child(3) { top: 46px; left: 55%; height: 8px; background: #111; }
+.sw-sombre { background: #141416; } .sw-sombre i { background: #333; } .sw-sombre i:nth-child(1) { top: 14px; right: 50%; background: #eee; } .sw-sombre i:nth-child(2) { top: 30px; height: 8px; background: var(--accent); } .sw-sombre i:nth-child(3) { top: 46px; left: 55%; height: 8px; background: #555; }
+.mini-paper { border-radius: 14px; background: var(--bg-2); padding: 12px; overflow: hidden; }
+.mini-paper > div { transform-origin: top left; width: 794px; }
+.mini-paper .paper { max-width: none; }
+.set-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 1000px) { .set-grid { grid-template-columns: 1fr; } .style-pick { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+.pp-draft { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; font: 800 110px var(--font-display); color: rgba(0,0,0,.05); transform: rotate(-24deg); letter-spacing: .05em; }
+.lock-bar { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 14px; background: var(--info-soft); color: var(--fg); }
+.lock-bar svg { color: var(--info); margin-top: 2px; }
+.lock-bar p { margin: 2px 0 10px; color: var(--muted); font-size: 13px; }
+.in:disabled, textarea.in:disabled { opacity: .65; cursor: not-allowed; }
 .pp-stamp { transform: rotate(-12deg); flex: none; margin-left: 10px; border: 3px solid #15803D; color: #15803D; font: 800 22px var(--font-display); padding: 4px 14px; border-radius: 8px; opacity: .8; letter-spacing: .06em; }
 
 #print-root { display: none; }
@@ -323,6 +427,7 @@ dialog.modal[open] { animation: pop .25s var(--ease); }
   .pp-tot-wrap { flex-direction: column-reverse; align-items: stretch; }
 }
 @media (min-width: 901px) { .fab { display: none; } }
+@media (max-width: 900px) { .toast { bottom: calc(max(10px, env(safe-area-inset-bottom)) + 84px); max-width: calc(100vw - 32px); } }
 @media (max-width: 560px) {
   .kpis, .kpis.k4 { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
   .kpis.k3 { grid-template-columns: 1fr; }
@@ -360,6 +465,7 @@ dialog.modal[open] { animation: pop .25s var(--ease); }
         <kbd>⌘K</kbd>
         <div class="search-res" id="q-res" role="listbox"></div>
       </div>
+      <button class="timer-chip" id="timer-chip" data-act="stop-timer" hidden title="Arrêter le chrono"></button>
       <button class="icon-btn" id="theme" title="Mode clair / sombre" aria-label="Basculer le mode clair ou sombre"></button>
       <div class="hide-m"><button class="btn primary" data-act="quick"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Nouveau</button></div>
     </header>
@@ -439,12 +545,17 @@ const PSTAT = [
   { k: 'archive', l: 'Archivé', c: '' },
 ];
 const PTYPES = ['Identité visuelle', 'Direction artistique', 'Campagne', 'Réseaux sociaux', 'Print / Affiche', 'Packaging', 'Motion / Vidéo', 'Web / UI', 'Retouche', 'Autre'];
-const KINDS = { devis: 'Devis', proforma: 'Facture proforma', facture: 'Facture' };
-const KSHORT = { devis: 'Devis', proforma: 'Proforma', facture: 'Facture' };
+const KINDS = { devis: 'Devis', proforma: 'Facture proforma', facture: 'Facture', avoir: 'Avoir' };
+const KSHORT = { devis: 'Devis', proforma: 'Proforma', facture: 'Facture', avoir: 'Avoir' };
+const REGIMES = ['', "Entreprenant (TEE)", 'Impôt synthétique', 'Réel simplifié (RSI)', 'Réel normal (RNI)', 'Salarié — activité accessoire', 'Autre'];
 const ECATS = ['Logiciels & abonnements', 'Matériel', 'Freelances / sous-traitance', 'Impression', 'Transport', 'Internet & téléphone', 'Formation', 'Banque & frais', 'Marketing', 'Autre'];
+const PCATS = ['Logement', 'Alimentation', 'Transport', 'Factures (eau, électricité)', 'Santé', 'Famille', 'Loisirs', 'Shopping', 'Autre perso'];
+const DOC_STYLES = { classique: 'Classique', minimal: 'Minimal', editorial: 'Éditorial', sombre: 'Sombre' };
 const SOURCES = { salaire: 'Salaire', freelance: 'Freelance', autre: 'Autre revenu' };
 const METHODS = ['Wave', 'Orange Money', 'MTN MoMo', 'Moov Money', 'Virement', 'Espèces', 'Chèque', 'PayPal'];
 const CUR = { XOF: { s: 'FCFA', d: 0 }, EUR: { s: '€', d: 2 }, USD: { s: '$', d: 2 }, XAF: { s: 'FCFA', d: 0 } };
+const XOF_PER = { XOF: 1, XAF: 1, EUR: 655.957, USD: 600 };
+const defRate = (from, to) => Math.round((XOF_PER[from] || 1) / (XOF_PER[to] || 1) * 1e6) / 1e6;
 const AV_COLORS = ['#FF5A1F', '#FFB020', '#7AD3A8', '#8EA8FF', '#E58FD0', '#F5D547', '#9AD0F5'];
 
 /* ---------- state ---------- */
@@ -456,7 +567,10 @@ const defaults = () => ({
     currency: 'XOF', taxOn: false, taxLabel: 'TVA', taxRate: 18, payDays: 15, depositPct: 50, quoteDays: 30, savePct: 20,
     payInfo: 'Wave / Orange Money : +225 07 78 34 27 09\nVirement : [Banque] — IBAN [à compléter]',
     terms: "Acompte à la commande, solde à la livraison. Les fichiers sources sont remis après paiement intégral. 2 séries de corrections incluses ; au-delà, facturation selon devis.",
-    color: '#FF5A1F', prefix: { devis: 'DEV', proforma: 'PRO', facture: 'FAC' }, counters: {}, theme: '',
+    color: '#FF5A1F', prefix: { devis: 'DEV', proforma: 'PRO', facture: 'FAC', avoir: 'AV' }, counters: {}, theme: '',
+    ncc: '', rccm: '', regime: '', taxCenter: '', noTaxText: 'TVA non applicable', legalNote: 'En cas de retard de paiement, des pénalités pourront être appliquées après mise en demeure.',
+    lastBackup: '', backupSnooze: '', docStyle: 'classique', waveLink: '', goalMonth: 0, goalYear: 0, savingsGoal: 0, cashBalance: '', cashDate: '', budgets: {}, timer: null,
+    rate: { target: 500000, charges: '', days: 8, hours: 6, margin: 15 },
   },
   clients: [], projects: [], docs: [], expenses: [], incomes: [],
   catalog: [
@@ -480,9 +594,12 @@ function normalize(data) {
   s.settings = Object.assign(d, data.settings || {});
   s.settings.prefix = Object.assign(defaults().settings.prefix, s.settings.prefix || {});
   s.settings.counters = s.settings.counters || {};
+  s.settings.budgets = s.settings.budgets || {};
+  s.settings.rate = Object.assign(defaults().settings.rate, s.settings.rate || {});
   COLLS.forEach(k => { if (!Array.isArray(s[k])) s[k] = k === 'catalog' ? defaults().catalog : []; });
   s.docs.forEach(x => { x.lines = Array.isArray(x.lines) ? x.lines : []; x.payments = Array.isArray(x.payments) ? x.payments : []; });
-  s.projects.forEach(x => { x.tasks = Array.isArray(x.tasks) ? x.tasks : []; });
+  s.projects.forEach(x => { x.tasks = Array.isArray(x.tasks) ? x.tasks : []; x.time = Array.isArray(x.time) ? x.time : []; });
+  s.docs.forEach(x => { x.reminders = Array.isArray(x.reminders) ? x.reminders : []; if (!x.currency) x.currency = s.settings.currency; if (!num(x.rate)) x.rate = 1; });
   return s;
 }
 let S = defaults();
@@ -529,14 +646,18 @@ function setSync(st) {
 window.addEventListener('pagehide', () => { if (saveT) { clearTimeout(saveT); saveT = null; flush(); } });
 window.addEventListener('beforeunload', e => { if (MODE === 'cloud' && (saveT || flushing)) { flush(); e.preventDefault(); e.returnValue = ''; } });
 const IS_PAGE = !!(window.claude && typeof window.claude.use === 'function');
-const UI = { pView: lsGet('dak-pview') || 'board', docTab: 'all', finTab: 'bilan', year: '', incSrc: '', expCat: '', period: 'month' };
+const UI = { setTab: 'identite', pView: lsGet('dak-pview') || 'board', docTab: 'all', finTab: 'bilan', year: '', incSrc: '', expCat: '', period: 'month' };
 
 /* ---------- money ---------- */
-const money = (n, opts = {}) => {
-  const c = CUR[S.settings.currency] || CUR.XOF;
+const fmtCur = (n, cur, opts = {}) => {
+  const c = CUR[cur] || CUR.XOF;
   const v = new Intl.NumberFormat('fr-FR', { minimumFractionDigits: opts.compact ? 0 : c.d, maximumFractionDigits: opts.compact ? 0 : c.d }).format(Math.round(n * 100) / 100).replace(/ /g, ' ');
   return c.s === '€' || c.s === 'FCFA' ? `${v} ${c.s}` : `${c.s}${v}`;
 };
+const money = (n, opts) => fmtCur(n, S.settings.currency, opts);
+const docCur = d => d.currency || S.settings.currency;
+const rateOf = d => docCur(d) === S.settings.currency ? 1 : (num(d.rate) || 1);
+const dm = (d, n, opts) => fmtCur(n, docCur(d), opts);
 const compact = n => {
   const a = Math.abs(n), c = CUR[S.settings.currency] || CUR.XOF;
   if (a >= 1e6) return (n / 1e6).toFixed(a >= 1e7 ? 0 : 1).replace('.', ',') + ' M';
@@ -579,25 +700,34 @@ const doc = id => S.docs.find(d => d.id === id);
 const cName = id => { const c = client(id); return c ? (c.company || c.name) : 'Sans client'; };
 const pstat = k => PSTAT.find(s => s.k === k) || PSTAT[0];
 
-function totals(d) {
-  const sub = d.lines.reduce((a, l) => a + num(l.qty) * num(l.price), 0);
+function lineTotals(d) {
+  const sub = (d.lines || []).reduce((a, l) => a + num(l.qty) * num(l.price), 0);
   const disc = sub * num(d.discount) / 100;
   const base = sub - disc;
   const tax = d.taxOn ? base * num(d.taxRate) / 100 : 0;
-  const total = base + tax;
-  const paid = (d.payments || []).reduce((a, p) => a + num(p.amount), 0);
-  const deposit = total * num(d.deposit) / 100;
-  return { sub, disc, base, tax, total, paid, due: Math.max(0, total - paid), deposit };
+  return { sub, disc, base, tax, total: base + tax };
 }
+const avoirsOf = d => S.docs.filter(x => x.kind === 'avoir' && x.fromId === d.id);
+function totals(d) {
+  const b = lineTotals(d);
+  const paid = (d.payments || []).reduce((a, p) => a + num(p.amount), 0);
+  const credit = d.kind === 'facture' ? avoirsOf(d).filter(x => x.status !== 'brouillon').reduce((a, x) => a + lineTotals(x).total, 0) : 0;
+  return { ...b, paid, credit, due: Math.max(0, b.total - credit - paid), deposit: b.total * num(d.deposit) / 100 };
+}
+const isFiscal = d => d.kind === 'facture' || d.kind === 'avoir';
+const locked = d => isFiscal(d) && d.status !== 'brouillon';
+const baseDue = d => totals(d).due * rateOf(d);
 function docState(d) {
   const t = totals(d);
   if (d.kind === 'facture') {
     if (d.status === 'brouillon') return { k: 'brouillon', l: 'Brouillon', c: '' };
-    if (t.total > 0 && t.paid >= t.total - 0.5) return { k: 'paye', l: 'Payée', c: 'b-ok' };
+    if (t.credit > 0 && t.credit >= t.total - 0.5) return { k: 'annule', l: 'Annulée par avoir', c: '' };
+    if (t.total > 0 && t.paid + t.credit >= t.total - 0.5) return { k: 'paye', l: t.credit ? 'Soldée (avoir)' : 'Payée', c: 'b-ok' };
     if (d.dueDate && d.dueDate < today()) return { k: 'retard', l: `En retard · ${daysBetween(d.dueDate, today())} j`, c: 'b-bad' };
     if (t.paid > 0) return { k: 'partiel', l: 'Partiellement payée', c: 'b-warn' };
     return { k: 'envoye', l: 'Envoyée', c: 'b-info' };
   }
+  if (d.kind === 'avoir') return d.status === 'brouillon' ? { k: 'brouillon', l: 'Brouillon', c: '' } : t.paid >= t.total - 0.5 && t.total > 0 ? { k: 'rembourse', l: 'Remboursé', c: 'b-ok' } : { k: 'emis', l: 'Émis', c: 'b-acc' };
   const map = { brouillon: ['Brouillon', ''], envoye: ['Envoyé', 'b-info'], accepte: ['Accepté', 'b-ok'], refuse: ['Refusé', 'b-bad'], converti: ['Converti', 'b-acc'] };
   if (d.status === 'envoye' && d.dueDate && d.dueDate < today()) return { k: 'expire', l: 'Expiré', c: 'b-warn' };
   const m = map[d.status] || map.brouillon;
@@ -608,7 +738,7 @@ const isOverdue = d => d.dueDate && d.dueDate < today();
 
 function allIncomes() {
   const out = [];
-  S.docs.filter(d => d.kind === 'facture').forEach(d => (d.payments || []).forEach(p => out.push({ id: p.id, date: p.date, amount: num(p.amount), method: p.method, label: `${d.number} · ${cName(d.clientId)}`, docId: d.id, clientId: d.clientId, projectId: d.projectId, source: 'freelance' })));
+  S.docs.filter(isFiscal).forEach(d => (d.payments || []).forEach(p => out.push({ id: p.id, date: p.date, amount: (d.kind === 'avoir' ? -1 : 1) * num(p.amount) * (num(p.rate) || rateOf(d)), method: p.method, label: `${d.kind === 'avoir' ? 'Remboursement ' : ''}${d.number} · ${cName(d.clientId)}`, docId: d.id, clientId: d.clientId, projectId: d.projectId, source: 'freelance' })));
   S.incomes.forEach(i => out.push({ ...i, amount: num(i.amount), free: true, source: SOURCES[i.source] ? i.source : 'autre', label: i.label || 'Entrée' }));
   return out.sort((a, b) => b.date.localeCompare(a.date));
 }
@@ -624,14 +754,14 @@ function newDoc(kind, extra = {}) {
     id: uid(), kind, number: nextNumber(kind), clientId: '', projectId: '', subject: '',
     date: today(), dueDate: addDays(today(), kind === 'facture' ? num(st.payDays) : num(st.quoteDays)),
     lines: [{ id: uid(), desc: '', qty: 1, price: 0 }], discount: 0, taxOn: !!st.taxOn, taxRate: num(st.taxRate),
-    deposit: kind === 'facture' ? 0 : num(st.depositPct), notes: '', terms: st.terms, status: 'brouillon', payments: [], createdAt: Date.now(), ...extra,
+    deposit: isFiscal({ kind }) ? 0 : num(st.depositPct), notes: '', terms: kind === 'avoir' ? '' : st.terms, status: 'brouillon', payments: [], reminders: [], currency: st.currency, rate: 1, createdAt: Date.now(), ...extra,
   };
   S.docs.push(d); save(); return d;
 }
 function convert(src, kind) {
   const d = newDoc(kind, {
     clientId: src.clientId, projectId: src.projectId, subject: src.subject, lines: src.lines.map(l => ({ ...l, id: uid() })),
-    discount: src.discount, taxOn: src.taxOn, taxRate: src.taxRate, deposit: kind === 'facture' ? src.deposit : src.deposit, notes: src.notes, terms: src.terms, fromId: src.id,
+    discount: src.discount, taxOn: src.taxOn, taxRate: src.taxRate, deposit: src.deposit, notes: src.notes, terms: src.terms, fromId: src.id, currency: docCur(src), rate: src.rate,
   });
   if (src.kind === 'devis') src.status = 'accepte';
   else if (src.kind === 'proforma') src.status = 'converti';
@@ -653,8 +783,108 @@ function ensureRecurring() {
   }));
 }
 
+/* ---------- time tracking ---------- */
+const projMin = p => (p.time || []).reduce((a, x) => a + num(x.min), 0);
+const fmtDur = m => { m = Math.round(m); const h = Math.floor(m / 60), r = m % 60; return h ? `${h} h${r ? ' ' + pad(r) : ''}` : `${r} min`; };
+function parseDur(v) {
+  v = String(v || '').trim().toLowerCase().replace(',', '.').replace(/\s+/g, '');
+  let m;
+  if ((m = v.match(/^(\d+(?:\.\d+)?)h(\d{1,2})?(?:m|min)?$/))) return Math.round(+m[1] * 60 + (+m[2] || 0));
+  if ((m = v.match(/^(\d+):(\d{1,2})$/))) return +m[1] * 60 + +m[2];
+  if ((m = v.match(/^(\d+(?:\.\d+)?)(?:m|min|mn)$/))) return Math.round(+m[1]);
+  if (/^\d+(?:\.\d+)?$/.test(v)) return +v <= 12 ? Math.round(+v * 60) : Math.round(+v);
+  return 0;
+}
+const projPaid = p => allIncomes().filter(i => i.projectId === p.id).reduce((a, i) => a + i.amount, 0);
+function projRate(p) { const h = projMin(p) / 60; if (h < .25) return null; const paid = projPaid(p), base = paid > 0 ? paid : num(p.budget); return base ? { v: base / h, basis: paid > 0 ? 'encaissé' : 'budget', h } : null; }
+function startTimer(pid) { if (S.settings.timer) stopTimer(true); S.settings.timer = { pid, start: Date.now() }; save(); renderTimer(); toast('Chrono lancé'); }
+function stopTimer(silent) {
+  const tm = S.settings.timer; if (!tm) return;
+  const p = project(tm.pid), min = Math.max(1, Math.round((Date.now() - tm.start) / 60000));
+  if (p) (p.time = p.time || []).push({ id: uid(), date: today(), min, note: 'Chrono' });
+  S.settings.timer = null; save(); renderTimer();
+  if (!silent) toast(`${fmtDur(min)} ajoutées à « ${p ? p.name : 'projet'} »`);
+}
+function renderTimer() {
+  const el = $('#timer-chip'); if (!el) return;
+  const tm = S.settings.timer, p = tm && project(tm.pid);
+  if (!p) { el.hidden = true; return; }
+  el.hidden = false;
+  el.innerHTML = `<span class="pulse"></span><span class="tc-name">${esc(p.name)} ·</span> ${fmtDur((Date.now() - tm.start) / 60000)} <span class="tc-stop">Arrêter</span>`;
+}
+setInterval(() => { if (S.settings.timer) { renderTimer(); const b = $('[data-act=stop-timer].btn'); if (b) b.lastChild.textContent = ` Arrêter (${fmtDur((Date.now() - S.settings.timer.start) / 60000)})`; } }, 15000);
+const niceRound = v => (CUR[S.settings.currency] || CUR.XOF).d ? Math.round(v / 5) * 5 : Math.round(v / 5000) * 5000;
+function rateCalc() {
+  const R = S.settings.rate, t = today();
+  const months = monthsBack(4).slice(0, 3);
+  const chargesAuto = Math.round(months.reduce((a, m) => a + sumBy(S.expenses, e => monthKey(e.date) === m && e.scope !== 'perso'), 0) / 3);
+  const charges = R.charges === '' || R.charges == null ? chargesAuto : num(R.charges);
+  const tax = Math.min(.9, num(S.settings.savePct) / 100);
+  const needCA = (num(R.target) + charges) / (1 - tax);
+  const tjm = needCA / Math.max(.5, num(R.days)) * (1 + num(R.margin) / 100);
+  const hourly = tjm / Math.max(1, num(R.hours));
+  const timed = S.projects.filter(p => projMin(p) >= 15);
+  const tMin = timed.reduce((a, p) => a + projMin(p), 0), tPaid = timed.reduce((a, p) => a + projPaid(p), 0);
+  return { charges, chargesAuto, needCA, tjm, hourly, real: tMin >= 60 && tPaid ? tPaid / (tMin / 60) : null, tMin };
+}
+
+/* ---------- forecast ---------- */
+function occurrences(tpl, from, to) {
+  const out = []; if (!/^\d{4}-\d{2}-\d{2}$/.test(tpl.date || '')) return out;
+  const day = +tpl.date.slice(8, 10); let y = +tpl.date.slice(0, 4), m = +tpl.date.slice(5, 7);
+  for (let i = 0; i < 400; i++) {
+    const date = `${y}-${pad(m)}-${pad(Math.min(day, new Date(y, m, 0).getDate()))}`;
+    if (date > to) break; if (date > from) out.push(date);
+    m++; if (m > 12) { m = 1; y++; }
+  }
+  return out;
+}
+function forecast(days) {
+  const t = today(), end = addDays(t, days), ev = [];
+  [[S.incomes, 1], [S.expenses, -1]].forEach(([list, sign]) => list.forEach(x => {
+    const kind = sign > 0 ? (x.source === 'salaire' ? 'salaire' : 'revenu') : (x.scope === 'perso' ? 'perso' : 'depense');
+    if (x.recurring && !x.recurOf) occurrences(x, t, end).forEach(date => ev.push({ date, amount: sign * num(x.amount), label: x.label, kind, recurring: true }));
+    else if (!x.recurOf && x.date > t && x.date <= end) ev.push({ date: x.date, amount: sign * num(x.amount), label: x.label, kind });
+  }));
+  openInvoices().forEach(d => { const date = d.dueDate && d.dueDate > t ? d.dueDate : t; if (date <= end) ev.push({ date, amount: baseDue(d), label: `${d.number} · ${cName(d.clientId)}`, kind: 'facture', late: isOverdue(d), href: `#document-${d.id}` }); });
+  return ev.sort((a, b) => a.date.localeCompare(b.date) || b.amount - a.amount);
+}
+const FC_KIND = { salaire: ['Salaire', 'b-info'], revenu: ['Revenu', 'b-ok'], facture: ['Facture client', 'b-acc'], depense: ['Dépense pro', ''], perso: ['Dépense perso', 'b-warn'] };
+function lineChart(points, { zero = true } = {}) {
+  const W = innerWidth < 600 ? 360 : 640, H = 220, pl = 50, pr = 12, pb = 26, pt = 12;
+  const vals = points.map(p => p.v), lo = Math.min(0, ...vals), hi = Math.max(1, ...vals);
+  const span = hi - lo || 1, x = i => pl + (W - pl - pr) * (points.length > 1 ? i / (points.length - 1) : 0), y = v => pt + (H - pt - pb) * (1 - (v - lo) / span);
+  let g = '';
+  for (let k = 0; k <= 3; k++) { const v = lo + span * k / 3; g += `<line class="grid-l" x1="${pl}" x2="${W - pr}" y1="${y(v)}" y2="${y(v)}"/><text x="${pl - 8}" y="${y(v) + 4}" text-anchor="end">${compact(v)}</text>`; }
+  if (zero && lo < 0) g += `<line x1="${pl}" x2="${W - pr}" y1="${y(0)}" y2="${y(0)}" stroke="var(--bad)" stroke-dasharray="4 4"/>`;
+  const path = points.map((p, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(p.v).toFixed(1)}`).join(' ');
+  g += `<path d="${path} L${x(points.length - 1)},${y(lo)} L${x(0)},${y(lo)} Z" fill="var(--accent-soft)"/><path d="${path}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>`;
+  points.forEach((p, i) => { if (p.label) g += `<text x="${x(i)}" y="${H - 6}" text-anchor="middle">${esc(p.label)}</text>`; });
+  const last = points[points.length - 1];
+  g += `<circle cx="${x(points.length - 1)}" cy="${y(last.v)}" r="4.5" fill="${last.v < 0 ? 'var(--bad)' : 'var(--accent)'}"/>`;
+  return `<svg class="fc-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Solde prévu semaine par semaine">${g}</svg>`;
+}
+function goalsCard(inc) {
+  const st = S.settings, t = today(), mk = monthKey(t), y = t.slice(0, 4);
+  const gM = num(st.goalMonth), gY = num(st.goalYear), gS = num(st.savingsGoal);
+  if (!gM && !gY && !gS) return `<div class="card"><h3>${ic('spark')}Objectifs</h3><p class="muted" style="margin-top:0">Fixe un objectif freelance mensuel ou annuel, et un objectif d'épargne : tu verras ta progression ici.</p><button class="btn sm primary" data-act="goals">Définir mes objectifs</button></div>`;
+  const flM = sumBy(inc, i => monthKey(i.date) === mk && i.source === 'freelance');
+  const flY = sumBy(inc, i => i.date.startsWith(y) && i.source === 'freelance');
+  const endM = `${mk}-${pad(new Date(+y, +mk.slice(5), 0).getDate())}`;
+  const pendM = openInvoices().filter(d => (d.dueDate || t) <= endM).reduce((a, d) => a + baseDue(d), 0);
+  const daysLeft = daysBetween(t, endM);
+  const bar = (done, goal, extra = 0, cls = '') => `<div class="progress2 ${cls}"><i class="a" style="width:${Math.min(100, done / goal * 100)}%"></i><i class="b" style="width:${Math.max(0, Math.min(100 - done / goal * 100, extra / goal * 100))}%"></i></div>`;
+  let h = `<div class="card"><h3>${ic('spark')}Objectifs <button class="btn sm ghost" data-act="goals">Modifier</button></h3>`;
+  if (gM) h += `<div class="goal"><div class="goal-h"><span>Freelance ce mois</span><b>${money(flM, { compact: 1 })} / ${money(gM, { compact: 1 })}</b></div>${bar(flM, gM, pendM, flM >= gM ? 'ok' : '')}<div class="small muted">${flM >= gM ? 'Objectif atteint 🎉' : `Il manque ${money(gM - flM)} · ${daysLeft} j restants${pendM ? ` · ${money(pendM, { compact: 1 })} attendus` : ''}`}</div></div>`;
+  if (gY) { const doy = daysBetween(`${y}-01-01`, t) + 1, pace = gY * doy / (new Date(+y, 1, 29).getDate() === 29 ? 366 : 365), diff = flY - pace; h += `<div class="goal"><div class="goal-h"><span>Freelance ${y}</span><b>${money(flY, { compact: 1 })} / ${money(gY, { compact: 1 })}</b></div>${bar(flY, gY, 0, flY >= gY ? 'ok' : '')}<div class="small ${diff >= 0 ? 'up' : 'muted'}">${flY >= gY ? 'Objectif annuel atteint 🎉' : diff >= 0 ? `En avance de ${money(diff, { compact: 1 })} sur le rythme` : `En retard de ${money(-diff, { compact: 1 })} sur le rythme`}</div></div>`; }
+  if (gS) { const net = sumBy(inc, i => monthKey(i.date) === mk) - sumBy(S.expenses, e => monthKey(e.date) === mk); h += `<div class="goal"><div class="goal-h"><span>Épargne ce mois</span><b>${money(Math.max(0, net), { compact: 1 })} / ${money(gS, { compact: 1 })}</b></div>${bar(Math.max(0, net), gS, 0, net >= gS ? 'ok' : net < 0 ? 'over' : '')}<div class="small muted">${net >= gS ? 'Objectif d\'épargne atteint' : net < 0 ? 'Dépenses supérieures aux revenus ce mois' : `Encore ${money(gS - net)} à mettre de côté`}</div></div>`; }
+  return h + '</div>';
+}
+
 /* ---------- UI helpers ---------- */
-const toast = (msg, kind) => { const t = $('#toast'); t.innerHTML = ic(kind === 'bad' ? 'alert' : 'check') + esc(msg); t.className = 'toast on' + (kind === 'bad' ? ' bad' : ''); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('on'), kind === 'bad' ? 4500 : 2400); };
+let UNDO = null, SAMPLE = null;
+const toast = (msg, kind) => { const t = $('#toast'); t.innerHTML = ic(kind === 'bad' ? 'alert' : kind === 'undo' ? 'trash' : 'check') + `<span>${esc(msg)}</span>` + (kind === 'undo' ? '<button type="button" class="toast-undo">Annuler</button>' : ''); t.className = 'toast on' + (kind === 'bad' ? ' bad' : '') + (kind === 'undo' ? ' has-undo' : ''); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('on', 'has-undo'), kind === 'bad' ? 4500 : kind === 'undo' ? 7000 : 2400); };
+function undoable(msg, fn) { const snap = JSON.stringify(S); fn(); save(); UNDO = snap; toast(msg, 'undo'); }
 function ask(msg, { ok = 'Supprimer', danger = true, title = 'Confirmer', cancel = true } = {}) {
   return new Promise(res => {
     const d = $('#ask'), b = $('#ask-ok');
@@ -717,11 +947,11 @@ const NAV = [
 ];
 function renderNav(cur) {
   const late = openInvoices().filter(isOverdue).length;
-  $('#nav').innerHTML = NAV.map(n => `<a class="nav-a ${cur === n.k ? 'on' : ''}" href="#/${n.k}">${ic(n.i)}${n.l}${n.k === 'finances' && late ? `<span class="count">${late}</span>` : ''}</a>`).join('');
+  $('#nav').innerHTML = NAV.map(n => `<a class="nav-a ${cur === n.k ? 'on' : ''}" href="#${n.k}">${ic(n.i)}${n.l}${n.k === 'finances' && late ? `<span class="count">${late}</span>` : ''}</a>`).join('');
   $('[data-nav=parametres]').className = 'nav-a ' + (cur === 'parametres' ? 'on' : '');
   $('[data-nav=parametres]').innerHTML = ic('settings') + 'Paramètres';
-  $('#tabbar').innerHTML = NAV.map(n => `<a class="${cur === n.k ? 'on' : ''}" href="#/${n.k}">${ic(n.i)}${n.s}</a>`).join('');
-  const pend = openInvoices().reduce((a, d) => a + totals(d).due, 0);
+  $('#tabbar').innerHTML = NAV.map(n => `<a class="${cur === n.k ? 'on' : ''}" href="#${n.k}">${ic(n.i)}${n.s}</a>`).join('');
+  const pend = openInvoices().reduce((a, d) => a + baseDue(d), 0);
   $('#side-pending').innerHTML = `En attente de paiement<b>${money(pend)}</b>`;
 }
 
@@ -756,16 +986,19 @@ routes.tableau = v => {
   const flM = incM - salM;
   const flOnlyM = sumBy(inc, i => monthKey(i.date) === mk && i.source === 'freelance');
   const expM = S.expenses.filter(e => monthKey(e.date) === mk).reduce((a, e) => a + num(e.amount), 0);
+  const persoM = sumBy(S.expenses, e => monthKey(e.date) === mk && e.scope === 'perso');
   const open = openInvoices();
-  const pend = open.reduce((a, d) => a + totals(d).due, 0);
+  const pend = open.reduce((a, d) => a + baseDue(d), 0);
   const late = open.filter(isOverdue);
-  const lateAmt = late.reduce((a, d) => a + totals(d).due, 0);
+  const lateAmt = late.reduce((a, d) => a + baseDue(d), 0);
   const active = S.projects.filter(p => ['en_cours', 'revision', 'devis'].includes(p.status));
   const quotesOpen = S.docs.filter(d => d.kind === 'devis' && d.status === 'envoye');
-  const quotesAmt = quotesOpen.reduce((a, d) => a + totals(d).total, 0);
+  const quotesAmt = quotesOpen.reduce((a, d) => a + totals(d).total * rateOf(d), 0);
   const net = incM - expM;
   const delta = incP ? Math.round((incM - incP) / incP * 100) : null;
   const firstRun = !S.clients.length && !S.projects.length && !S.docs.length;
+  const lb = S.settings.lastBackup, hasData = S.docs.length || S.incomes.length || S.expenses.length;
+  const needBk = hasData && (!lb || daysBetween(lb, t) >= 30) && !(S.settings.backupSnooze && S.settings.backupSnooze > t);
 
   // 6-month series
   const series = monthsBack(6).map(m => ({ m, sal: sumBy(inc, i => monthKey(i.date) === m && i.source === 'salaire'), inc: sumBy(inc, i => monthKey(i.date) === m && i.source !== 'salaire'), exp: sumBy(S.expenses, e => monthKey(e.date) === m) }));
@@ -774,25 +1007,26 @@ routes.tableau = v => {
   // deadlines
   const soon = [];
   S.projects.filter(p => p.due && !['paye', 'archive', 'livre'].includes(p.status)).forEach(p => soon.push({ date: p.due, title: p.name, sub: `Livraison · ${cName(p.clientId)}`, href: `#projet-${p.id}`, icon: 'folder' }));
-  open.forEach(d => soon.push({ date: d.dueDate, title: `${d.number} · ${money(totals(d).due)}`, sub: `Échéance de paiement · ${cName(d.clientId)}`, href: `#document-${d.id}`, icon: 'receipt', late: isOverdue(d) }));
+  open.forEach(d => soon.push({ date: d.dueDate, title: `${d.number} · ${dm(d, totals(d).due)}`, sub: `Échéance de paiement · ${cName(d.clientId)}`, href: `#document-${d.id}`, icon: 'receipt', late: isOverdue(d) }));
   soon.sort((a, b) => (a.date || '9').localeCompare(b.date || '9'));
 
   // activity
   const act = [];
   inc.slice(0, 8).forEach(i => act.push({ date: i.date, t: `${i.source === 'salaire' ? 'Salaire' : i.docId ? 'Paiement reçu' : 'Entrée'} · ${money(i.amount)}`, s: i.label, i: 'in', c: 'ok' }));
   S.expenses.slice().sort((a, b) => b.date.localeCompare(a.date)).slice(0, 6).forEach(e => act.push({ date: e.date, t: `Dépense · ${money(num(e.amount))}`, s: e.label, i: 'out', c: 'bad' }));
-  S.docs.slice().sort((a, b) => b.createdAt - a.createdAt).slice(0, 6).forEach(d => act.push({ date: d.date, t: `${KSHORT[d.kind]} ${d.number}`, s: `${cName(d.clientId)} · ${money(totals(d).total)}`, i: 'file', c: 'acc', href: `#document-${d.id}` }));
+  S.docs.slice().sort((a, b) => b.createdAt - a.createdAt).slice(0, 6).forEach(d => act.push({ date: d.date, t: `${KSHORT[d.kind]} ${d.number}`, s: `${cName(d.clientId)} · ${dm(d, totals(d).total)}`, i: 'file', c: 'acc', href: `#document-${d.id}` }));
   act.sort((a, b) => b.date.localeCompare(a.date));
 
   v.innerHTML = `
   <div class="head"><div><h2>Bonjour ${esc((S.settings.name || '').split(' ')[0] || '')} 👋</h2><p>${fdate(t)} · voici où en sont tes projets et ta trésorerie.</p></div>
     <div class="row"><button class="btn" data-act="new-expense">${ic('out')}Dépense</button><button class="btn" data-act="new-income">${ic('in')}Revenu</button><button class="btn" data-act="new-project">${ic('folder')}Projet</button><button class="btn primary" data-act="new-doc" data-kind="facture">${ic('plus')}Facture</button></div></div>
   ${firstRun ? `<div class="card" style="margin-bottom:16px">${empty('spark', 'Bienvenue dans ton espace de gestion', "Commence par renseigner tes informations (elles apparaîtront sur tes devis et factures), ou charge des exemples pour découvrir l'outil.", `<div class="row" style="justify-content:center"><a class="btn" href="#parametres">${ic('settings')}Mes informations</a><button class="btn primary" data-act="demo">${ic('spark')}Charger des exemples</button></div>`)}</div>` : ''}
+  ${needBk ? `<div class="warn-bar" style="align-items:center;flex-wrap:wrap">${ic('alert')}<span style="flex:1;min-width:200px">${lb ? `Dernière sauvegarde il y a ${daysBetween(lb, t)} jours.` : 'Tu n\'as encore jamais exporté de sauvegarde.'} Une copie de secours prend cinq secondes.</span><button class="btn sm primary" data-act="export">Exporter maintenant</button><button class="btn sm ghost" data-act="snooze-backup">Dans 7 jours</button></div>` : ''}
   <div class="kpis">
     <a class="card kpi hero" href="#finances" data-fin="bilan" style="text-decoration:none"><div class="lbl">${ic('in', 'width:14px;height:14px')}Revenus du mois</div><div class="val">${money(incM)}</div><div class="sub">${hasSalary ? `Salaire ${money(salM, { compact: 1 })} · Freelance ${money(flM, { compact: 1 })}` : delta === null ? 'Mois précédent : —' : `${delta >= 0 ? '▲' : '▼'} ${Math.abs(delta)} % vs mois dernier`}</div></a>
     <a class="card kpi" href="#finances" data-fin="attente" style="text-decoration:none"><div class="lbl"><span class="dot" style="background:var(--info)"></span>En attente</div><div class="val">${money(pend)}</div><div class="sub">${open.length} facture${open.length > 1 ? 's' : ''} ouverte${open.length > 1 ? 's' : ''}</div></a>
     <a class="card kpi" href="#finances" data-fin="attente" style="text-decoration:none"><div class="lbl"><span class="dot" style="background:var(--bad)"></span>En retard</div><div class="val ${late.length ? 'down' : ''}">${money(lateAmt)}</div><div class="sub">${late.length ? `${late.length} à relancer` : 'Rien en retard 🎉'}</div></a>
-    <div class="card kpi"><div class="lbl"><span class="dot" style="background:var(--exp)"></span>Dépenses du mois</div><div class="val">${money(expM)}</div><div class="sub">Reste du mois : <b class="${net >= 0 ? 'up' : 'down'}">${money(net)}</b></div></div>
+    <div class="card kpi"><div class="lbl"><span class="dot" style="background:var(--exp)"></span>Dépenses du mois</div><div class="val">${money(expM)}</div><div class="sub">${persoM ? `Pro ${money(expM - persoM, { compact: 1 })} · Perso ${money(persoM, { compact: 1 })} · ` : ''}Reste <b class="${net >= 0 ? 'up' : 'down'}">${money(net, { compact: 1 })}</b></div></div>
     <div class="card kpi"><div class="lbl"><span class="dot" style="background:var(--warn)"></span>À mettre de côté</div><div class="val">${money(Math.max(0, flOnlyM * num(S.settings.savePct) / 100))}</div><div class="sub">${num(S.settings.savePct)} % du freelance (impôts & charges)</div></div>
     <a class="card kpi" href="#projets" style="text-decoration:none"><div class="lbl"><span class="dot" style="background:var(--accent)"></span>Projets actifs</div><div class="val">${active.length}</div><div class="sub">${quotesOpen.length} devis en attente · ${money(quotesAmt, { compact: 1 })}</div></a>
   </div>
@@ -804,9 +1038,11 @@ routes.tableau = v => {
       </div>
     </div>
     <div class="grid" style="align-content:start">
+      ${goalsCard(inc)}
       <div class="card"><h3>${ic('clock')}Échéances</h3>
         ${soon.length ? `<div class="list">${soon.slice(0, 7).map(s => `<a class="li" href="${s.href}"><span class="li-ic ${s.late ? 'bad' : 'acc'}">${ic(s.icon)}</span><div class="grow"><div class="strong">${esc(s.title)}</div><div class="small muted">${esc(s.sub)}</div></div><span class="small ${s.late ? 'down strong' : 'muted'}">${s.date ? relDate(s.date) : '—'}</span></a>`).join('')}</div>` : `<p class="muted">Aucune échéance à venir.</p>`}
       </div>
+      ${(() => { const pf = S.projects.filter(p => p.portfolio === 'a_publier' || (!p.portfolio && ['livre', 'paye'].includes(p.status))).slice(0, 4); return pf.length ? `<div class="card"><h3>Portfolio <a class="btn sm ghost" href="https://dak-portfolio-gray.vercel.app" target="_blank" rel="noopener">Ouvrir ${ic('arrowR')}</a></h3><div class="list">${pf.map(p => `<div class="li"><a class="grow" href="#projet-${p.id}" style="text-decoration:none"><div class="strong">${esc(p.name)}</div><div class="small muted">${p.portfolio === 'a_publier' ? 'À publier' : 'Livré · à ajouter ?'}</div></a><button class="btn sm" data-act="pf" data-id="${p.id}" data-pf="publie">${ic('check')}Publié</button>${p.portfolio ? '' : `<button class="btn sm ghost" data-act="pf" data-id="${p.id}" data-pf="non" aria-label="Ne pas publier">${ic('x')}</button>`}</div>`).join('')}</div></div>` : ''; })()}
       <div class="card"><h3>Activité récente</h3>
         ${act.length ? `<div class="list">${act.slice(0, 8).map(a => `<${a.href ? `a href="${a.href}"` : 'div'} class="li"><span class="li-ic ${a.c}">${ic(a.i)}</span><div class="grow"><div class="strong">${esc(a.t)}</div><div class="small muted">${esc(a.s)}</div></div><span class="small muted">${fdate(a.date).replace(/ \d{4}$/, '')}</span></${a.href ? 'a' : 'div'}>`).join('')}</div>` : `<p class="muted">Rien pour l'instant.</p>`}
       </div>
@@ -848,13 +1084,13 @@ routes.projets = v => {
   setTitle('Projets');
   const list = S.projects.filter(p => p.status !== 'archive');
   const archived = S.projects.filter(p => p.status === 'archive');
-  v.innerHTML = `<div class="head"><div><h2>Projets</h2><p>${list.length} projet${list.length > 1 ? 's' : ''} · glisse une carte pour changer son statut.</p></div>
+  v.innerHTML = `<div class="head"><div><h2>Projets</h2><p>${list.length} projet${list.length > 1 ? 's' : ''} · glisse une carte ou touche ${ic('arrowR', 'width:13px;height:13px;vertical-align:-2px')} pour changer son statut.</p></div>
     <div class="row"><div class="tabs" role="tablist"><button class="${UI.pView === 'board' ? 'on' : ''}" data-pview="board">${ic('board', 'width:15px;height:15px;vertical-align:-3px')} Kanban</button><button class="${UI.pView === 'list' ? 'on' : ''}" data-pview="list">${ic('listI', 'width:15px;height:15px;vertical-align:-3px')} Liste</button></div><button class="btn primary" data-act="new-project">${ic('plus')}Nouveau projet</button></div></div>
   ${!S.projects.length ? `<div class="card">${empty('folder', 'Aucun projet', 'Crée ton premier projet : le devis peut être généré automatiquement.', `<button class="btn primary" data-act="new-project">${ic('plus')}Nouveau projet</button>`)}</div>` :
     UI.pView === 'board' ? `<div class="kanban">${PSTAT.filter(s => s.k !== 'archive').map(s => {
       const items = list.filter(p => p.status === s.k);
       const sum = items.reduce((a, p) => a + num(p.budget), 0);
-      return `<div class="col" data-col="${s.k}"><div class="col-h">${badge(s.l, s.c)}<span class="muted">${items.length} · ${compact(sum)}</span></div>${items.map(p => `<a class="pcard" draggable="true" data-pid="${p.id}" href="#projet-${p.id}"><div class="pt">${esc(p.name)}</div><div class="small muted">${esc(cName(p.clientId))}</div><div class="pm"><span>${esc(p.type || '')}</span><b style="color:var(--fg)">${money(num(p.budget), { compact: 1 })}</b></div>${p.due ? `<div class="pm"><span>${ic('clock', 'width:13px;height:13px;vertical-align:-2px')} ${relDate(p.due)}</span>${(p.tasks || []).length ? `<span>${p.tasks.filter(t => t.done).length}/${p.tasks.length} tâches</span>` : ''}</div>` : ''}</a>`).join('')}</div>`;
+      return `<div class="col" data-col="${s.k}"><div class="col-h">${badge(s.l, s.c)}<span class="muted">${items.length} · ${compact(sum)}</span></div>${items.map(p => `<a class="pcard" draggable="true" data-pid="${p.id}" href="#projet-${p.id}"><button type="button" class="pc-move" data-move="${p.id}" aria-label="Changer le statut de ${esc(p.name)}" title="Déplacer vers…">${ic('arrowR', 'width:14px;height:14px')}</button><div class="pt">${esc(p.name)}</div><div class="small muted">${esc(cName(p.clientId))}</div><div class="pm"><span>${esc(p.type || '')}</span><b style="color:var(--fg)">${money(num(p.budget), { compact: 1 })}</b></div>${p.due ? `<div class="pm"><span>${ic('clock', 'width:13px;height:13px;vertical-align:-2px')} ${relDate(p.due)}</span>${(p.tasks || []).length ? `<span>${p.tasks.filter(t => t.done).length}/${p.tasks.length} tâches</span>` : ''}</div>` : ''}</a>`).join('')}</div>`;
     }).join('')}</div>` :
     `<div class="card"><div class="t-wrap"><table class="t"><thead><tr><th>Projet</th><th class="hide-s">Client</th><th>Statut</th><th class="hide-s">Échéance</th><th class="num">Budget</th></tr></thead><tbody>${list.map(p => `<tr class="click" data-href="#projet-${p.id}"><td><div class="strong">${esc(p.name)}</div><div class="small muted">${esc(p.type || '')}</div></td><td class="hide-s">${esc(cName(p.clientId))}</td><td>${badge(pstat(p.status).l, pstat(p.status).c)}</td><td class="hide-s">${p.due ? fdate(p.due) : '—'}</td><td class="num strong">${money(num(p.budget))}</td></tr>`).join('')}</tbody></table></div></div>`}
   ${archived.length ? `<details style="margin-top:16px"><summary class="muted" style="cursor:pointer">${archived.length} projet(s) archivé(s)</summary><div class="card" style="margin-top:10px"><div class="list">${archived.map(projectRow).join('')}</div></div></details>` : ''}`;
@@ -871,6 +1107,11 @@ function bindKanban() {
     col.addEventListener('dragleave', () => col.classList.remove('drop'));
     col.addEventListener('drop', e => { e.preventDefault(); const p = project(dragId); if (p && p.status !== col.dataset.col) { p.status = col.dataset.col; save(); toast(`« ${p.name} » → ${pstat(p.status).l}`); route(); } });
   });
+}
+function moveModal(id) {
+  const p = project(id); if (!p) return;
+  modal(`Déplacer « ${p.name} »`, `<div class="move-grid">${PSTAT.map(st => `<button type="button" class="btn ${st.k === p.status ? 'cur' : ''}" data-to="${st.k}">${badge(st.l, st.c)}${st.k === p.status ? '<span class="small muted" style="margin-left:auto">actuel</span>' : ''}</button>`).join('')}</div>`);
+  $$('[data-to]').forEach(b => b.onclick = () => { p.status = b.dataset.to; save(); closeModal(); toast(`« ${p.name} » → ${pstat(p.status).l}`); route(); });
 }
 function projectForm(p = {}) {
   const isNew = !p.id;
@@ -918,18 +1159,18 @@ routes.projet = (v, id) => {
   setTitle(p.name);
   const docs = S.docs.filter(d => d.projectId === p.id).sort((a, b) => b.createdAt - a.createdAt);
   const paid = allIncomes().filter(i => i.projectId === p.id).reduce((a, i) => a + i.amount, 0);
-  const invoiced = docs.filter(d => d.kind === 'facture' && d.status !== 'brouillon').reduce((a, d) => a + totals(d).total, 0);
+  const invoiced = docs.filter(d => d.kind === 'facture' && d.status !== 'brouillon').reduce((a, d) => a + (totals(d).total - totals(d).credit) * rateOf(d), 0);
   const exps = S.expenses.filter(e => e.projectId === p.id);
   const expAmt = exps.reduce((a, e) => a + num(e.amount), 0);
   const tasks = p.tasks || [];
   const revOver = num(p.revUsed) > num(p.revIncluded);
   v.innerHTML = `<div class="head"><div><a href="#projets" class="btn sm ghost" style="margin-left:-10px">${ic('arrowL')}Projets</a><h2 style="margin-top:6px">${esc(p.name)}</h2><p>${client(p.clientId) ? `<a href="#client-${p.clientId}">${esc(cName(p.clientId))}</a>` : 'Sans client'} · ${esc(p.type || '')}</p></div>
-    <div class="row"><select class="in" id="p-status" style="width:auto;height:40px">${PSTAT.map(s => opt(s.k, s.l, p.status)).join('')}</select><button class="btn" data-act="edit-project" data-id="${p.id}">${ic('edit')}Modifier</button><button class="btn primary" data-act="new-doc" data-kind="devis" data-project="${p.id}">${ic('plus')}Document</button></div></div>
+    <div class="row"><select class="in" id="p-status" style="width:auto;height:40px">${PSTAT.map(s => opt(s.k, s.l, p.status)).join('')}</select>${SAMPLE ? `<button class="btn ai-btn" data-ai="estimate">${ic('spark')}Estimer le prix</button>` : ''}<button class="btn" data-act="edit-project" data-id="${p.id}">${ic('edit')}Modifier</button><button class="btn primary" data-act="new-doc" data-kind="devis" data-project="${p.id}">${ic('plus')}Document</button></div></div>
   <div class="kpis k4">
     <div class="card kpi"><div class="lbl">Budget</div><div class="val">${money(num(p.budget))}</div><div class="sub">${p.due ? `Livraison ${relDate(p.due).toLowerCase()}` : 'Pas de date'}</div></div>
     <div class="card kpi"><div class="lbl">Facturé</div><div class="val">${money(invoiced)}</div><div class="sub">Encaissé : ${money(paid)}</div></div>
     <div class="card kpi"><div class="lbl">Dépenses liées</div><div class="val">${money(expAmt)}</div><div class="sub">${exps.length} dépense(s)</div></div>
-    <div class="card kpi hero"><div class="lbl">Rentabilité</div><div class="val">${money(paid - expAmt)}</div><div class="sub">${paid ? Math.round((paid - expAmt) / paid * 100) + ' % de marge' : 'Encaissé − dépenses'}</div></div>
+    <div class="card kpi hero"><div class="lbl">Rentabilité</div><div class="val">${money(paid - expAmt)}</div><div class="sub">${paid ? Math.round((paid - expAmt) / paid * 100) + ' % de marge' : 'Encaissé − dépenses'}${projRate(p) ? ` · ${money(projRate(p).v, { compact: 1 })}/h` : ''}</div></div>
   </div>
   <div class="grid g-dash">
     <div class="grid" style="align-content:start">
@@ -940,6 +1181,13 @@ routes.projet = (v, id) => {
       <div class="card"><h3>Documents</h3>${docs.length ? docTable(docs) : `<p class="muted">Aucun document. </p><div class="row"><button class="btn" data-act="new-doc" data-kind="devis" data-project="${p.id}">Créer un devis</button><button class="btn" data-act="new-doc" data-kind="proforma" data-project="${p.id}">Proforma</button><button class="btn" data-act="new-doc" data-kind="facture" data-project="${p.id}">Facture</button></div>`}</div>
     </div>
     <div class="grid" style="align-content:start">
+      ${(() => { const tm = S.settings.timer, running = tm && tm.pid === p.id, tot = projMin(p), r = projRate(p), target = rateCalc().hourly; return `<div class="card"><h3>${ic('clock')}Temps passé <span class="small muted" style="font-family:var(--font-body);font-weight:500;margin-left:auto">${fmtDur(tot)}</span></h3>
+        ${running ? `<button class="btn primary" data-act="stop-timer">${ic('x')} Arrêter (${fmtDur((Date.now() - tm.start) / 60000)})</button>` : `<button class="btn primary" data-act="start-timer" data-id="${p.id}">${ic('clock')}Démarrer le chrono</button>`}
+        <form id="time-form" class="row" style="margin-top:10px;flex-wrap:nowrap"><input class="in" name="d" placeholder="1h30" aria-label="Durée" style="width:92px"><input class="in" name="n" placeholder="Note (facultatif)" aria-label="Note"><button class="btn" type="submit" aria-label="Ajouter le temps">${ic('plus')}</button></form>
+        <p class="hint" style="margin:6px 0 0">Écris 1h30, 2 (heures) ou 45min.</p>
+        ${r ? `<div class="rate-row" style="margin-top:8px"><span>Taux horaire réel <span class="small muted">(${r.basis})</span></span><b class="${target && r.v < target ? 'down' : 'up'}">${money(r.v)}/h</b></div>${target ? `<div class="small muted">Ton objectif : ${money(target)}/h (Finances › Tarifs)</div>` : ''}` : ''}
+        ${(p.time || []).length ? `<div class="list" style="margin-top:8px">${p.time.slice().reverse().slice(0, 6).map(x => `<div class="li small"><span class="grow">${fdate(x.date)} · ${esc(x.note || '')}</span><b>${fmtDur(x.min)}</b><button class="btn sm ghost" data-del-time="${x.id}" aria-label="Supprimer">${ic('x')}</button></div>`).join('')}</div>` : ''}</div>`; })()}
+      <div class="card"><h3>Portfolio</h3><div class="seg" role="radiogroup" aria-label="Portfolio" style="flex-wrap:wrap">${[['a_publier', 'À publier'], ['publie', 'Publié'], ['non', 'Non']].map(([k, l]) => `<button type="button" class="${p.portfolio === k ? 'on' : ''}" data-act="pf" data-id="${p.id}" data-pf="${k}">${l}</button>`).join('')}</div>${!p.portfolio && ['livre', 'paye'].includes(p.status) ? '<p class="hint" style="margin:8px 0 0">Projet livré : c\'est le bon moment pour l\'ajouter à ton portfolio.</p>' : ''}</div>
       <div class="card"><h3>Corrections</h3><div class="row" style="justify-content:space-between"><div><div style="font:700 28px var(--font-display)" class="${revOver ? 'down' : ''}">${num(p.revUsed)} / ${num(p.revIncluded)}</div><div class="small muted">${revOver ? 'Au-delà du forfait : pense à facturer le supplément' : 'séries utilisées / incluses'}</div></div><div class="row"><button class="btn sm" data-rev="-1" aria-label="Retirer">−</button><button class="btn sm primary" data-rev="1" aria-label="Ajouter">+</button></div></div>
       ${revOver ? `<button class="btn sm" style="margin-top:12px" data-act="bill-revisions" data-id="${p.id}">${ic('receipt')}Facturer les corrections en plus</button>` : ''}</div>
       <div class="card"><h3>Dates</h3><div class="list"><div class="li"><span class="muted grow">Début</span>${fdate(p.start)}</div><div class="li"><span class="muted grow">Livraison</span>${fdate(p.due)}</div></div></div>
@@ -950,21 +1198,24 @@ routes.projet = (v, id) => {
   $('#p-status').onchange = e => { p.status = e.target.value; save(); toast('Statut mis à jour'); };
   $('#task-form').onsubmit = e => { e.preventDefault(); const t = e.target.t.value.trim(); if (!t) return; (p.tasks = p.tasks || []).push({ id: uid(), text: t, done: false }); save(); route(); setTimeout(() => $('#task-form input').focus(), 30); };
   $$('[data-task]').forEach(c => c.onchange = () => { const t = p.tasks.find(x => x.id === c.dataset.task); t.done = c.checked; save(); route(); });
-  $$('[data-del-task]').forEach(b => b.onclick = () => { p.tasks = p.tasks.filter(x => x.id !== b.dataset.delTask); save(); route(); });
+  $$('[data-del-task]').forEach(b => b.onclick = () => { undoable('Tâche supprimée', () => { p.tasks = p.tasks.filter(x => x.id !== b.dataset.delTask); }); route(); });
   $$('[data-rev]').forEach(b => b.onclick = () => { p.revUsed = Math.max(0, num(p.revUsed) + num(b.dataset.rev)); save(); route(); });
+  const aie = $('[data-ai=estimate]'); if (aie) aie.onclick = () => aiEstimate(p, aie);
+  $('#time-form').onsubmit = e => { e.preventDefault(); const min = parseDur(e.target.d.value); if (!min) { e.target.d.focus(); return toast('Durée non reconnue : écris par exemple 1h30', 'bad'); } (p.time = p.time || []).push({ id: uid(), date: today(), min, note: e.target.n.value.trim() }); save(); toast(`${fmtDur(min)} ajoutées`); route(); };
+  $$('[data-del-time]').forEach(b => b.onclick = () => { undoable('Temps supprimé', () => { p.time = p.time.filter(x => x.id !== b.dataset.delTime); }); route(); });
 };
 function editProject(id) {
   const p = project(id);
   modal('Modifier le projet', projectForm(p), {
     onSubmit: d => { Object.assign(p, { name: d.name.trim(), clientId: resolveClient(d), type: d.type, budget: num(d.budget), start: d.start, due: d.due, status: d.status, revIncluded: num(d.revIncluded), notes: d.notes }); save(); toast('Projet enregistré'); route(); },
-    danger: { label: 'Supprimer', confirm: 'Supprimer ce projet ? Les documents liés sont conservés.', run: () => { S.projects = S.projects.filter(x => x.id !== id); S.docs.forEach(d => { if (d.projectId === id) d.projectId = ''; }); save(); toast('Projet supprimé'); go('#projets'); } },
+    danger: { label: 'Supprimer', confirm: 'Supprimer ce projet ? Les documents liés sont conservés.', run: () => { undoable('Projet supprimé', () => { S.projects = S.projects.filter(x => x.id !== id); S.docs.forEach(d => { if (d.projectId === id) d.projectId = ''; }); }); go('#projets'); } },
   });
   bindNewClientToggle();
 }
 
 /* ---------- Documents ---------- */
 function docTable(docs) {
-  return `<div class="t-wrap"><table class="t"><thead><tr><th>N°</th><th class="hide-s">Client</th><th class="hide-s">Date</th><th>Statut</th><th class="num">Montant</th></tr></thead><tbody>${docs.map(d => { const st = docState(d), t = totals(d); return `<tr class="click" data-href="#document-${d.id}"><td><div class="strong">${esc(d.number)}</div><div class="small muted">${KSHORT[d.kind]}${d.subject ? ' · ' + esc(d.subject) : ''}</div></td><td class="hide-s">${esc(cName(d.clientId))}</td><td class="hide-s">${fdate(d.date)}</td><td>${badge(st.l, st.c)}</td><td class="num"><div class="strong">${money(t.total)}</div>${d.kind === 'facture' && t.paid > 0 && t.due > 0.5 ? `<div class="small muted">reste ${money(t.due)}</div>` : ''}</td></tr>`; }).join('')}</tbody></table></div>`;
+  return `<div class="t-wrap"><table class="t"><thead><tr><th>N°</th><th class="hide-s">Client</th><th class="hide-s">Date</th><th>Statut</th><th class="num">Montant</th></tr></thead><tbody>${docs.map(d => { const st = docState(d), t = totals(d); return `<tr class="click" data-href="#document-${d.id}"><td><div class="strong">${esc(d.number)}</div><div class="small muted">${KSHORT[d.kind]}${d.subject ? ' · ' + esc(d.subject) : ''}</div></td><td class="hide-s">${esc(cName(d.clientId))}</td><td class="hide-s">${fdate(d.date)}</td><td>${badge(st.l, st.c)}</td><td class="num"><div class="strong">${d.kind === 'avoir' ? '− ' : ''}${dm(d, t.total)}</div>${d.kind === 'facture' && (t.paid > 0 || t.credit > 0) && t.due > 0.5 ? `<div class="small muted">reste ${dm(d, t.due)}</div>` : ''}</td></tr>`; }).join('')}</tbody></table></div>`;
 }
 routes.documents = v => {
   setTitle('Devis & factures');
@@ -973,7 +1224,7 @@ routes.documents = v => {
   const cnt = k => all.filter(d => d.kind === k).length;
   v.innerHTML = `<div class="head"><div><h2>Devis & factures</h2><p>Devis → proforma → facture en un clic. Export PDF à tes couleurs.</p></div>
     <div class="row"><button class="btn" data-act="new-doc" data-kind="devis">${ic('plus')}Devis</button><button class="btn" data-act="new-doc" data-kind="proforma">${ic('plus')}Proforma</button><button class="btn primary" data-act="new-doc" data-kind="facture">${ic('plus')}Facture</button></div></div>
-  <div class="tabs" style="margin-bottom:16px">${[['all', `Tous (${all.length})`], ['devis', `Devis (${cnt('devis')})`], ['proforma', `Proformas (${cnt('proforma')})`], ['facture', `Factures (${cnt('facture')})`]].map(([k, l]) => `<button class="${UI.docTab === k ? 'on' : ''}" data-doctab="${k}">${l}</button>`).join('')}</div>
+  <div class="tabs" style="margin-bottom:16px">${[['all', `Tous (${all.length})`], ['devis', `Devis (${cnt('devis')})`], ['proforma', `Proformas (${cnt('proforma')})`], ['facture', `Factures (${cnt('facture')})`], ...(cnt('avoir') ? [['avoir', `Avoirs (${cnt('avoir')})`]] : [])].map(([k, l]) => `<button class="${UI.docTab === k ? 'on' : ''}" data-doctab="${k}">${l}</button>`).join('')}</div>
   <div class="card">${f.length ? docTable(f) : empty('file', 'Aucun document', 'Crée un devis, une proforma ou une facture.', `<button class="btn primary" data-act="new-doc" data-kind="${UI.docTab === 'all' ? 'devis' : UI.docTab}">${ic('plus')}Créer</button>`)}</div>`;
 };
 function createDoc(kind, projectId, clientId) {
@@ -990,24 +1241,28 @@ routes.document = (v, id) => {
   const actions = [];
   if (d.kind === 'devis') actions.push(`<button class="btn" data-conv="proforma">${ic('repeat')}En proforma</button>`, `<button class="btn primary" data-conv="facture">${ic('repeat')}En facture</button>`);
   if (d.kind === 'proforma') actions.push(`<button class="btn primary" data-conv="facture">${ic('repeat')}Convertir en facture</button>`);
-  if (d.kind === 'facture' && d.status !== 'brouillon' && t.due > 0.5) actions.push(`<button class="btn primary" data-act="pay" data-id="${d.id}">${ic('in')}Encaisser</button>`);
-  v.innerHTML = `<div class="head"><div><a href="#documents" class="btn sm ghost" style="margin-left:-10px">${ic('arrowL')}Documents</a><h2 style="margin-top:6px">${KSHORT[d.kind]} ${esc(d.number)} <span style="vertical-align:middle">${badge(st.l, st.c)}</span></h2><p>${d.fromId && doc(d.fromId) ? `Issu de <a href="#document-${d.fromId}">${esc(doc(d.fromId).number)}</a> · ` : ''}${esc(cName(d.clientId))}</p></div>
+  if (d.kind === 'facture' && d.status !== 'brouillon' && t.due > 0.5) actions.push(`<button class="btn" data-act="remind" data-id="${d.id}">${ic('chat')}Relancer</button>`, `<button class="btn primary" data-act="pay" data-id="${d.id}">${ic('in')}Encaisser</button>`);
+  if (d.kind === 'avoir' && d.status !== 'brouillon' && totals(d).paid < totals(d).total - 0.5) actions.push(`<button class="btn" data-act="pay" data-id="${d.id}">${ic('out')}Rembourser</button>`);
+  v.innerHTML = `<div class="head"><div><a href="#documents" class="btn sm ghost" style="margin-left:-10px">${ic('arrowL')}Documents</a><h2 style="margin-top:6px">${KSHORT[d.kind]} ${esc(d.number)} <span style="vertical-align:middle">${badge(st.l, st.c)}</span></h2><p>${d.fromId && doc(d.fromId) ? `${d.kind === 'avoir' ? 'Avoir sur' : 'Issu de'} <a href="#document-${d.fromId}">${esc(doc(d.fromId).number)}</a> · ` : ''}${avoirsOf(d).length ? `Avoir(s) : ${avoirsOf(d).map(x => `<a href="#document-${x.id}">${esc(x.number)}</a>`).join(', ')} · ` : ''}${esc(cName(d.clientId))}</p></div>
     <div class="row">${actions.join('')}<button class="btn dark" data-act="pdf">${ic('down')}Télécharger le PDF</button>${IS_PAGE ? '' : `<button class="btn" data-act="print" title="Imprimer" aria-label="Imprimer">${ic('print')}</button>`}</div></div>
   <div class="doc-layout">
     <div class="grid" style="align-content:start">
+      ${locked(d) ? `<div class="lock-bar">${ic('alert')}<div><b>${d.kind === 'avoir' ? 'Avoir émis' : 'Facture émise'} : elle n'est plus modifiable.</b><p>C'est la règle comptable : une facture envoyée garde son numéro et ses montants. Pour corriger ou annuler, crée un avoir.</p><div class="row">${d.kind === 'facture' ? `<button class="btn sm" data-act="avoir" data-id="${d.id}">${ic('receipt')}Créer un avoir</button>` : ''}${!(d.payments || []).length && !avoirsOf(d).length ? `<button class="btn sm ghost" data-act="unlock" data-id="${d.id}">Repasser en brouillon</button>` : ''}</div></div></div>` : ''}
       <div class="card"><h3>Statut & envoi</h3>
         <div class="row">
-          ${d.kind === 'facture' ? `<select class="in" id="d-status" style="width:auto">${opt('brouillon', 'Brouillon', d.status)}${opt('envoye', 'Envoyée', d.status === 'brouillon' ? '' : 'envoye')}</select>` : `<select class="in" id="d-status" style="width:auto">${['brouillon', 'envoye', 'accepte', 'refuse', ...(d.kind === 'proforma' ? ['converti'] : [])].map(k => opt(k, { brouillon: 'Brouillon', envoye: 'Envoyé', accepte: 'Accepté', refuse: 'Refusé', converti: 'Converti' }[k], d.status)).join('')}</select>`}
+          ${isFiscal(d) ? (d.status === 'brouillon' ? `<button class="btn primary" data-act="emit" data-id="${d.id}">${ic('check')}Émettre ${d.kind === 'avoir' ? "l'avoir" : 'la facture'}</button>` : badge(docState(d).l, docState(d).c)) : `<select class="in" id="d-status" style="width:auto">${['brouillon', 'envoye', 'accepte', 'refuse', ...(d.kind === 'proforma' ? ['converti'] : [])].map(k => opt(k, { brouillon: 'Brouillon', envoye: 'Envoyé', accepte: 'Accepté', refuse: 'Refusé', converti: 'Converti' }[k], d.status)).join('')}</select>`}
           <a class="btn" target="_blank" rel="noopener" id="d-wa">${ic('chat')}WhatsApp</a><a class="btn" id="d-mail">${ic('mail')}E-mail</a>
         </div>
-        <p class="hint" style="margin:10px 0 0">Astuce : télécharge le PDF puis joins-le à ton message WhatsApp ou e-mail.</p>
+        ${(d.reminders || []).length ? `<p class="hint" style="margin:10px 0 0">${ic('chat', 'width:13px;height:13px;vertical-align:-2px')} Relancée ${d.reminders.length} fois · dernière : ${RLEVELS[lastReminder(d).level]?.l.toLowerCase() || 'relance'} le ${fdate(lastReminder(d).date)}</p>` : ''}
+        <p class="hint" style="margin:10px 0 0">${isFiscal(d) && d.status === 'brouillon' ? 'Tant qu\'elle est en brouillon, le PDF porte la mention « BROUILLON ». Émets-la pour obtenir le PDF définitif (elle sera alors verrouillée).' : 'Astuce : télécharge le PDF puis joins-le à ton message WhatsApp ou e-mail.'}</p>
       </div>
       <div class="card"><h3>Informations</h3><div class="f" id="d-form">
         <div class="f2"><label class="fl">Client<select class="in" name="clientId">${clientOpts(d.clientId)}</select></label><label class="fl">Projet<select class="in" name="projectId">${projectOpts(d.projectId)}</select></label></div>
         <label class="fl">Objet<input class="in" name="subject" value="${esc(d.subject)}" placeholder="Ex. Création de l'identité visuelle"></label>
-        <div class="f2"><label class="fl">Date<input class="in" type="date" name="date" value="${esc(d.date)}"></label><label class="fl">${d.kind === 'facture' ? 'Échéance' : 'Valable jusqu\'au'}<input class="in" type="date" name="dueDate" value="${esc(d.dueDate)}"></label></div>
+        <div class="f2"><label class="fl">Date<input class="in" type="date" name="date" value="${esc(d.date)}"></label>${d.kind === 'avoir' ? '' : `<label class="fl">${d.kind === 'facture' ? 'Échéance' : 'Valable jusqu\'au'}<input class="in" type="date" name="dueDate" value="${esc(d.dueDate)}"></label>`}</div>
+        <div class="f2"><label class="fl">Devise du document<select class="in" name="currency">${Object.keys(CUR).map(k => opt(k, `${k} (${CUR[k].s})`, docCur(d))).join('')}</select></label><label class="fl f-rate" style="${docCur(d) === S.settings.currency ? 'visibility:hidden' : ''}">1 ${esc(docCur(d))} = ? ${esc(CUR[S.settings.currency].s)}<input class="in" name="rate" inputmode="decimal" value="${esc(d.rate)}"></label></div>
       </div></div>
-      <div class="card"><h3>Prestations <select class="in" id="cat-pick" style="margin-left:auto;width:auto;height:32px;font-size:13px">${opt('', '+ Catalogue')}${S.catalog.map(x => opt(x.id, `${x.label} · ${compact(x.price)}`)).join('')}</select></h3>
+      <div class="card"><h3>Prestations ${SAMPLE ? `<button class="btn sm ghost ai-btn" data-ai="lines" type="button">${ic('spark')}Améliorer</button>` : ''}<select class="in" id="cat-pick" style="margin-left:auto;width:auto;height:32px;font-size:13px">${opt('', '+ Catalogue')}${S.catalog.map(x => opt(x.id, `${x.label} · ${compact(x.price)}`)).join('')}</select></h3>
         <div class="line-h"><span>Description</span><span>Qté</span><span>Prix unit.</span><span></span></div>
         <div class="lines" id="lines" style="margin-top:6px">${d.lines.map(l => lineRow(l)).join('')}</div>
         <button class="btn sm" id="add-line" style="margin-top:10px">${ic('plus')}Ajouter une ligne</button>
@@ -1023,8 +1278,8 @@ routes.document = (v, id) => {
         <label class="fl">Note au client<textarea class="in" name="notes" placeholder="Merci pour votre confiance…">${esc(d.notes)}</textarea></label>
         <label class="fl">Conditions<textarea class="in" name="terms">${esc(d.terms)}</textarea></label>
       </div></div>
-      ${d.kind === 'facture' ? `<div class="card"><h3>Paiements reçus ${t.due > 0.5 && d.status !== 'brouillon' ? `<button class="btn sm" data-act="pay" data-id="${d.id}">${ic('plus')}</button>` : ''}</h3>${(d.payments || []).length ? `<div class="list">${d.payments.map(p => `<div class="li"><span class="li-ic ok">${ic('in')}</span><div class="grow"><div class="strong">${money(num(p.amount))}</div><div class="small muted">${fdate(p.date)} · ${esc(p.method)}</div></div><button class="btn sm ghost" data-del-pay="${p.id}" aria-label="Supprimer le paiement">${ic('trash')}</button></div>`).join('')}</div>` : `<p class="muted small">${d.status === 'brouillon' ? 'Passe la facture en « Envoyée » pour enregistrer un paiement.' : 'Aucun paiement enregistré.'}</p>`}</div>` : ''}
-      <div class="row"><button class="btn" data-act="dup-doc" data-id="${d.id}">${ic('copy')}Dupliquer</button><span class="spacer"></span><button class="btn danger" data-act="del-doc" data-id="${d.id}">${ic('trash')}Supprimer</button></div>
+      ${isFiscal(d) ? `<div class="card"><h3>${d.kind === 'avoir' ? 'Remboursements' : 'Paiements reçus'} ${t.due > 0.5 && d.status !== 'brouillon' && d.kind === 'facture' ? `<button class="btn sm" data-act="pay" data-id="${d.id}">${ic('plus')}</button>` : ''}</h3>${(d.payments || []).length ? `<div class="list">${d.payments.map(p => `<div class="li"><span class="li-ic ${d.kind === 'avoir' ? 'bad' : 'ok'}">${ic(d.kind === 'avoir' ? 'out' : 'in')}</span><div class="grow"><div class="strong">${dm(d, num(p.amount))}${docCur(d) !== S.settings.currency ? ` <span class="small muted">≈ ${money(num(p.amount) * (num(p.rate) || rateOf(d)))}</span>` : ''}</div><div class="small muted">${fdate(p.date)} · ${esc(p.method)}</div></div><button class="btn sm ghost" data-del-pay="${p.id}" aria-label="Supprimer le paiement">${ic('trash')}</button></div>`).join('')}</div>` : `<p class="muted small">${d.status === 'brouillon' ? 'Émets le document pour enregistrer un paiement.' : 'Aucun paiement enregistré.'}</p>`}</div>` : ''}
+      <div class="row"><button class="btn" data-act="dup-doc" data-id="${d.id}">${ic('copy')}Dupliquer</button><span class="spacer"></span>${locked(d) ? '' : `<button class="btn danger" data-act="del-doc" data-id="${d.id}">${ic('trash')}Supprimer</button>`}</div>
     </div>
     <div class="doc-preview-wrap"><div id="paper"></div></div>
   </div>`;
@@ -1032,23 +1287,24 @@ routes.document = (v, id) => {
   const refresh = () => {
     $('#paper').innerHTML = paper(d);
     const t = totals(d);
-    $('#tot-mini').innerHTML = `<div><span>Sous-total</span><span>${money(t.sub)}</span></div>${t.disc ? `<div><span>Remise</span><span>− ${money(t.disc)}</span></div>` : ''}${d.taxOn ? `<div><span>${esc(S.settings.taxLabel)}</span><span>${money(t.tax)}</span></div>` : ''}<div class="tt"><span>Total</span><span>${money(t.total)}</span></div>${num(d.deposit) ? `<div class="muted"><span>Acompte ${num(d.deposit)} %</span><span>${money(t.deposit)}</span></div>` : ''}`;
+    $('#tot-mini').innerHTML = `<div><span>Sous-total</span><span>${dm(d, t.sub)}</span></div>${t.disc ? `<div><span>Remise</span><span>− ${dm(d, t.disc)}</span></div>` : ''}${d.taxOn ? `<div><span>${esc(S.settings.taxLabel)}</span><span>${dm(d, t.tax)}</span></div>` : ''}<div class="tt"><span>Total</span><span>${dm(d, t.total)}</span></div>${docCur(d) !== S.settings.currency ? `<div class="muted"><span>Soit</span><span>≈ ${money(t.total * rateOf(d))}</span></div>` : ''}${num(d.deposit) ? `<div class="muted"><span>Acompte ${num(d.deposit)} %</span><span>${dm(d, t.deposit)}</span></div>` : ''}`;
     const c = client(d.clientId);
-    const msg = `Bonjour${c ? ' ' + (c.name || '').split(' ')[0] : ''},\n\nVoici ${d.kind === 'facture' ? 'la facture' : d.kind === 'devis' ? 'le devis' : 'la facture proforma'} ${d.number}${d.subject ? ` pour « ${d.subject} »` : ''} d'un montant de ${money(t.total)}${d.kind === 'facture' && t.paid > 0 ? ` (reste à payer : ${money(t.due)})` : ''}.${d.kind === 'facture' ? `\nÉchéance : ${fdate(d.dueDate)}.` : ''}\n\n${S.settings.payInfo ? 'Paiement :\n' + S.settings.payInfo + '\n\n' : ''}Merci,\n${S.settings.name}`;
+    const msg = `Bonjour${c ? ' ' + (c.name || '').split(' ')[0] : ''},\n\nVoici ${d.kind === 'facture' ? 'la facture' : d.kind === 'devis' ? 'le devis' : 'la facture proforma'} ${d.number}${d.subject ? ` pour « ${d.subject} »` : ''} d'un montant de ${dm(d, t.total)}${d.kind === 'facture' && (t.paid > 0 || t.credit > 0) ? ` (reste à payer : ${dm(d, t.due)})` : ''}.${waveFor(d) ? `\nPayer avec Wave : ${waveFor(d)}` : ''}${d.kind === 'facture' ? `\nÉchéance : ${fdate(d.dueDate)}.` : ''}\n\n${S.settings.payInfo ? 'Paiement :\n' + S.settings.payInfo + '\n\n' : ''}Merci,\n${S.settings.name}`;
     const phone = (c?.phone || '').replace(/[^\d]/g, '');
     $('#d-wa').href = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
     $('#d-mail').href = `mailto:${encodeURIComponent(c?.email || '')}?subject=${encodeURIComponent(`${KINDS[d.kind]} ${d.number}`)}&body=${encodeURIComponent(msg)}`;
   };
   refresh();
   const bindFields = sel => $$(`${sel} [name]`).forEach(i => i.addEventListener(i.tagName === 'SELECT' ? 'change' : 'input', () => {
-    const n = i.name; d[n] = ['discount', 'deposit', 'taxRate'].includes(n) ? num(i.value) : i.value;
+    const n = i.name; d[n] = ['discount', 'deposit', 'taxRate', 'rate'].includes(n) ? num(i.value) : i.value;
+    if (n === 'currency') { d.rate = defRate(d.currency, S.settings.currency); const r = $('#d-form [name=rate]'); r.value = d.rate; r.closest('.f-rate').style.visibility = d.currency === S.settings.currency ? 'hidden' : ''; r.closest('.f-rate').firstChild.textContent = `1 ${d.currency} = ? ${CUR[S.settings.currency].s}`; }
     if (n === 'clientId') { $('#d-form [name=projectId]').innerHTML = projectOpts(d.projectId, d.clientId); }
     if (n === 'projectId' && d.projectId && !d.clientId) { d.clientId = project(d.projectId).clientId; $('#d-form [name=clientId]').value = d.clientId; }
     save(); refresh();
   }));
   ['#d-form', '#d-form2', '#d-form3'].forEach(bindFields);
   $('#tax-on').onchange = e => { d.taxOn = e.target.checked; $('#d-form2 [name=taxRate]').disabled = !d.taxOn; save(); refresh(); };
-  $('#d-status').onchange = e => { d.status = e.target.value; save(); toast('Statut mis à jour'); route(); };
+  const ds = $('#d-status'); if (ds) ds.onchange = e => { d.status = e.target.value; save(); toast('Statut mis à jour'); route(); };
   const bindLines = () => {
     $$('#lines .line').forEach(row => {
       const l = d.lines.find(x => x.id === row.dataset.line);
@@ -1058,44 +1314,60 @@ routes.document = (v, id) => {
     });
   };
   bindLines();
+  if (locked(d)) $$('#d-form [name], #d-form2 [name], #d-form3 [name], #lines .in, #lines button, #tax-on, #cat-pick, #add-line, [data-ai=lines]').forEach(x => { x.disabled = true; });
   const addLine = (desc = '', price = 0) => { const l = { id: uid(), desc, qty: 1, price }; const blank = d.lines.length === 1 && !d.lines[0].desc && !num(d.lines[0].price); if (blank && desc) d.lines = [l]; else d.lines.push(l); save(); $('#lines').innerHTML = d.lines.map(lineRow).join(''); bindLines(); refresh(); $(`[data-line="${l.id}"] [data-f=desc]`).focus(); };
   $('#add-line').onclick = () => addLine();
+  const ail = $('[data-ai=lines]'); if (ail) ail.onclick = () => aiLines(d, ail);
   $('#cat-pick').onchange = e => { const x = S.catalog.find(c => c.id === e.target.value); if (x) addLine(x.label, x.price); e.target.value = ''; };
   $$('[data-conv]').forEach(b => b.onclick = () => { const n = convert(d, b.dataset.conv); toast(`${KSHORT[n.kind]} ${n.number} créée`); go(`#document-${n.id}`); });
-  $$('[data-del-pay]').forEach(b => b.onclick = async () => { if (await ask('Supprimer ce paiement ?')) { d.payments = d.payments.filter(p => p.id !== b.dataset.delPay); save(); route(); } });
+  $$('[data-del-pay]').forEach(b => b.onclick = async () => { if (await ask('Supprimer ce paiement ?')) { undoable('Paiement supprimé', () => { d.payments = d.payments.filter(p => p.id !== b.dataset.delPay); }); route(); } });
 };
 const lineRow = l => `<div class="line" data-line="${l.id}"><textarea class="in" data-f="desc" rows="1" placeholder="Description de la prestation">${esc(l.desc)}</textarea><input class="in" data-f="qty" inputmode="decimal" value="${esc(l.qty)}" aria-label="Quantité"><input class="in" data-f="price" inputmode="decimal" value="${esc(l.price)}" aria-label="Prix unitaire"><button class="btn sm ghost" data-rm aria-label="Retirer la ligne" style="padding:0;width:32px;height:38px">${ic('x')}</button></div>`;
 
+function waveFor(d) {
+  const link = (S.settings.waveLink || '').trim();
+  if (!/^https:\/\//i.test(link) || !['facture', 'proforma'].includes(d.kind)) return '';
+  const t = totals(d), amount = Math.round((d.kind === 'facture' ? t.due : t.total) * rateOf(d) * (S.settings.currency === 'XOF' ? 1 : XOF_PER[S.settings.currency] || 1));
+  if (amount <= 0) return '';
+  return link.replace(/\{montant\}/gi, String(amount));
+}
+function qrData(text) { try { if (!window.qrcode || !text) return ''; const q = window.qrcode(0, 'M'); q.addData(text); q.make(); return q.createDataURL(4, 0); } catch { return ''; } }
+const legalIds = s => [s.ncc ? `NCC : ${s.ncc}` : '', s.rccm ? `RCCM : ${s.rccm}` : '', s.regime ? `Régime : ${s.regime}` : '', s.taxCenter ? `Centre des impôts : ${s.taxCenter}` : '', s.ids].filter(Boolean);
 function paper(d) {
   const s = S.settings, c = client(d.clientId) || {}, t = totals(d);
-  const paidStamp = d.kind === 'facture' && t.total > 0 && t.paid >= t.total - 0.5;
-  const me = [s.title, s.address, s.phone, s.email, s.ids].filter(Boolean).join('\n');
-  return `<div class="paper" style="--pc:${esc(s.color || '#FF5A1F')}">
-    <div class="pp-top"><div>${s.logo ? `<img class="pp-logo" src="${s.logo}" alt="">` : `<div class="pp-brand">${esc(s.business || s.name)}</div>`}<div class="pp-me">${s.logo ? `<b style="color:#111">${esc(s.business || s.name)}</b>\n` : ''}${s.business && s.name !== s.business ? esc(s.name) + '\n' : ''}${esc(me)}</div></div>
+  const isAv = d.kind === 'avoir';
+  const paidStamp = d.kind === 'facture' && t.total > 0 && t.paid + t.credit >= t.total - 0.5;
+  const me = [s.title, s.address, s.phone, s.email, s.ncc ? `NCC : ${s.ncc}` : '', s.rccm ? `RCCM : ${s.rccm}` : ''].filter(Boolean).join('\n');
+  const wave = waveFor(d), qr = wave ? qrData(wave) : '';
+  return `<div class="paper ps-${esc(s.docStyle || 'classique')}" style="--pc:${esc(s.color || '#FF5A1F')}">
+    ${isFiscal(d) && d.status === 'brouillon' ? '<div class="pp-draft">BROUILLON</div>' : ''}
+    <div class="pp-top"><div>${s.logo ? `<img class="pp-logo" src="${s.logo}" alt="">` : `<div class="pp-brand">${esc(s.business || s.name)}</div>`}<div class="pp-me">${s.logo ? `<b class="pp-strong">${esc(s.business || s.name)}</b>\n` : ''}${s.business && s.name !== s.business ? esc(s.name) + '\n' : ''}${esc(me)}</div></div>
       <div class="pp-kind"><h1>${KINDS[d.kind]}</h1><div class="no">N° ${esc(d.number)}</div></div></div>
-    <div class="pp-meta"><div><div class="pp-lbl">${d.kind === 'devis' ? 'Destinataire' : 'Facturé à'}</div><div class="pp-client">${esc(c.company || c.name || '—')}</div><div style="white-space:pre-line;color:#555">${esc([c.company ? c.name : '', c.address, c.phone, c.email, c.ids].filter(Boolean).join('\n'))}</div></div>
-      <div><div class="pp-dates"><span>Date</span><b>${fdate(d.date)}</b><span>${d.kind === 'facture' ? 'Échéance' : 'Valable jusqu\'au'}</span><b>${fdate(d.dueDate)}</b>${d.fromId && doc(d.fromId) ? `<span>Réf.</span><b>${esc(doc(d.fromId).number)}</b>` : ''}</div></div></div>
+    <div class="pp-meta"><div><div class="pp-lbl">${d.kind === 'devis' ? 'Destinataire' : isAv ? 'Client' : 'Facturé à'}</div><div class="pp-client">${esc(c.company || c.name || '—')}</div><div class="pp-sub">${esc([c.company ? c.name : '', c.address, c.phone, c.email, c.ids].filter(Boolean).join('\n'))}</div></div>
+      <div><div class="pp-dates"><span>Date</span><b>${fdate(d.date)}</b>${isAv ? '' : `<span>${d.kind === 'facture' ? 'Échéance' : 'Valable jusqu\'au'}</span><b>${fdate(d.dueDate)}</b>`}${d.fromId && doc(d.fromId) ? `<span>${isAv ? 'Facture d\'origine' : 'Réf.'}</span><b>${esc(doc(d.fromId).number)}</b>` : ''}${docCur(d) !== 'XOF' ? `<span>Devise</span><b>${esc(docCur(d))}</b>` : ''}</div></div></div>
     ${d.subject ? `<div class="pp-obj"><b>Objet :</b> ${esc(d.subject)}</div>` : ''}
     <table class="pp-table"><thead><tr><th>Désignation</th><th class="r">Qté</th><th class="r">Prix unitaire</th><th class="r">Montant</th></tr></thead>
-    <tbody>${d.lines.filter(l => l.desc || num(l.price)).map(l => `<tr><td>${esc(l.desc)}</td><td class="r">${num(l.qty)}</td><td class="r">${money(num(l.price))}</td><td class="r"><b>${money(num(l.qty) * num(l.price))}</b></td></tr>`).join('') || '<tr><td colspan="4" style="color:#999">Ajoute une prestation…</td></tr>'}</tbody></table>
-    <div class="pp-tot-wrap">${paidStamp ? '<div class="pp-stamp">PAYÉE</div>' : '<span></span>'}<div class="pp-tot" style="margin-left:auto"><div><span>Sous-total</span><span>${money(t.sub)}</span></div>
-      ${t.disc ? `<div><span>Remise (${num(d.discount)} %)</span><span>− ${money(t.disc)}</span></div>` : ''}
-      ${d.taxOn ? `<div><span>${esc(s.taxLabel)} (${num(d.taxRate)} %)</span><span>${money(t.tax)}</span></div>` : ''}
-      <div class="grand"><span>Total${d.taxOn ? ' TTC' : ''}</span><span>${money(t.total)}</span></div>
-      ${num(d.deposit) && d.kind !== 'facture' ? `<div><span>Acompte à la commande (${num(d.deposit)} %)</span><b>${money(t.deposit)}</b></div>` : ''}
-      ${num(d.deposit) && d.kind === 'facture' && !t.paid ? `<div><span>Acompte demandé (${num(d.deposit)} %)</span><b>${money(t.deposit)}</b></div>` : ''}
-      ${d.kind === 'facture' && t.paid ? `<div class="paid"><span>Déjà réglé</span><span>− ${money(t.paid)}</span></div><div><b>Reste à payer</b><b>${money(t.due)}</b></div>` : ''}
+    <tbody>${d.lines.filter(l => l.desc || num(l.price)).map(l => `<tr><td>${esc(l.desc)}</td><td class="r">${num(l.qty)}</td><td class="r">${dm(d, num(l.price))}</td><td class="r"><b>${dm(d, num(l.qty) * num(l.price))}</b></td></tr>`).join('') || '<tr><td colspan="4" style="color:#999">Ajoute une prestation…</td></tr>'}</tbody></table>
+    <div class="pp-tot-wrap">${paidStamp ? '<div class="pp-stamp">PAYÉE</div>' : '<span></span>'}<div class="pp-tot" style="margin-left:auto"><div><span>Sous-total</span><span>${dm(d, t.sub)}</span></div>
+      ${t.disc ? `<div><span>Remise (${num(d.discount)} %)</span><span>− ${dm(d, t.disc)}</span></div>` : ''}
+      ${d.taxOn ? `<div><span>${esc(s.taxLabel)} (${num(d.taxRate)} %)</span><span>${dm(d, t.tax)}</span></div>` : ''}
+      <div class="grand"><span>${isAv ? 'Montant de l\'avoir' : 'Total'}${d.taxOn ? ' TTC' : ''}</span><span>${dm(d, t.total)}</span></div>
+      ${num(d.deposit) && !isFiscal(d) ? `<div><span>Acompte à la commande (${num(d.deposit)} %)</span><b>${dm(d, t.deposit)}</b></div>` : ''}
+      ${num(d.deposit) && d.kind === 'facture' && !t.paid ? `<div><span>Acompte demandé (${num(d.deposit)} %)</span><b>${dm(d, t.deposit)}</b></div>` : ''}
+      ${d.kind === 'facture' && t.credit ? `<div class="paid"><span>Avoir(s)</span><span>− ${dm(d, t.credit)}</span></div>` : ''}
+      ${d.kind === 'facture' && t.paid ? `<div class="paid"><span>Déjà réglé</span><span>− ${dm(d, t.paid)}</span></div>` : ''}
+      ${d.kind === 'facture' && (t.paid || t.credit) ? `<div><b>Reste à payer</b><b>${dm(d, t.due)}</b></div>` : ''}
     </div></div>
-    ${!d.taxOn ? `<div class="pp-legal" style="text-align:right;margin-top:6px">${esc(s.taxLabel)} non applicable</div>` : ''}
-    ${s.currency === 'XOF' || s.currency === 'XAF' ? `<div class="pp-words">Arrêté${d.kind === 'devis' ? ' le présent devis' : ' la présente facture'} à la somme de : <b style="color:#111">${frWords(t.total)} francs CFA</b>.</div>` : ''}
-    <div class="pp-foot"><div><div class="pp-lbl">Modalités de paiement</div>${esc(s.payInfo)}</div><div><div class="pp-lbl">Conditions</div>${esc(d.terms)}</div></div>
+    ${!d.taxOn && s.noTaxText ? `<div class="pp-legal" style="text-align:right;margin-top:6px">${esc(s.noTaxText)}</div>` : ''}
+    ${['XOF', 'XAF'].includes(docCur(d)) ? `<div class="pp-words">Arrêté${d.kind === 'devis' ? ' le présent devis' : isAv ? ' le présent avoir' : d.kind === 'proforma' ? ' la présente facture proforma' : ' la présente facture'} à la somme de : <b>${frWords(t.total)} francs CFA</b>.</div>` : ''}
+    ${isAv ? (d.notes ? '' : `<div class="pp-foot" style="grid-template-columns:1fr"><div>Le présent avoir annule et remplace, à hauteur du montant indiqué, la facture ${esc(doc(d.fromId)?.number || '')}.</div></div>`) : `<div class="pp-foot"><div><div class="pp-lbl">Modalités de paiement</div>${esc(s.payInfo)}${qr ? `<div class="pp-qr"><img src="${qr}" alt=""><div><b>Payer avec Wave</b><span>Scanne ce code avec l'app Wave</span></div></div>` : ''}</div><div><div class="pp-lbl">Conditions</div>${esc(d.terms)}${d.kind === 'facture' && s.legalNote ? `\n\n<span class="pp-small">${esc(s.legalNote)}</span>` : ''}</div></div>`}
     ${d.notes ? `<div style="margin-top:16px;white-space:pre-line">${esc(d.notes)}</div>` : ''}
-    ${d.kind !== 'facture' ? `<div class="pp-sign"><div>Bon pour accord — date, nom et signature du client</div><div style="text-align:right">${esc(s.name)}</div></div>` : ''}
-    <div class="pp-legal">${esc([s.business || s.name, s.address, s.ids].filter(Boolean).join(' · '))}</div>
+    ${!isFiscal(d) ? `<div class="pp-sign"><div>Bon pour accord — date, nom et signature du client</div><div style="text-align:right">${esc(s.name)}</div></div>` : ''}
+    <div class="pp-legal">${esc([s.business || s.name, s.address, ...legalIds(s)].filter(Boolean).join(' · '))}</div>
   </div>`;
 }
 const docFile = d => `${d.number} - ${cName(d.clientId)}`.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w .-]+/g, "").replace(/\s+/g, " ").trim();
-function markSent(d) { if (d.status === 'brouillon') { d.status = 'envoye'; save(); } }
+function markSent(d) { if (!isFiscal(d) && d.status === 'brouillon') { d.status = 'envoye'; save(); } }
 function printDoc(id) {
   const d = doc(id); if (!d) return;
   $('#print-root').innerHTML = paper(d);
@@ -1107,30 +1379,142 @@ async function pdfDoc(id) {
   if (!window.html2pdf) { if (IS_PAGE) return toast('Module PDF pas encore chargé : réessaie dans un instant', 'bad'); toast('Module PDF indisponible (connexion ?) : impression à la place', 'bad'); return printDoc(id); }
   const btn = $('[data-act=pdf]'); if (btn) btn.disabled = true;
   toast('Création du PDF…');
-  const host = document.createElement('div'); host.className = 'pdf-host'; host.innerHTML = paper(d); document.body.appendChild(host);
+  const host = document.createElement('div'); host.className = 'pdf-host'; host.innerHTML = paper(d); document.body.appendChild(host); host.firstElementChild.style.cssText += ';width:794px;max-width:none;min-height:1120px;box-shadow:none;border-radius:0';
   try {
     if (document.fonts && document.fonts.ready) await document.fonts.ready;
-    const blob = await window.html2pdf().set({ margin: 0, image: { type: 'jpeg', quality: 0.95 }, html2canvas: { scale: 2, backgroundColor: '#ffffff', useCORS: true, logging: false }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }, pagebreak: { mode: ['css', 'legacy'] } }).from(host.firstElementChild).outputPdf('blob');
+    const blob = await window.html2pdf().set({ margin: 0, image: { type: 'jpeg', quality: 0.95 }, html2canvas: { scale: 2, backgroundColor: S.settings.docStyle === 'sombre' ? '#141416' : '#ffffff', useCORS: true, logging: false }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }, pagebreak: { mode: ['css', 'legacy'] } }).from(host.firstElementChild).outputPdf('blob');
     if (await download(docFile(d) + '.pdf', blob, 'application/pdf')) { toast('PDF téléchargé'); markSent(d); }
   } catch (e) { console.warn(e); toast(IS_PAGE ? 'Création du PDF impossible, réessaie' : 'Création du PDF impossible : essaie « Imprimer »', 'bad'); }
   finally { host.remove(); if (btn) btn.disabled = false; if (location.hash.endsWith(d.id)) route(); }
 }
+async function htmlToPdf(html, filename, bg = '#ffffff') {
+  if (!window.html2pdf) { toast(IS_PAGE ? 'Module PDF pas encore chargé : réessaie dans un instant' : 'Module PDF indisponible (connexion ?)', 'bad'); return false; }
+  const host = document.createElement('div'); host.className = 'pdf-host'; host.innerHTML = html; document.body.appendChild(host); host.firstElementChild.style.cssText += ';width:794px;max-width:none;box-shadow:none;border-radius:0';
+  try {
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
+    const blob = await window.html2pdf().set({ margin: [0, 0, 0, 0], image: { type: 'jpeg', quality: 0.95 }, html2canvas: { scale: 2, backgroundColor: bg, useCORS: true, logging: false }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }, pagebreak: { mode: ['css', 'legacy'], avoid: ['tr', '.rp-block', 'h2'] } }).from(host.firstElementChild).outputPdf('blob');
+    return await download(filename, blob, 'application/pdf');
+  } catch (e) { console.warn(e); toast('Création du PDF impossible, réessaie', 'bad'); return false; }
+  finally { host.remove(); }
+}
+async function pdfReport(Y) {
+  Y = String(Y || today().slice(0, 4));
+  const s = S.settings, inc = allIncomes().filter(i => i.date.startsWith(Y)), exY = S.expenses.filter(e => (e.date || '').startsWith(Y));
+  const tot = { sal: sumBy(inc, i => i.source === 'salaire'), fl: sumBy(inc, i => i.source === 'freelance'), au: sumBy(inc, i => i.source === 'autre'), pro: sumBy(exY, e => e.scope !== 'perso'), perso: sumBy(exY, e => e.scope === 'perso') };
+  const all = tot.sal + tot.fl + tot.au, net = all - tot.pro - tot.perso;
+  const rows = Array.from({ length: 12 }, (_, k) => { const m = `${Y}-${pad(k + 1)}`, r = { m, sal: sumBy(inc, i => monthKey(i.date) === m && i.source === 'salaire'), fl: sumBy(inc, i => monthKey(i.date) === m && i.source === 'freelance'), au: sumBy(inc, i => monthKey(i.date) === m && i.source === 'autre'), exp: sumBy(exY, e => monthKey(e.date) === m) }; r.net = r.sal + r.fl + r.au - r.exp; return r; }).filter(r => r.sal || r.fl || r.au || r.exp);
+  const cats = scope => { const o = {}; exY.filter(e => (e.scope === 'perso') === (scope === 'perso')).forEach(e => o[e.category] = (o[e.category] || 0) + num(e.amount)); return Object.entries(o).sort((a, b) => b[1] - a[1]); };
+  const invs = S.docs.filter(d => isFiscal(d) && d.status !== 'brouillon' && (d.date || '').startsWith(Y)).sort((a, b) => a.number.localeCompare(b.number));
+  const byClient = {}; inc.filter(i => i.source === 'freelance').forEach(i => { const k = cName(i.clientId); byClient[k] = (byClient[k] || 0) + i.amount; });
+  const M = n => money(n), catT = list => list.length ? `<table class="rp-t"><tbody>${list.map(([c, a]) => `<tr><td>${esc(c)}</td><td class="r">${M(a)}</td></tr>`).join('')}</tbody></table>` : '<p style="color:#888">Aucune.</p>';
+  const html = `<div class="paper report" style="--pc:${esc(s.color || '#FF5A1F')}">
+    <div class="pp-top"><div>${s.logo ? `<img class="pp-logo" src="${s.logo}" alt="">` : `<div class="pp-brand">${esc(s.business || s.name)}</div>`}<div class="pp-me">${esc([s.name, s.title, s.ncc ? `NCC : ${s.ncc}` : ''].filter(Boolean).join('\n'))}</div></div><div class="pp-kind"><h1>Bilan ${esc(Y)}</h1><div class="no">Établi le ${fdate(today())}</div></div></div>
+    <h2>Synthèse</h2><div class="rp-kpis rp-block">
+      <div class="rp-kpi acc">Revenus totaux<b>${M(all)}</b></div><div class="rp-kpi">Salaire<b>${M(tot.sal)}</b></div><div class="rp-kpi">Freelance<b>${M(tot.fl)}</b></div><div class="rp-kpi">Autres revenus<b>${M(tot.au)}</b></div>
+      <div class="rp-kpi">Dépenses pro<b>${M(tot.pro)}</b></div><div class="rp-kpi">Dépenses perso<b>${M(tot.perso)}</b></div><div class="rp-kpi">Reste<b>${M(net)}</b></div><div class="rp-kpi">Taux d'épargne<b>${all ? Math.round(net / all * 100) : 0} %</b></div></div>
+    <h2>Mois par mois</h2><table class="rp-t"><thead><tr><th>Mois</th><th class="r">Salaire</th><th class="r">Freelance</th><th class="r">Autres</th><th class="r">Dépenses</th><th class="r">Reste</th></tr></thead><tbody>${rows.map(r => `<tr><td>${MONTHS[+r.m.slice(5) - 1]}</td><td class="r">${M(r.sal)}</td><td class="r">${M(r.fl)}</td><td class="r">${M(r.au)}</td><td class="r">${M(r.exp)}</td><td class="r">${M(r.net)}</td></tr>`).join('')}</tbody><tfoot><tr><td>Total</td><td class="r">${M(tot.sal)}</td><td class="r">${M(tot.fl)}</td><td class="r">${M(tot.au)}</td><td class="r">${M(tot.pro + tot.perso)}</td><td class="r">${M(net)}</td></tr></tfoot></table>
+    <div class="rp-cols rp-block"><div><h2>Dépenses pro par catégorie</h2>${catT(cats('pro'))}</div><div><h2>Dépenses perso par catégorie</h2>${catT(cats('perso'))}</div></div>
+    <h2>Factures et avoirs émis en ${esc(Y)}</h2>${invs.length ? `<table class="rp-t"><thead><tr><th>N°</th><th>Date</th><th>Client</th><th class="r">Montant</th><th class="r">Encaissé</th><th class="r">Reste</th></tr></thead><tbody>${invs.map(d => { const t = totals(d), k = rateOf(d); return `<tr><td>${esc(d.number)}</td><td>${fdate(d.date)}</td><td>${esc(cName(d.clientId))}</td><td class="r">${d.kind === 'avoir' ? '− ' : ''}${M(t.total * k)}</td><td class="r">${M(t.paid * k)}</td><td class="r">${d.kind === 'avoir' ? '—' : M(t.due * k)}</td></tr>`; }).join('')}</tbody></table>` : '<p style="color:#888">Aucune facture émise.</p>'}
+    ${Object.keys(byClient).length ? `<h2>Freelance encaissé par client</h2><table class="rp-t rp-block"><tbody>${Object.entries(byClient).sort((a, b) => b[1] - a[1]).map(([c, a]) => `<tr><td>${esc(c)}</td><td class="r">${M(a)}</td><td class="r">${tot.fl ? Math.round(a / tot.fl * 100) : 0} %</td></tr>`).join('')}</tbody></table>` : ''}
+    <div class="pp-legal" style="margin-top:28px">Montants en ${esc(CUR[s.currency].s)}. Document établi à partir des données saisies dans Dak Studio Gestion, à vérifier avec ton comptable.</div>
+  </div>`;
+  toast('Création du bilan PDF…');
+  if (await htmlToPdf(html, `Bilan ${Y} - ${(s.business || s.name || 'activite').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^\w .-]+/g, '')}.pdf`)) toast('Bilan PDF téléchargé');
+}
 function payModal(id) {
-  const d = doc(id), t = totals(d);
-  modal(`Encaisser ${d.number}`, `<div class="f"><div class="totals-mini"><div><span>Total</span><span>${money(t.total)}</span></div><div><span>Déjà réglé</span><span>${money(t.paid)}</span></div><div class="tt"><span>Reste</span><span>${money(t.due)}</span></div></div>
-    <div class="f2"><label class="fl">Montant<input class="in" name="amount" inputmode="decimal" required autofocus value="${t.due}"></label><label class="fl">Date<input class="in" type="date" name="date" value="${today()}"></label></div>
+  const d = doc(id), t = totals(d), isAv = d.kind === 'avoir', foreign = docCur(d) !== S.settings.currency;
+  const left = isAv ? Math.max(0, t.total - t.paid) : t.due;
+  modal(isAv ? `Rembourser ${d.number}` : `Encaisser ${d.number}`, `<div class="f"><div class="totals-mini"><div><span>${isAv ? 'Avoir' : 'Total'}</span><span>${dm(d, t.total)}</span></div>${t.credit ? `<div><span>Avoir(s)</span><span>− ${dm(d, t.credit)}</span></div>` : ''}<div><span>${isAv ? 'Déjà remboursé' : 'Déjà réglé'}</span><span>${dm(d, t.paid)}</span></div><div class="tt"><span>Reste</span><span>${dm(d, left)}</span></div></div>
+    <div class="f2"><label class="fl">Montant (${esc(CUR[docCur(d)].s)})<input class="in" name="amount" inputmode="decimal" required autofocus value="${left}"></label><label class="fl">Date<input class="in" type="date" name="date" value="${today()}"></label></div>
+    ${foreign ? `<label class="fl">Taux reçu : 1 ${esc(docCur(d))} = ? ${esc(CUR[S.settings.currency].s)}<input class="in" name="rate" inputmode="decimal" value="${esc(d.rate)}"><span class="hint">Le montant réellement reçu sur ton compte, converti, compte dans tes revenus.</span></label>` : ''}
     <label class="fl">Moyen de paiement<select class="in" name="method">${METHODS.map(m => opt(m, m, 'Wave')).join('')}</select></label>
-    <div class="row">${num(d.deposit) && !t.paid ? `<button type="button" class="btn sm" data-fill="${t.deposit}">Acompte ${num(d.deposit)} %</button>` : ''}<button type="button" class="btn sm" data-fill="${t.due}">Solde</button></div></div>`, {
-    submit: 'Enregistrer le paiement', onSubmit: f => {
+    <div class="row">${num(d.deposit) && !t.paid && !isAv ? `<button type="button" class="btn sm" data-fill="${t.deposit}">Acompte ${num(d.deposit)} %</button>` : ''}<button type="button" class="btn sm" data-fill="${left}">${isAv ? 'Totalité' : 'Solde'}</button></div></div>`, {
+    submit: isAv ? 'Enregistrer le remboursement' : 'Enregistrer le paiement', onSubmit: f => {
       const a = num(f.amount); if (a <= 0) return false;
-      (d.payments = d.payments || []).push({ id: uid(), date: f.date || today(), amount: a, method: f.method });
+      (d.payments = d.payments || []).push({ id: uid(), date: f.date || today(), amount: a, method: f.method, rate: foreign ? (num(f.rate) || rateOf(d)) : 1 });
+      if (isAv) { save(); toast('Remboursement enregistré'); return void route(); }
       const tt = totals(d);
       const p = project(d.projectId);
       if (p && tt.due <= 0.5 && ['livre', 'en_cours', 'revision'].includes(p.status)) p.status = 'paye';
-      save(); toast(tt.due <= 0.5 ? 'Facture soldée 🎉' : `Paiement enregistré · reste ${money(tt.due)}`); route();
+      save(); toast(tt.due <= 0.5 ? 'Facture soldée 🎉' : `Paiement enregistré · reste ${dm(d, tt.due)}`); route();
     }
   });
   $$('[data-fill]').forEach(b => b.onclick = () => { $('#m-body [name=amount]').value = b.dataset.fill; });
+}
+
+/* ---------- assistant (Claude, only on the hosted page) ---------- */
+const aiErr = e => { if (e && e.code === 'cancelled') return; if (e && e.code === 'not_granted') { SAMPLE = null; route(); } toast(e && e.code === 'not_granted' ? "Assistant non autorisé pour cette page" : e && e.code === 'rate_limited' ? 'Trop de demandes, réessaie dans un instant' : "L'assistant n'a pas pu répondre, réessaie", 'bad'); };
+const aiCtx = () => `Contexte : ${S.settings.name}, ${S.settings.title || 'directeur artistique'} freelance basé à ${S.settings.address || 'Abidjan'}. Devise : ${CUR[S.settings.currency].s}.`;
+async function aiLines(d, btn) {
+  if (!SAMPLE) return;
+  const lines = d.lines.filter(l => l.desc.trim());
+  if (!lines.length) return toast('Écris d\'abord au moins une ligne', 'bad');
+  btn.disabled = true; const old = btn.innerHTML; btn.innerHTML = `${ic('spark')}Claude réfléchit…`;
+  try {
+    const res = await SAMPLE.json(`${aiCtx()}\nRéécris les descriptions des prestations de ce ${KINDS[d.kind].toLowerCase()} pour qu'elles soient claires, professionnelles et précises : livrables, formats, nombre de pistes ou de corrections quand c'est pertinent. Français, une à deux lignes par prestation, sans prix. Garde exactement le même nombre de lignes et le même ordre.\nObjet : ${d.subject || '—'}\nLignes :\n${lines.map((l, i) => `${i + 1}. ${l.desc}`).join('\n')}\nRéponds uniquement en JSON : {"lines": ["…", "…"]}`);
+    const out = res && Array.isArray(res.lines) ? res.lines : null;
+    if (!out || out.length !== lines.length || out.some(x => typeof x !== 'string' || !x.trim())) throw { code: 'bad_shape' };
+    undoable('Descriptions améliorées par Claude', () => lines.forEach((l, i) => { l.desc = out[i].trim(); }));
+    route();
+  } catch (e) { aiErr(e); btn.disabled = false; btn.innerHTML = old; }
+}
+async function aiReminder(ta, level, d, sync, btn) {
+  if (!SAMPLE) return;
+  const base = ta.value; btn.disabled = true; ta.readOnly = true;
+  try {
+    await SAMPLE(`${aiCtx()}\nReformule ce message de relance de facture (${RLEVELS[level].l.toLowerCase()}) pour WhatsApp : naturel, poli, ${level === 1 ? 'chaleureux et léger' : level === 2 ? 'cordial mais direct' : 'ferme et professionnel'}, en français de Côte d'Ivoire, court. Garde exactement les montants, numéros, dates, liens et coordonnées de paiement. Réponds uniquement avec le message.\n\n${base}`, { onText: ({ text }) => { ta.value = text; sync(); } });
+  } catch (e) { aiErr(e); if (!ta.value.trim()) ta.value = base; sync(); }
+  finally { btn.disabled = false; ta.readOnly = false; }
+}
+async function aiEstimate(p, btn) {
+  if (!SAMPLE) return;
+  const r = rateCalc(); btn.disabled = true; const old = btn.innerHTML; btn.innerHTML = `${ic('spark')}Claude estime…`;
+  try {
+    const res = await SAMPLE.json(`${aiCtx()}\nEstime le prix d'un projet à partir de son brief. Tarif journalier minimum du freelance : ${Math.round(r.tjm)} ${CUR[S.settings.currency].s}. Ses prix catalogue :\n${S.catalog.map(x => `- ${x.label} : ${x.price}`).join('\n')}\nProjet : ${p.name} (${p.type})\nBrief : ${p.notes || '(pas de brief détaillé)'}\nPropose 2 à 6 lignes de devis réalistes pour le marché ivoirien, en t'appuyant sur le catalogue quand une prestation correspond. Réponds uniquement en JSON : {"lines":[{"desc":"…","qty":1,"price":0}],"days":0,"comment":"une phrase sur les hypothèses"}`);
+    const lines = (res && Array.isArray(res.lines) ? res.lines : []).filter(l => l && typeof l.desc === 'string' && isFinite(+l.price) && +l.price >= 0).slice(0, 8).map(l => ({ id: uid(), desc: l.desc.trim(), qty: Math.max(1, Math.round(+l.qty || 1)), price: niceRound(+l.price) || +l.price }));
+    if (!lines.length) throw { code: 'bad_shape' };
+    const tot = lines.reduce((a, l) => a + l.qty * l.price, 0);
+    modal(`Estimation · ${p.name}`, `<div class="f"><div class="t-wrap"><table class="t"><thead><tr><th>Prestation</th><th class="num">Qté</th><th class="num">Prix</th></tr></thead><tbody>${lines.map(l => `<tr><td>${esc(l.desc)}</td><td class="num">${l.qty}</td><td class="num">${money(l.price)}</td></tr>`).join('')}</tbody><tfoot><tr><td>Total</td><td></td><td class="num">${money(tot)}</td></tr></tfoot></table></div>
+      ${res.comment ? `<p class="ai-out" style="margin:0">${esc(String(res.comment))}${+res.days ? ` · environ ${esc(String(res.days))} jours` : ''}</p>` : ''}<p class="hint" style="margin:0">Estimation indicative : ajuste les lignes dans le devis.</p></div>`, {
+      submit: 'Créer le devis', onSubmit: () => { const q = newDoc('devis', { clientId: p.clientId, projectId: p.id, subject: p.name, lines }); if (!num(p.budget)) p.budget = tot; save(); toast('Devis créé à partir de l\'estimation'); go(`#document-${q.id}`); } });
+  } catch (e) { aiErr(e); }
+  finally { btn.disabled = false; btn.innerHTML = old; }
+}
+
+/* ---------- reminders ---------- */
+const RLEVELS = [null, { l: 'Rappel courtois' }, { l: 'Relance' }, { l: 'Dernier rappel' }];
+function reminderText(d, level) {
+  const c = client(d.clientId), t = totals(d), first = c ? ' ' + (c.name || '').split(' ')[0] : '';
+  const late = isOverdue(d) ? daysBetween(d.dueDate, today()) : 0, wave = waveFor(d), amt = dm(d, t.due);
+  const pay = S.settings.payInfo ? `\n\nPour le règlement :\n${S.settings.payInfo}` : '', sig = `\n\n${level === 1 ? 'Merci beaucoup' : 'Cordialement'},\n${S.settings.name}`;
+  if (level === 1) return `Bonjour${first},\n\nJ'espère que vous allez bien. Petit rappel concernant la facture ${d.number}${d.subject ? ` (« ${d.subject} »)` : ''} d'un montant de ${amt}, ${late ? `arrivée à échéance le ${fdate(d.dueDate)}` : `à régler avant le ${fdate(d.dueDate)}`}.${wave ? `\nPaiement Wave en un clic : ${wave}` : ''}${pay}${sig}`;
+  if (level === 2) return `Bonjour${first},\n\nSauf erreur de ma part, la facture ${d.number} de ${amt}, échue depuis le ${fdate(d.dueDate)}${late ? ` (${late} jours)` : ''}, n'a pas encore été réglée. Pourriez-vous me confirmer la date de paiement prévue ?${wave ? `\nPaiement Wave : ${wave}` : ''}${pay}${sig}`;
+  return `Bonjour${first},\n\nMalgré mes précédents rappels, la facture ${d.number} de ${amt}, échue le ${fdate(d.dueDate)}, reste impayée à ce jour. Je vous remercie de procéder au règlement sous 7 jours. Sans retour de votre part, je devrai engager les démarches prévues dans nos conditions.${pay}${sig}`;
+}
+const lastReminder = d => (d.reminders || []).slice(-1)[0];
+function remindModal(id) {
+  const d = doc(id); if (!d) return;
+  const c = client(d.clientId), prev = d.reminders || [];
+  let level = Math.min(3, prev.length + 1);
+  modal(`Relancer ${d.number}`, `<div class="f">
+    <div class="tabs" id="rl-tabs" role="tablist">${[1, 2, 3].map(n => `<button type="button" data-rl="${n}">${RLEVELS[n].l}</button>`).join('')}</div>
+    <label class="fl">Message (modifiable)<textarea class="in" id="rl-msg" style="min-height:230px"></textarea></label>
+    ${SAMPLE ? `<button type="button" class="btn sm" id="rl-ai" style="justify-self:start">${ic('spark')}Reformuler avec Claude</button>` : ''}
+    <div class="row"><a class="btn primary" id="rl-wa" target="_blank" rel="noopener">${ic('chat')}Envoyer sur WhatsApp</a><a class="btn" id="rl-mail">${ic('mail')}E-mail</a><button type="button" class="btn" id="rl-copy">${ic('copy')}Copier</button></div>
+    ${!c?.phone ? '<p class="hint" style="margin:0">Pas de numéro pour ce client : WhatsApp te laissera choisir le contact.</p>' : ''}
+    ${prev.length ? `<div><div class="small muted strong" style="margin-bottom:4px">Déjà relancé</div><div class="list">${prev.slice().reverse().map(r => `<div class="li small"><span class="grow">${RLEVELS[r.level]?.l || 'Relance'} · ${esc(r.channel)}</span><span class="muted">${fdate(r.date)}</span></div>`).join('')}</div></div>` : ''}
+  </div>`, { wide: true });
+  const ta = $('#rl-msg');
+  const sync = () => { const m = ta.value, phone = (c?.phone || '').replace(/[^\d]/g, ''); $('#rl-wa').href = `https://wa.me/${phone}?text=${encodeURIComponent(m)}`; $('#rl-mail').href = `mailto:${encodeURIComponent(c?.email || '')}?subject=${encodeURIComponent(`${RLEVELS[level].l} — facture ${d.number}`)}&body=${encodeURIComponent(m)}`; };
+  const setLevel = n => { level = n; $$('#rl-tabs [data-rl]').forEach(b => b.classList.toggle('on', +b.dataset.rl === n)); ta.value = reminderText(d, n); sync(); };
+  setLevel(level);
+  ta.oninput = sync;
+  $$('#rl-tabs [data-rl]').forEach(b => b.onclick = () => setLevel(+b.dataset.rl));
+  const log = ch => { (d.reminders = d.reminders || []).push({ id: uid(), date: today(), level, channel: ch }); save(); setTimeout(() => { closeModal(); toast('Relance notée dans l\'historique'); route(); }, 50); };
+  $('#rl-wa').addEventListener('click', () => log('WhatsApp'));
+  $('#rl-mail').addEventListener('click', () => log('E-mail'));
+  $('#rl-copy').onclick = async () => { let ok = true; try { await navigator.clipboard.writeText(ta.value); } catch { ok = false; ta.focus(); ta.select(); } if (ok) log('Message copié'); else toast('Copie bloquée : le texte est sélectionné, fais Copier', 'bad'); };
+  const ai = $('#rl-ai'); if (ai) ai.onclick = () => aiReminder(ta, level, d, sync, ai);
 }
 
 /* ---------- Finances ---------- */
@@ -1142,7 +1526,7 @@ routes.finances = v => {
   const incY = inc.filter(i => i.date.startsWith(y)).reduce((a, i) => a + i.amount, 0);
   const expY = S.expenses.filter(e => e.date.startsWith(y)).reduce((a, e) => a + num(e.amount), 0);
   const open = openInvoices();
-  const pend = open.reduce((a, d) => a + totals(d).due, 0);
+  const pend = open.reduce((a, d) => a + baseDue(d), 0);
   let body = '';
   if (tab === 'bilan') {
     const years = [...new Set([y, ...inc.map(i => i.date.slice(0, 4)), ...S.expenses.map(e => (e.date || '').slice(0, 4))])].filter(Boolean).sort().reverse();
@@ -1156,60 +1540,118 @@ routes.finances = v => {
     const byClient = {}; inY.filter(i => i.source === 'freelance').forEach(i => { const k = cName(i.clientId); byClient[k] = (byClient[k] || 0) + i.amount; });
     const cl = Object.entries(byClient).sort((a, b) => b[1] - a[1]).slice(0, 6), maxCl = Math.max(1, ...cl.map(c => c[1]));
     const pct = v => all ? Math.round(v / all * 100) : 0;
-    body = `<div class="row" style="margin-bottom:14px"><span class="muted small">Année</span><select class="in" id="fin-year" style="width:auto;height:36px">${years.map(x => opt(x, x, Y)).join('')}</select><span class="spacer"></span><button class="btn sm" data-act="new-salary">${ic('plus')}Salaire</button><button class="btn sm" data-act="new-income">${ic('plus')}Autre revenu</button></div>
+    body = `<div class="row" style="margin-bottom:14px"><span class="muted small">Année</span><select class="in" id="fin-year" style="width:auto;height:36px">${years.map(x => opt(x, x, Y)).join('')}</select><button class="btn sm" data-act="report" data-year="${Y}">${ic('down')}Rapport PDF</button><span class="spacer"></span><button class="btn sm" data-act="new-salary">${ic('plus')}Salaire</button><button class="btn sm" data-act="new-income">${ic('plus')}Autre revenu</button></div>
     <div class="kpis k4">
       <div class="card kpi hero"><div class="lbl">Revenus totaux ${Y}</div><div class="val">${money(all)}</div><div class="sub">${lastM ? `≈ ${money(all / lastM, { compact: 1 })} / mois` : ''}</div></div>
       <div class="card kpi"><div class="lbl"><span class="dot" style="background:var(--sal)"></span>Salaire</div><div class="val">${money(tot.sal)}</div><div class="sub">${pct(tot.sal)} % des revenus</div></div>
       <div class="card kpi"><div class="lbl"><span class="dot" style="background:var(--inc)"></span>Freelance${tot.au ? ' & autres' : ''}</div><div class="val">${money(tot.fl + tot.au)}</div><div class="sub">${pct(tot.fl + tot.au)} % des revenus</div></div>
-      <div class="card kpi"><div class="lbl"><span class="dot" style="background:var(--ok)"></span>Reste (revenus − dépenses)</div><div class="val ${net >= 0 ? 'up' : 'down'}">${money(net)}</div><div class="sub">Taux d'épargne : ${all ? Math.round(net / all * 100) : 0} %</div></div>
+      <div class="card kpi"><div class="lbl"><span class="dot" style="background:var(--ok)"></span>Reste (revenus − dépenses)</div><div class="val ${net >= 0 ? 'up' : 'down'}">${money(net)}</div><div class="sub">Taux d'épargne : ${all ? Math.round(net / all * 100) : 0} %${num(S.settings.savingsGoal) && rows.length ? ` · objectif ${money(num(S.settings.savingsGoal) * rows.length, { compact: 1 })}` : ''}</div></div>
     </div>
     ${all ? `<div class="card" style="margin-bottom:16px"><h3>Répartition des revenus ${Y}</h3><div class="split" role="img" aria-label="Salaire ${pct(tot.sal)} %, freelance ${pct(tot.fl)} %, autres ${pct(tot.au)} %"><i style="width:${pct(tot.sal)}%;background:var(--sal)"></i><i style="width:${pct(tot.fl)}%;background:var(--inc)"></i><i style="width:${pct(tot.au)}%;background:var(--warn)"></i></div><div class="legend"><span><i class="dot" style="background:var(--sal)"></i>Salaire ${pct(tot.sal)} %</span><span><i class="dot" style="background:var(--inc)"></i>Freelance ${pct(tot.fl)} %</span>${tot.au ? `<span><i class="dot" style="background:var(--warn)"></i>Autres ${pct(tot.au)} %</span>` : ''}</div></div>` : ''}
     <div class="grid g-dash"><div class="card"><h3>Mois par mois</h3>${rows.length ? `<div class="t-wrap"><table class="t"><thead><tr><th>Mois</th><th class="num hide-s">Salaire</th><th class="num hide-s">Freelance</th><th class="num hide-s">Autres</th><th class="num">Revenus</th><th class="num hide-s">Dépenses</th><th class="num">Reste</th></tr></thead><tbody>${rows.map(r => `<tr><td class="strong">${MONTHS[+r.m.slice(5) - 1]}</td><td class="num hide-s">${r.sal ? money(r.sal) : '—'}</td><td class="num hide-s">${r.fl ? money(r.fl) : '—'}</td><td class="num hide-s">${r.au ? money(r.au) : '—'}</td><td class="num strong">${money(r.tot)}</td><td class="num hide-s">${r.exp ? '− ' + money(r.exp) : '—'}</td><td class="num strong ${r.net >= 0 ? 'up' : 'down'}">${money(r.net)}</td></tr>`).join('')}</tbody><tfoot><tr><td>Total</td><td class="num hide-s">${money(tot.sal)}</td><td class="num hide-s">${money(tot.fl)}</td><td class="num hide-s">${money(tot.au)}</td><td class="num">${money(all)}</td><td class="num hide-s">− ${money(tot.exp)}</td><td class="num ${net >= 0 ? 'up' : 'down'}">${money(net)}</td></tr></tfoot></table></div>` : '<p class="muted">Pas encore de données.</p>'}</div>
-    <div class="card" style="align-self:start"><h3>Freelance par client · ${Y}</h3>${cl.length ? `<div class="hbar">${cl.map(([c, a]) => `<div class="hbar-row"><span class="small" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(c)}">${esc(c)}</span><div class="hbar-track"><div class="hbar-fill" style="width:${a / maxCl * 100}%"></div></div><span class="small strong">${compact(a)}</span></div>`).join('')}</div>` : '<p class="muted small">Aucun paiement client cette année.</p>'}</div></div>`;
+    <div class="grid" style="align-content:start">${(() => { const tp = S.projects.filter(p => projRate(p)).map(p => ({ p, r: projRate(p) })).sort((a, b) => b.r.v - a.r.v); const target = rateCalc().hourly; return tp.length ? `<div class="card"><h3>Rentabilité par projet</h3>${tp.slice(0, 8).map(({ p, r }) => `<a class="rate-row" href="#projet-${p.id}" style="text-decoration:none"><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(p.name)} <span class="small muted">· ${fmtDur(r.h * 60)}</span></span><b class="${r.v < target ? 'down' : 'up'}">${money(r.v, { compact: 1 })}/h</b></a>`).join('')}<p class="hint" style="margin:8px 0 0">Objectif : ${money(target, { compact: 1 })}/h. En rouge, les projets payés en dessous.</p></div>` : ''; })()}<div class="card" style="align-self:start"><h3>Freelance par client · ${Y}</h3>${cl.length ? `<div class="hbar">${cl.map(([c, a]) => `<div class="hbar-row"><span class="small" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(c)}">${esc(c)}</span><div class="hbar-track"><div class="hbar-fill" style="width:${a / maxCl * 100}%"></div></div><span class="small strong">${compact(a)}</span></div>`).join('')}</div>` : '<p class="muted small">Aucun paiement client cette année.</p>'}</div></div></div>`;
   } else if (tab === 'entrees') {
     const list = inc.filter(i => !UI.incSrc || i.source === UI.incSrc);
     body = `<div class="card"><h3>Revenus <select class="in" id="inc-src" style="margin-left:auto;width:auto;height:32px;font-size:13px">${opt('', 'Tous', UI.incSrc)}${Object.entries(SOURCES).map(([k, l]) => opt(k, l, UI.incSrc)).join('')}</select><button class="btn sm primary" data-act="new-income" aria-label="Nouveau revenu">${ic('plus')}</button></h3>${list.length ? `<div class="t-wrap"><table class="t"><thead><tr><th>Date</th><th>Libellé</th><th class="hide-s">Type</th><th class="num">Montant</th></tr></thead><tbody>${list.map(i => `<tr class="click" ${i.docId ? `data-href="#document-${i.docId}"` : `data-inc="${i.id}"`}><td class="small">${fdate(i.date)}</td><td><div class="strong">${esc(i.label)} ${i.recurring || i.recurOf ? ic('repeat', 'width:13px;height:13px;vertical-align:-2px;color:var(--muted)') : ''}</div><div class="small muted">${esc(i.method || '')}</div></td><td class="hide-s">${badge(SOURCES[i.source], i.source === 'salaire' ? 'b-info' : i.source === 'freelance' ? 'b-acc' : 'b-warn')}</td><td class="num strong up">+ ${money(i.amount)}</td></tr>`).join('')}</tbody></table></div>` : empty('in', 'Aucun revenu', 'Ajoute ton salaire et tes autres revenus. Les paiements de factures apparaissent ici automatiquement.', `<button class="btn primary" data-act="new-salary">${ic('plus')}Ajouter mon salaire</button>`)}</div>`;
   } else if (tab === 'attente') {
     const buckets = [['À échoir', d => !isOverdue(d)], ['1–30 j de retard', d => isOverdue(d) && daysBetween(d.dueDate, t) <= 30], ['31–60 j', d => isOverdue(d) && daysBetween(d.dueDate, t) > 30 && daysBetween(d.dueDate, t) <= 60], ['+ 60 j', d => isOverdue(d) && daysBetween(d.dueDate, t) > 60]];
     const quotes = S.docs.filter(d => d.kind !== 'facture' && d.status === 'envoye');
-    body = `<div class="kpis k4">${buckets.map(([l, f], i) => { const xs = open.filter(f); return `<div class="card kpi"><div class="lbl"><span class="dot" style="background:${['var(--info)', 'var(--warn)', 'var(--bad)', 'var(--bad)'][i]}"></span>${l}</div><div class="val">${money(xs.reduce((a, d) => a + totals(d).due, 0))}</div><div class="sub">${xs.length} facture(s)</div></div>`; }).join('')}</div>
-    <div class="card"><h3>Factures à encaisser</h3>${open.length ? `<div class="list">${open.sort((a, b) => a.dueDate.localeCompare(b.dueDate)).map(d => { const st = docState(d), tt = totals(d), c = client(d.clientId); const msg = `Bonjour${c ? ' ' + (c.name || '').split(' ')[0] : ''}, petit rappel concernant la facture ${d.number} (${money(tt.due)} restant), échue le ${fdate(d.dueDate)}. ${S.settings.payInfo ? 'Paiement : ' + S.settings.payInfo.replace(/\n/g, ' · ') + '. ' : ''}Merci !`; return `<div class="li" style="flex-wrap:wrap">${avatar(cName(d.clientId))}<a class="grow" href="#document-${d.id}" style="text-decoration:none"><div class="strong">${esc(cName(d.clientId))} · ${esc(d.number)}</div><div class="small muted">Échéance ${fdate(d.dueDate)}</div></a><div style="text-align:right"><div class="strong">${money(tt.due)}</div>${badge(st.l, st.c)}</div><div class="row"><a class="btn sm" target="_blank" rel="noopener" href="https://wa.me/${(c?.phone || '').replace(/[^\d]/g, '')}?text=${encodeURIComponent(msg)}">${ic('chat')}Relancer</a><button class="btn sm primary" data-act="pay" data-id="${d.id}">Encaisser</button></div></div>`; }).join('')}</div>` : empty('check', 'Tout est encaissé', 'Aucune facture en attente de paiement.')}</div>
+    body = `<div class="kpis k4">${buckets.map(([l, f], i) => { const xs = open.filter(f); return `<div class="card kpi"><div class="lbl"><span class="dot" style="background:${['var(--info)', 'var(--warn)', 'var(--bad)', 'var(--bad)'][i]}"></span>${l}</div><div class="val">${money(xs.reduce((a, d) => a + baseDue(d), 0))}</div><div class="sub">${xs.length} facture(s)</div></div>`; }).join('')}</div>
+    <div class="card"><h3>Factures à encaisser</h3>${open.length ? `<div class="list">${open.sort((a, b) => a.dueDate.localeCompare(b.dueDate)).map(d => { const st = docState(d), tt = totals(d), lr = lastReminder(d); return `<div class="li" style="flex-wrap:wrap">${avatar(cName(d.clientId))}<a class="grow" href="#document-${d.id}" style="text-decoration:none"><div class="strong">${esc(cName(d.clientId))} · ${esc(d.number)}</div><div class="small muted">Échéance ${fdate(d.dueDate)}${lr ? ` · relancée ${relDate(lr.date).toLowerCase()} (${d.reminders.length}×)` : ''}</div></a><div style="text-align:right"><div class="strong">${dm(d, tt.due)}</div>${badge(st.l, st.c)}</div><div class="row"><button class="btn sm" data-act="remind" data-id="${d.id}">${ic('chat')}Relancer</button><button class="btn sm primary" data-act="pay" data-id="${d.id}">Encaisser</button></div></div>`; }).join('')}</div>` : empty('check', 'Tout est encaissé', 'Aucune facture en attente de paiement.')}</div>
     ${quotes.length ? `<div class="card" style="margin-top:16px"><h3>Devis & proformas en attente de réponse</h3>${docTable(quotes)}</div>` : ''}`;
-  } else {
-    const cats = {}; const yearExp = S.expenses.filter(e => e.date.startsWith(y));
-    yearExp.forEach(e => cats[e.category] = (cats[e.category] || 0) + num(e.amount));
+  } else if (tab === 'depenses') {
+    const sc = UI.expScope || '';
+    const yearExp = S.expenses.filter(e => e.date.startsWith(y) && (!sc || (e.scope || 'pro') === sc));
+    const cats = {}; yearExp.forEach(e => cats[e.category] = (cats[e.category] || 0) + num(e.amount));
     const catList = Object.entries(cats).sort((a, b) => b[1] - a[1]);
     const maxC = Math.max(1, ...catList.map(c => c[1]));
-    const exps = S.expenses.filter(e => !UI.expCat || e.category === UI.expCat).sort((a, b) => b.date.localeCompare(a.date));
-    body = `<div class="grid g-dash"><div class="card"><h3>Dépenses <select class="in" id="exp-cat" style="margin-left:auto;width:auto;height:32px;font-size:13px">${opt('', 'Toutes catégories', UI.expCat)}${ECATS.map(c => opt(c, c, UI.expCat)).join('')}</select><button class="btn sm primary" data-act="new-expense">${ic('plus')}</button></h3>
-      ${exps.length ? `<div class="t-wrap"><table class="t"><thead><tr><th>Date</th><th>Libellé</th><th class="hide-s">Catégorie</th><th class="num">Montant</th></tr></thead><tbody>${exps.map(e => `<tr class="click" data-exp="${e.id}"><td class="small">${fdate(e.date)}</td><td><div class="strong">${esc(e.label)} ${e.recurring || e.recurOf ? ic('repeat', 'width:13px;height:13px;vertical-align:-2px;color:var(--muted)') : ''} ${e.receipt ? ic('receipt', 'width:13px;height:13px;vertical-align:-2px;color:var(--accent)') : ''}</div>${e.projectId && project(e.projectId) ? `<div class="small muted">${esc(project(e.projectId).name)}</div>` : ''}</td><td class="hide-s small">${esc(e.category)}</td><td class="num strong">− ${money(num(e.amount))}</td></tr>`).join('')}</tbody></table></div>` : empty('out', 'Aucune dépense', 'Ajoute tes abonnements (Adobe, Figma…), matériel, sous-traitance… Les dépenses mensuelles se répètent automatiquement.', `<button class="btn primary" data-act="new-expense">${ic('plus')}Ajouter une dépense</button>`)}</div>
-      <div class="card" style="align-self:start"><h3>Par catégorie · ${y}</h3>${catList.length ? `<div class="hbar">${catList.map(([c, a]) => `<div class="hbar-row"><span class="small" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(c)}">${esc(c)}</span><div class="hbar-track"><div class="hbar-fill" style="width:${a / maxC * 100}%"></div></div><span class="small strong">${compact(a)}</span></div>`).join('')}</div>` : '<p class="muted small">Pas encore de données.</p>'}</div></div>`;
+    const exps = S.expenses.filter(e => (!sc || (e.scope || 'pro') === sc) && (!UI.expCat || e.category === UI.expCat)).sort((a, b) => b.date.localeCompare(a.date));
+    const catOpts = sc === 'perso' ? PCATS : sc === 'pro' ? ECATS : [...ECATS, ...PCATS];
+    const B = S.settings.budgets || {}, bCats = PCATS.filter(c => B[c] || S.expenses.some(e => e.scope === 'perso' && e.category === c && monthKey(e.date) === mk));
+    const proY = sumBy(S.expenses, e => e.date.startsWith(y) && e.scope !== 'perso'), persoY = sumBy(S.expenses, e => e.date.startsWith(y) && e.scope === 'perso');
+    body = `<div class="row" style="margin-bottom:14px"><div class="seg" role="radiogroup" aria-label="Filtrer">${[['', 'Toutes'], ['pro', `Pro · ${compact(proY)}`], ['perso', `Perso · ${compact(persoY)}`]].map(([k, l]) => `<button type="button" data-expscope="${k}" class="${sc === k ? 'on' : ''}">${l}</button>`).join('')}</div></div>
+    <div class="grid g-dash"><div class="card"><h3>Dépenses <select class="in" id="exp-cat" style="margin-left:auto;width:auto;height:32px;font-size:13px;max-width:46%">${opt('', 'Toutes catégories', UI.expCat)}${catOpts.map(c => opt(c, c, UI.expCat)).join('')}</select><button class="btn sm primary" data-act="new-expense" aria-label="Nouvelle dépense">${ic('plus')}</button></h3>
+      ${exps.length ? `<div class="t-wrap"><table class="t"><thead><tr><th>Date</th><th>Libellé</th><th class="hide-s">Catégorie</th><th class="num">Montant</th></tr></thead><tbody>${exps.map(e => `<tr class="click" data-exp="${e.id}"><td class="small">${fdate(e.date)}</td><td><div class="strong">${esc(e.label)} ${e.recurring || e.recurOf ? ic('repeat', 'width:13px;height:13px;vertical-align:-2px;color:var(--muted)') : ''} ${e.receipt || e.link ? ic('receipt', 'width:13px;height:13px;vertical-align:-2px;color:var(--accent)') : ''}</div><div class="small muted">${e.scope === 'perso' ? 'Perso' : 'Pro'}${e.projectId && project(e.projectId) ? ' · ' + esc(project(e.projectId).name) : ''}</div></td><td class="hide-s small">${esc(e.category)}</td><td class="num strong">− ${money(num(e.amount))}</td></tr>`).join('')}</tbody></table></div>` : empty('out', 'Aucune dépense', 'Ajoute tes abonnements (Adobe, Figma…), ton matériel, mais aussi tes dépenses perso si tu veux suivre ton budget.', `<button class="btn primary" data-act="new-expense">${ic('plus')}Ajouter une dépense</button>`)}</div>
+      <div class="grid" style="align-content:start">
+      ${sc !== 'pro' ? `<div class="card"><h3>Budgets perso · ${MONTHS[+mk.slice(5) - 1]} <button class="btn sm ghost" data-act="goals">Gérer</button></h3>${bCats.length ? bCats.map(c => { const spent = sumBy(S.expenses, e => e.scope === 'perso' && e.category === c && monthKey(e.date) === mk), b = num(B[c]); const r = b ? spent / b : 0; return `<div class="goal"><div class="goal-h"><span>${esc(c)}</span><b>${money(spent, { compact: 1 })}${b ? ` / ${money(b, { compact: 1 })}` : ''}</b></div>${b ? `<div class="progress2 ${r > 1 ? 'over' : r > .8 ? 'warn' : 'ok'}"><i class="a" style="width:${Math.min(100, r * 100)}%"></i></div><div class="small ${r > 1 ? 'down' : 'muted'}">${r > 1 ? `Dépassé de ${money(spent - b)}` : `Reste ${money(b - spent)}`}</div>` : '<div class="small muted">Pas de budget fixé</div>'}</div>`; }).join('') : `<p class="muted small" style="margin:0">Fixe un budget par catégorie (logement, alimentation…) pour suivre tes dépenses perso.</p>`}</div>` : ''}
+      <div class="card"><h3>Par catégorie · ${y}</h3>${catList.length ? `<div class="hbar">${catList.map(([c, a]) => `<div class="hbar-row"><span class="small" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(c)}">${esc(c)}</span><div class="hbar-track"><div class="hbar-fill" style="width:${a / maxC * 100}%;${PCATS.includes(c) ? 'background:var(--warn)' : ''}"></div></div><span class="small strong">${compact(a)}</span></div>`).join('')}</div>` : '<p class="muted small">Pas encore de données.</p>'}</div></div></div>`;
+  } else if (tab === 'tarifs') {
+    const R = S.settings.rate;
+    const RF = (k, l, hint, ph = '') => `<label class="fl">${l}<input class="in" data-rate="${k}" inputmode="decimal" value="${esc(R[k] ?? '')}" placeholder="${esc(ph)}">${hint ? `<span class="hint">${hint}</span>` : ''}</label>`;
+    body = `<div class="grid g-dash" style="grid-template-columns:minmax(0,1fr) minmax(0,1.4fr)"><div class="card" style="align-self:start"><h3>Tes paramètres</h3><div class="f">
+      ${RF('target', 'Revenu freelance net visé par mois', 'Ce que tu veux garder pour toi, après charges et impôts.', 'Ex. 500000')}
+      ${RF('charges', 'Frais pro par mois', `Vide = moyenne de tes 3 derniers mois (${money(rateCalc().chargesAuto)}).`, String(rateCalc().chargesAuto))}
+      <div class="f2">${RF('days', 'Jours facturables / mois', 'Hors salariat : soirs, week-ends, congés.')}${RF('hours', 'Heures par jour')}</div>
+      ${RF('margin', 'Marge de sécurité (%)', 'Pour les temps non facturés : échanges, corrections, prospection.')}
+      <p class="hint" style="margin:0">Impôts et charges : ${num(S.settings.savePct)} % (réglable dans Paramètres › Facturation).</p></div></div>
+      <div id="rate-out"></div></div>`;
+  } else if (tab === 'prevision') {
+    const cash = S.settings.cashBalance === '' || S.settings.cashBalance == null ? null : num(S.settings.cashBalance);
+    const ev = forecast(90), start = cash ?? 0;
+    let run = start, firstNeg = null; ev.forEach(e => { run += e.amount; e.bal = run; if (cash !== null && run < 0 && !firstNeg) firstNeg = e.date; });
+    const at = days => { const end = addDays(t, days), xs = ev.filter(e => e.date <= end); return { inn: xs.filter(e => e.amount > 0).reduce((a, e) => a + e.amount, 0), out: -xs.filter(e => e.amount < 0).reduce((a, e) => a + e.amount, 0), bal: start + xs.reduce((a, e) => a + e.amount, 0) }; };
+    const pts = Array.from({ length: 14 }, (_, w) => { const d = addDays(t, w * 7); return { v: start + ev.filter(e => e.date <= d).reduce((a, e) => a + e.amount, 0), label: w % 2 === 0 ? `${new Date(d + 'T00:00:00').getDate()} ${MONTHS[+d.slice(5, 7) - 1]}` : '' }; });
+    const potential = S.docs.filter(d => (d.kind === 'devis' || d.kind === 'proforma') && ['envoye', 'accepte'].includes(d.status)).reduce((a, d) => a + totals(d).total * rateOf(d), 0);
+    const byMonth = {}; ev.forEach(e => (byMonth[monthKey(e.date)] = byMonth[monthKey(e.date)] || []).push(e));
+    body = `<div class="card" style="margin-bottom:16px"><h3>Ton point de départ</h3><div class="cash-in"><label class="fl" style="flex:1;min-width:220px">Solde disponible aujourd'hui (banque + mobile money)<input class="in" id="cash" inputmode="decimal" value="${cash === null ? '' : esc(cash)}" placeholder="Ex. 350000"></label><span class="hint" style="flex:2;min-width:220px">${cash === null ? 'Indique ton solde pour voir ton solde prévu. Sans lui, la prévision montre seulement les entrées et sorties à venir.' : `Mis à jour ${S.settings.cashDate ? 'le ' + fdate(S.settings.cashDate) : ''}. Pense à l'actualiser de temps en temps.`}</span></div></div>
+    ${firstNeg ? `<div class="warn-bar" style="background:var(--bad-soft);color:var(--bad)">${ic('alert')}<span>Attention : ton solde passerait sous zéro vers le ${fdate(firstNeg)}. Relance les factures en attente ou décale une dépense.</span></div>` : ''}
+    <div class="kpis k3">${[30, 60, 90].map((n, i) => { const r = at(n); return `<div class="card kpi ${i === 0 ? 'hero' : ''}"><div class="lbl">${cash === null ? 'Flux net' : 'Solde prévu'} dans ${n} jours</div><div class="val ${i && r.bal < 0 ? 'down' : ''}">${money(cash === null ? r.inn - r.out : r.bal)}</div><div class="sub">+ ${money(r.inn, { compact: 1 })} · − ${money(r.out, { compact: 1 })}</div></div>`; }).join('')}</div>
+    <div class="grid g-dash"><div class="card"><h3>${cash === null ? 'Flux cumulés' : 'Solde prévu'} · 13 semaines</h3>${lineChart(pts)}<p class="hint" style="margin:10px 0 0">Compte ton salaire, tes revenus et dépenses mensuels, et les factures en attente à leur date d'échéance (celles en retard sont comptées aujourd'hui).${potential ? ` Non compté : ${money(potential)} de devis et proformas en attente de réponse.` : ''}</p></div>
+    <div class="card" style="align-self:start"><h3>À venir</h3>${ev.length ? Object.entries(byMonth).map(([m, xs]) => `<div class="small muted strong" style="margin:8px 0 2px">${MONTHS[+m.slice(5) - 1]} ${m.slice(0, 4)}</div><div class="list">${xs.map(e => `<${e.href ? `a href="${e.href}"` : 'div'} class="li"><div class="grow"><div class="strong">${esc(e.label)}</div><div class="small muted">${fdate(e.date)} · ${FC_KIND[e.kind][0]}${e.late ? ' · en retard' : ''}${e.recurring ? ' · mensuel' : ''}</div></div><div style="text-align:right"><div class="strong ${e.amount >= 0 ? 'amt-in' : 'amt-out'}">${e.amount >= 0 ? '+' : '−'} ${money(Math.abs(e.amount), { compact: 1 })}</div>${cash !== null ? `<div class="small muted">${money(e.bal, { compact: 1 })}</div>` : ''}</div></${e.href ? 'a' : 'div'}>`).join('')}</div>`).join('') : '<p class="muted">Rien de prévu sur 90 jours. Ajoute ton salaire et tes dépenses mensuelles.</p>'}</div></div>`;
   }
   v.innerHTML = `<div class="head"><div><h2>Finances</h2><p>Année ${y} · revenus ${money(incY)} · dépenses ${money(expY)} · reste <b class="${incY - expY >= 0 ? 'up' : 'down'}">${money(incY - expY)}</b></p></div>
     <div class="row"><button class="btn" data-act="csv">${ic('down')}Export CSV</button><button class="btn" data-act="new-income">${ic('in')}Revenu</button><button class="btn primary" data-act="new-expense">${ic('plus')}Dépense</button></div></div>
-  <div class="tabs" style="margin-bottom:16px">${[['bilan', 'Bilan'], ['entrees', 'Revenus'], ['attente', `En attente · ${compact(pend)}`], ['depenses', 'Dépenses']].map(([k, l]) => `<button class="${tab === k ? 'on' : ''}" data-fintab="${k}">${l}</button>`).join('')}</div>${body}`;
+  <div class="tabs" style="margin-bottom:16px">${[['bilan', 'Bilan'], ['entrees', 'Revenus'], ['attente', `En attente · ${compact(pend)}`], ['depenses', 'Dépenses'], ['prevision', 'Prévision'], ['tarifs', 'Tarifs']].map(([k, l]) => `<button class="${tab === k ? 'on' : ''}" data-fintab="${k}">${l}</button>`).join('')}</div>${body}`;
   const sel = $('#exp-cat'); if (sel) sel.onchange = () => { UI.expCat = sel.value; route(); };
+  const ro = $('#rate-out');
+  if (ro) {
+    const draw = () => {
+      const r = rateCalc();
+      ro.innerHTML = `<div class="card" style="margin-bottom:16px"><h3>Ton tarif minimum</h3>
+        <div class="kpis k3" style="margin-bottom:6px"><div class="card kpi hero"><div class="lbl">Tarif journalier (TJM)</div><div class="val">${money(niceRound(r.tjm))}</div><div class="sub">par jour facturé</div></div><div class="card kpi"><div class="lbl">Taux horaire</div><div class="val">${money(niceRound(r.hourly))}</div><div class="sub">${num(S.settings.rate.hours)} h / jour</div></div><div class="card kpi"><div class="lbl">Ton taux réel</div><div class="val ${r.real === null ? '' : r.real < r.hourly ? 'down' : 'up'}">${r.real === null ? '—' : money(niceRound(r.real))}</div><div class="sub">${r.real === null ? 'Suis ton temps sur tes projets' : `sur ${fmtDur(r.tMin)} suivies · ${Math.round(r.real / r.hourly * 100)} % de l'objectif`}</div></div></div>
+        <div class="rate-row"><span>Chiffre d'affaires freelance à faire par mois</span><b>${money(niceRound(r.needCA))}</b></div>
+        <div class="rate-row"><span>Dont frais pro</span><b>${money(r.charges)}</b></div>
+        <div class="rate-row"><span>Dont impôts et charges (${num(S.settings.savePct)} %)</span><b>${money(niceRound(r.needCA * num(S.settings.savePct) / 100))}</b></div></div>
+        <div class="card"><h3>Prix conseillés pour ton catalogue</h3><p class="hint" style="margin-top:-6px">Indique combien de jours te prend chaque prestation.</p>
+        <div class="t-wrap"><table class="t"><thead><tr><th>Prestation</th><th class="num">Jours</th><th class="num hide-s">Prix actuel</th><th class="num">Conseillé</th><th></th></tr></thead><tbody>${S.catalog.map(x => { const sug = num(x.days) ? niceRound(num(x.days) * r.tjm) : 0, diff = sug && num(x.price) ? Math.round((num(x.price) - sug) / sug * 100) : null; return `<tr><td>${esc(x.label)}</td><td class="num"><input class="in" data-cdays="${x.id}" inputmode="decimal" value="${esc(x.days ?? '')}" placeholder="—" style="width:64px;height:34px;text-align:right" aria-label="Jours pour ${esc(x.label)}"></td><td class="num hide-s">${money(num(x.price))}${diff !== null ? `<div class="small ${diff < -5 ? 'down' : diff > 5 ? 'up' : 'muted'}">${diff > 0 ? '+' : ''}${diff} %</div>` : ''}</td><td class="num strong">${sug ? money(sug) : '—'}</td><td class="num">${sug && sug !== num(x.price) ? `<button class="btn sm" data-apply="${x.id}">Appliquer</button>` : ''}</td></tr>`; }).join('')}</tbody></table></div></div>`;
+      $$('[data-cdays]', ro).forEach(i => i.onchange = () => { const x = S.catalog.find(c => c.id === i.dataset.cdays); x.days = i.value.trim() === '' ? '' : num(i.value); save(); draw(); });
+      $$('[data-apply]', ro).forEach(b => b.onclick = () => { const x = S.catalog.find(c => c.id === b.dataset.apply); const old = x.price; undoable(`Prix mis à jour (${money(old)} → ${money(niceRound(num(x.days) * rateCalc().tjm))})`, () => { x.price = niceRound(num(x.days) * rateCalc().tjm); }); draw(); });
+    };
+    draw();
+    $$('[data-rate]').forEach(i => i.oninput = () => { const k = i.dataset.rate; S.settings.rate[k] = k === 'charges' && i.value.trim() === '' ? '' : num(i.value); save(); draw(); });
+  }
+  $$('[data-expscope]').forEach(b => b.onclick = () => { UI.expScope = b.dataset.expscope; UI.expCat = ''; route(); });
+  const ci = $('#cash'); if (ci) { ci.oninput = () => { S.settings.cashBalance = ci.value.trim() === '' ? '' : num(ci.value); S.settings.cashDate = today(); save(); }; ci.onchange = () => route(); }
   $$('[data-exp]').forEach(r => r.onclick = () => expenseModal(r.dataset.exp));
   $$('[data-inc]').forEach(r => r.onclick = () => incomeModal(r.dataset.inc));
   const ys = $('#fin-year'); if (ys) ys.onchange = () => { UI.year = ys.value; route(); };
   const is = $('#inc-src'); if (is) is.onchange = () => { UI.incSrc = is.value; route(); };
 };
 function expenseModal(id, presetProject) {
-  const e = id ? S.expenses.find(x => x.id === id) : { date: today(), category: ECATS[0], projectId: presetProject || '' };
+  const e = id ? S.expenses.find(x => x.id === id) : { date: today(), category: ECATS[0], projectId: presetProject || '', scope: 'pro' };
   let receipt = e.receipt || '';
+  const sc0 = e.scope === 'perso' ? 'perso' : 'pro';
   modal(id ? 'Modifier la dépense' : 'Nouvelle dépense', `<div class="f">
+    <div class="seg" role="radiogroup" aria-label="Type de dépense"><button type="button" data-scope="pro" class="${sc0 === 'pro' ? 'on' : ''}">Pro (activité)</button><button type="button" data-scope="perso" class="${sc0 === 'perso' ? 'on' : ''}">Perso</button></div><input type="hidden" name="scope" value="${sc0}">
     <label class="fl">Libellé<input class="in" name="label" required autofocus value="${esc(e.label)}" placeholder="Ex. Abonnement Adobe Creative Cloud"></label>
     <div class="f2"><label class="fl">Montant (${CUR[S.settings.currency].s})<input class="in" name="amount" inputmode="decimal" required value="${esc(e.amount ?? '')}"></label><label class="fl">Date<input class="in" type="date" name="date" value="${esc(e.date)}"></label></div>
-    <div class="f2"><label class="fl">Catégorie<select class="in" name="category">${ECATS.map(c => opt(c, c, e.category)).join('')}</select></label><label class="fl">Projet lié<select class="in" name="projectId">${projectOpts(e.projectId)}</select></label></div>
+    <div class="f2"><label class="fl">Catégorie<select class="in" name="category">${(sc0 === 'perso' ? PCATS : ECATS).map(c => opt(c, c, e.category)).join('')}</select></label><label class="fl f-proj" style="${sc0 === 'perso' ? 'visibility:hidden' : ''}">Projet lié<select class="in" name="projectId">${projectOpts(e.projectId)}</select></label></div>
     ${e.recurOf ? '<p class="hint">Copie automatique d\'une dépense mensuelle.</p>' : `<label class="check"><input type="checkbox" name="recurring" ${e.recurring ? 'checked' : ''}> Dépense mensuelle (se répète chaque mois)</label>`}
     <label class="fl">Justificatif (photo ou PDF)<input class="in" type="file" id="receipt" accept="image/*,application/pdf" style="padding-top:9px"><span class="hint" id="rc-info">${receipt ? `Justificatif joint · <a href="${receipt}" target="_blank" download="justificatif">ouvrir</a>` : 'Facultatif — les images sont compressées.'}</span></label>
+    <label class="fl">Ou lien vers le justificatif (Drive, Dropbox…)<input class="in" name="link" type="url" inputmode="url" value="${esc(e.link || '')}" placeholder="https://drive.google.com/…">${/^https?:\/\//.test(e.link || '') ? `<a class="hint" href="${esc(e.link)}" target="_blank" rel="noopener" style="color:var(--accent-text)">Ouvrir le lien</a>` : ''}</label>
     <label class="fl">Note<textarea class="in" name="note" style="min-height:60px">${esc(e.note || '')}</textarea></label></div>`, {
     onSubmit: f => {
-      const o = { label: f.label.trim(), amount: num(f.amount), date: f.date || today(), category: f.category, projectId: f.projectId, recurring: !!f.recurring, note: f.note, receipt };
+      const o = { label: f.label.trim(), amount: num(f.amount), date: f.date || today(), category: f.category, scope: f.scope === 'perso' ? 'perso' : 'pro', projectId: f.scope === 'perso' ? '' : f.projectId, recurring: !!f.recurring, note: f.note, receipt, link: (f.link || '').trim() };
       if (id) Object.assign(e, o); else S.expenses.push({ id: uid(), ...o });
       ensureRecurring(); save(); toast('Dépense enregistrée'); route();
     },
-    danger: id ? { label: 'Supprimer', run: () => { S.expenses = S.expenses.filter(x => x.id !== id && (e.recurring ? x.recurOf !== id : true)); save(); toast('Dépense supprimée'); route(); }, confirm: e.recurring ? 'Supprimer cette dépense mensuelle et toutes ses copies ?' : 'Supprimer cette dépense ?' } : null,
+    danger: id ? { label: 'Supprimer', run: () => { undoable('Dépense supprimée', () => { S.expenses = S.expenses.filter(x => x.id !== id && (e.recurring ? x.recurOf !== id : true)); }); route(); }, confirm: e.recurring ? 'Supprimer cette dépense mensuelle et toutes ses copies ?' : 'Supprimer cette dépense ?' } : null,
+  });
+  $$('#m-body [data-scope]').forEach(b => b.onclick = () => {
+    const sc = b.dataset.scope; $('#m-body [name=scope]').value = sc;
+    $$('#m-body [data-scope]').forEach(x => x.classList.toggle('on', x === b));
+    $('#m-body [name=category]').innerHTML = (sc === 'perso' ? PCATS : ECATS).map(c => opt(c, c)).join('');
+    $('#m-body .f-proj').style.visibility = sc === 'perso' ? 'hidden' : '';
   });
   $('#receipt').onchange = async ev => {
     const file = ev.target.files[0]; if (!file) return;
@@ -1250,7 +1692,7 @@ function incomeModal(id, preset = {}) {
       if (id) Object.assign(i, o); else S.incomes.push({ id: uid(), ...o });
       ensureRecurring(); save(); toast(o.source === 'salaire' ? 'Salaire enregistré' : 'Revenu enregistré'); route();
     },
-    danger: id ? { label: 'Supprimer', confirm: i.recurring ? 'Supprimer ce revenu mensuel et toutes ses copies ?' : 'Supprimer ce revenu ?', run: () => { S.incomes = S.incomes.filter(x => x.id !== id && (i.recurring ? x.recurOf !== id : true)); save(); toast('Revenu supprimé'); route(); } } : null,
+    danger: id ? { label: 'Supprimer', confirm: i.recurring ? 'Supprimer ce revenu mensuel et toutes ses copies ?' : 'Supprimer ce revenu ?', run: () => { undoable('Revenu supprimé', () => { S.incomes = S.incomes.filter(x => x.id !== id && (i.recurring ? x.recurOf !== id : true)); }); route(); } } : null,
   });
   $('#m-body [name=source]').addEventListener('change', () => { const on = sal(); $('#m-body .f-client').style.display = on ? 'none' : ''; $('#m-body .lb-label').textContent = on ? 'Employeur' : 'Libellé'; const r = $('#m-body [name=recurring]'); if (r && on) r.checked = true; });
 }
@@ -1258,7 +1700,7 @@ function incomeModal(id, preset = {}) {
 /* ---------- Clients ---------- */
 routes.clients = v => {
   setTitle('Clients');
-  const stats = c => { const ds = S.docs.filter(d => d.clientId === c.id && d.kind === 'facture' && d.status !== 'brouillon'); return { billed: ds.reduce((a, d) => a + totals(d).total, 0), due: ds.reduce((a, d) => a + totals(d).due, 0), projects: S.projects.filter(p => p.clientId === c.id).length }; };
+  const stats = c => { const ds = S.docs.filter(d => d.clientId === c.id && d.kind === 'facture' && d.status !== 'brouillon'); return { billed: ds.reduce((a, d) => a + (totals(d).total - totals(d).credit) * rateOf(d), 0), due: ds.reduce((a, d) => a + baseDue(d), 0), projects: S.projects.filter(p => p.clientId === c.id).length }; };
   const list = S.clients.map(c => ({ c, s: stats(c) })).sort((a, b) => b.s.billed - a.s.billed);
   v.innerHTML = `<div class="head"><div><h2>Clients</h2><p>${S.clients.length} client(s) · classés par chiffre d'affaires.</p></div><button class="btn primary" data-act="new-client">${ic('plus')}Nouveau client</button></div>
   ${list.length ? `<div class="grid g3">${list.map(({ c, s }) => `<a class="card" href="#client-${c.id}" style="text-decoration:none;display:grid;gap:14px"><div class="row" style="flex-wrap:nowrap">${avatar(c.company || c.name)}<div style="min-width:0"><div class="strong" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(c.company || c.name)}</div><div class="small muted" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(c.company ? c.name : (c.email || c.phone || ''))}</div></div></div>
@@ -1270,14 +1712,14 @@ function clientModal(id) {
     <div class="f2"><label class="fl">Nom & prénom<input class="in" name="name" required autofocus value="${esc(c.name)}"></label><label class="fl">Entreprise<input class="in" name="company" value="${esc(c.company)}" placeholder="Facultatif"></label></div>
     <div class="f2"><label class="fl">Téléphone / WhatsApp<input class="in" name="phone" type="tel" value="${esc(c.phone)}" placeholder="+225 …"></label><label class="fl">E-mail<input class="in" name="email" type="email" value="${esc(c.email)}"></label></div>
     <label class="fl">Adresse<input class="in" name="address" value="${esc(c.address)}" placeholder="Ville, quartier…"></label>
-    <label class="fl">Identifiants (NCC, RCCM…)<input class="in" name="ids" value="${esc(c.ids)}" placeholder="Apparaît sur les documents"></label>
+    <label class="fl">NCC / RCCM du client<input class="in" name="ids" value="${esc(c.ids)}" placeholder="Pour les clients entreprises · apparaît sur les factures"></label>
     <label class="fl">Notes<textarea class="in" name="notes" style="min-height:60px">${esc(c.notes)}</textarea></label></div>`, {
     onSubmit: f => {
       const o = { name: f.name.trim(), company: f.company.trim(), phone: f.phone, email: f.email, address: f.address, ids: f.ids, notes: f.notes };
       if (id) Object.assign(c, o); else { const n = { id: uid(), ...o, createdAt: Date.now() }; S.clients.push(n); id = n.id; }
       save(); toast('Client enregistré'); go(`#client-${id}`);
     },
-    danger: id ? { label: 'Supprimer', confirm: 'Supprimer ce client ? Ses projets et documents sont conservés.', run: () => { S.clients = S.clients.filter(x => x.id !== id); save(); go('#clients'); } } : null,
+    danger: id ? { label: 'Supprimer', confirm: 'Supprimer ce client ? Ses projets et documents sont conservés.', run: () => { undoable('Client supprimé', () => { S.clients = S.clients.filter(x => x.id !== id); }); go('#clients'); } } : null,
   });
 }
 routes.client = (v, id) => {
@@ -1287,7 +1729,7 @@ routes.client = (v, id) => {
   const docs = S.docs.filter(d => d.clientId === id).sort((a, b) => b.date.localeCompare(a.date));
   const projs = S.projects.filter(p => p.clientId === id);
   const inv = docs.filter(d => d.kind === 'facture' && d.status !== 'brouillon');
-  const billed = inv.reduce((a, d) => a + totals(d).total, 0), due = inv.reduce((a, d) => a + totals(d).due, 0);
+  const billed = inv.reduce((a, d) => a + (totals(d).total - totals(d).credit) * rateOf(d), 0), due = inv.reduce((a, d) => a + baseDue(d), 0);
   const paid = allIncomes().filter(i => i.clientId === id).reduce((a, i) => a + i.amount, 0);
   v.innerHTML = `<div class="head"><div><a href="#clients" class="btn sm ghost" style="margin-left:-10px">${ic('arrowL')}Clients</a><div class="row" style="margin-top:8px;flex-wrap:nowrap">${avatar(c.company || c.name)}<div><h2>${esc(c.company || c.name)}</h2><p>${esc(c.company ? c.name : '')}</p></div></div></div>
     <div class="row">${c.phone ? `<a class="btn" target="_blank" rel="noopener" href="https://wa.me/${c.phone.replace(/[^\d]/g, '')}">${ic('chat')}WhatsApp</a>` : ''}<button class="btn" data-act="edit-client" data-id="${id}">${ic('edit')}Modifier</button><button class="btn primary" data-act="new-project" data-client="${id}">${ic('plus')}Projet</button></div></div>
@@ -1297,45 +1739,76 @@ routes.client = (v, id) => {
 };
 
 /* ---------- Settings ---------- */
+const sampleDoc = () => ({ id: '_apercu', kind: 'facture', number: `${S.settings.prefix.facture}-${new Date().getFullYear()}-001`, clientId: '', subject: 'Identité visuelle (aperçu)', date: today(), dueDate: addDays(today(), num(S.settings.payDays)), lines: [{ id: 'a', desc: 'Création de logo', qty: 1, price: 250000 }, { id: 'b', desc: 'Charte graphique', qty: 1, price: 250000 }], discount: 0, taxOn: !!S.settings.taxOn, taxRate: num(S.settings.taxRate), deposit: 0, terms: S.settings.terms, notes: '', status: 'envoye', payments: [], reminders: [], currency: S.settings.currency, rate: 1 });
+function fitMini() { $$('.mini-paper').forEach(w => { const inner = w.firstElementChild; if (!inner) return; const k = (w.clientWidth - 24) / 794; inner.style.transform = `scale(${k})`; w.style.height = Math.round(inner.offsetHeight * k + 24) + 'px'; }); }
+window.addEventListener('resize', () => fitMini());
+const SET_TABS = [['identite', 'Identité & légal'], ['facturation', 'Facturation'], ['documents', 'Style & paiement'], ['objectifs', 'Objectifs & budgets'], ['catalogue', 'Catalogue'], ['donnees', 'Données']];
 routes.parametres = v => {
   setTitle('Paramètres');
-  const s = S.settings;
-  v.innerHTML = `<div class="head"><div><h2>Paramètres</h2><p>Ces informations apparaissent sur tes devis et factures.</p></div></div>
-  <div class="grid g2">
-    <div class="card"><h3>Mon identité</h3><div class="f" id="set-id">
-      <div class="f2"><label class="fl">Nom complet<input class="in" name="name" value="${esc(s.name)}"></label><label class="fl">Nom commercial<input class="in" name="business" value="${esc(s.business)}"></label></div>
-      <label class="fl">Titre<input class="in" name="title" value="${esc(s.title)}"></label>
-      <div class="f2"><label class="fl">Téléphone<input class="in" name="phone" value="${esc(s.phone)}"></label><label class="fl">E-mail<input class="in" name="email" value="${esc(s.email)}"></label></div>
-      <label class="fl">Adresse<input class="in" name="address" value="${esc(s.address)}"></label>
-      <label class="fl">Identifiants légaux (NCC, RCCM…)<input class="in" name="ids" value="${esc(s.ids)}" placeholder="Ex. NCC 1234567 X · RCCM CI-ABJ-…"></label>
-      <div class="f2"><label class="fl">Logo des documents<input class="in" type="file" id="logo-in" accept="image/*" style="padding-top:9px"></label><label class="fl">Couleur des documents<input class="in" type="color" name="color" value="${esc(s.color)}" style="padding:4px;height:42px"></label></div>
-      ${s.logo ? `<div class="row"><img src="${s.logo}" alt="Logo" style="max-height:44px;max-width:160px;background:#fff;padding:6px;border-radius:8px"><button class="btn sm danger" id="logo-rm">${ic('trash')}Retirer</button></div>` : ''}
+  const s = S.settings, tab = SET_TABS.some(x => x[0] === UI.setTab) ? UI.setTab : 'identite';
+  const F = (key, label, opts = {}) => `<label class="fl">${label}<${opts.area ? 'textarea' : 'input'} class="in" data-s="${key}" ${opts.num ? 'data-num inputmode="decimal"' : ''} ${opts.type ? `type="${opts.type}"` : ''} placeholder="${esc(opts.ph || '')}" ${opts.area ? `>${esc(s[key])}</textarea>` : `value="${esc(s[key])}">`}${opts.hint ? `<span class="hint">${opts.hint}</span>` : ''}</label>`;
+  let body = '';
+  if (tab === 'identite') body = `<div class="set-grid"><div class="card"><h3>Mon identité</h3><div class="f">
+      <div class="f2">${F('name', 'Nom complet')}${F('business', 'Nom commercial')}</div>
+      ${F('title', 'Titre')}
+      <div class="f2">${F('phone', 'Téléphone')}${F('email', 'E-mail')}</div>
+      ${F('address', 'Adresse')}
     </div></div>
-    <div class="card"><h3>Facturation</h3><div class="f" id="set-bill">
-      <div class="f3"><label class="fl">Devise<select class="in" name="currency">${Object.keys(CUR).map(k => opt(k, `${k} (${CUR[k].s})`, s.currency)).join('')}</select></label><label class="fl">Paiement sous (jours)<input class="in" name="payDays" inputmode="numeric" value="${esc(s.payDays)}"></label><label class="fl">Devis valable (jours)<input class="in" name="quoteDays" inputmode="numeric" value="${esc(s.quoteDays)}"></label></div>
-      <div class="f3"><label class="fl">Acompte par défaut %<input class="in" name="depositPct" inputmode="decimal" value="${esc(s.depositPct)}"></label><label class="fl">Nom de la taxe<input class="in" name="taxLabel" value="${esc(s.taxLabel)}"></label><label class="fl">Taux %<input class="in" name="taxRate" inputmode="decimal" value="${esc(s.taxRate)}"></label></div>
-      <label class="check"><input type="checkbox" name="taxOn" ${s.taxOn ? 'checked' : ''}> Appliquer la taxe par défaut sur les nouveaux documents</label>
-      <div class="f3"><label class="fl">Préfixe devis<input class="in" name="p_devis" value="${esc(s.prefix.devis)}"></label><label class="fl">Préfixe proforma<input class="in" name="p_proforma" value="${esc(s.prefix.proforma)}"></label><label class="fl">Préfixe facture<input class="in" name="p_facture" value="${esc(s.prefix.facture)}"></label></div>
-      <label class="fl">À mettre de côté sur chaque encaissement (%)<input class="in" name="savePct" inputmode="decimal" value="${esc(s.savePct)}"><span class="hint">Pour anticiper impôts et charges.</span></label>
-      <label class="fl">Modalités de paiement<textarea class="in" name="payInfo">${esc(s.payInfo)}</textarea></label>
-      <label class="fl">Conditions par défaut<textarea class="in" name="terms">${esc(s.terms)}</textarea></label>
+    <div class="card"><h3>Mentions légales (Côte d'Ivoire)</h3><div class="f">
+      <div class="f2">${F('ncc', 'NCC (numéro de compte contribuable)', { ph: 'Ex. 1234567 X' })}${F('rccm', 'RCCM', { ph: 'Ex. CI-ABJ-2024-A-12345' })}</div>
+      <div class="f2"><label class="fl">Régime fiscal<select class="in" data-s="regime">${REGIMES.map(r => opt(r, r || '— Choisir —', s.regime)).join('')}</select></label>${F('taxCenter', 'Centre des impôts', { ph: 'Ex. Centre des impôts de Cocody' })}</div>
+      ${F('ids', 'Autres mentions (facultatif)', { ph: 'Ex. Compte contribuable, numéro CNPS…' })}
+      ${F('noTaxText', 'Mention quand la TVA n\'est pas appliquée', { hint: 'Ex. « TVA non applicable » ou la mention de ton régime. Vérifie la formule exacte avec ton centre des impôts ou ton comptable.' })}
+      ${F('legalNote', 'Mention de retard de paiement (factures)', { area: true })}
+      <p class="hint" style="margin:0">Ces mentions apparaissent sur tes factures. Je les ai préparées pour la Côte d'Ivoire, mais seul ton centre des impôts ou ton comptable peut confirmer ce qui est obligatoire pour ton statut.</p>
+    </div></div></div>`;
+  else if (tab === 'facturation') body = `<div class="set-grid"><div class="card"><h3>Règles par défaut</h3><div class="f">
+      <div class="f3"><label class="fl">Devise principale<select class="in" data-s="currency">${Object.keys(CUR).map(k => opt(k, `${k} (${CUR[k].s})`, s.currency)).join('')}</select></label>${F('payDays', 'Paiement sous (jours)', { num: 1 })}${F('quoteDays', 'Devis valable (jours)', { num: 1 })}</div>
+      <div class="f3">${F('depositPct', 'Acompte par défaut %', { num: 1 })}${F('taxLabel', 'Nom de la taxe')}${F('taxRate', 'Taux %', { num: 1 })}</div>
+      <label class="check"><input type="checkbox" data-s="taxOn" ${s.taxOn ? 'checked' : ''}> Appliquer la taxe par défaut sur les nouveaux documents</label>
+      ${F('savePct', 'À mettre de côté sur chaque encaissement freelance (%)', { num: 1, hint: 'Pour anticiper impôts et charges.' })}
     </div></div>
-    <div class="card"><h3>Catalogue de prestations <button class="btn sm" id="cat-add">${ic('plus')}</button></h3><div class="list" id="cat-list">${S.catalog.map(x => `<div class="li" data-cat="${x.id}"><input class="in" data-k="label" value="${esc(x.label)}" style="flex:1"><input class="in" data-k="price" inputmode="decimal" value="${esc(x.price)}" style="width:110px"><button class="btn sm ghost" data-cat-rm aria-label="Retirer">${ic('x')}</button></div>`).join('')}</div></div>
-    <div class="card"><h3>Données & sauvegarde</h3>
+    <div class="card"><h3>Numérotation</h3><div class="f">
+      <div class="f2">${['devis', 'proforma', 'facture', 'avoir'].map(k => `<label class="fl">Préfixe ${KSHORT[k].toLowerCase()}<input class="in" data-prefix="${k}" value="${esc(s.prefix[k])}"></label>`).join('')}</div>
+      <p class="hint" style="margin:0">Format : PRÉFIXE-ANNÉE-NUMÉRO (ex. ${esc(s.prefix.facture)}-${new Date().getFullYear()}-001). La numérotation repart à 001 chaque année et ne saute aucun numéro.</p>
+      ${F('terms', 'Conditions par défaut', { area: true })}
+    </div></div></div>`;
+  else if (tab === 'documents') body = `<div class="set-grid"><div class="grid"><div class="card"><h3>Style des documents</h3>
+      <div class="style-pick" role="radiogroup" aria-label="Style des documents">${Object.entries(DOC_STYLES).map(([k, l]) => `<label><input type="radio" name="docStyle" value="${k}" ${s.docStyle === k ? 'checked' : ''}><span class="sw sw-${k}"><i></i><i></i><i></i></span>${l}</label>`).join('')}</div>
+      <div class="f2" style="margin-top:14px"><label class="fl">Logo des documents<input class="in" type="file" id="logo-in" accept="image/*" style="padding-top:9px"></label><label class="fl">Couleur d'accent<input class="in" type="color" data-s="color" value="${esc(s.color)}" style="padding:4px;height:42px"></label></div>
+      ${s.logo ? `<div class="row" style="margin-top:10px"><img src="${s.logo}" alt="Logo" style="max-height:44px;max-width:160px;background:#fff;padding:6px;border-radius:8px"><button class="btn sm danger" id="logo-rm">${ic('trash')}Retirer</button></div>` : ''}</div>
+      <div class="card"><h3>Paiement</h3><div class="f">
+      ${F('payInfo', 'Modalités de paiement (sur chaque facture)', { area: true })}
+      ${F('waveLink', 'Lien de paiement Wave', { type: 'url', ph: 'https://pay.wave.com/…', hint: 'Dans l\'app Wave, copie ton lien pour recevoir un paiement. Un QR code apparaît alors sur tes factures et proformas. Si ton lien accepte un montant, écris {montant} à sa place : il sera rempli automatiquement.' })}
+      </div></div></div>
+    <div class="card"><h3>Aperçu</h3><div class="mini-paper"><div>${paper(sampleDoc())}</div></div></div></div>`;
+  else if (tab === 'objectifs') body = `<div class="set-grid"><div class="card"><h3>Objectifs</h3><div class="f">
+      <div class="f2">${F('goalMonth', 'Objectif freelance par mois', { num: 1, ph: 'Ex. 500000' })}${F('goalYear', 'Objectif freelance par an', { num: 1, ph: 'Ex. 6000000' })}</div>
+      ${F('savingsGoal', 'Objectif d\'épargne par mois', { num: 1, ph: 'Ex. 150000', hint: 'Comparé chaque mois à ce qui reste (revenus − dépenses).' })}
+      <p class="hint" style="margin:0">Laisse 0 pour masquer un objectif. Ta progression s'affiche sur le tableau de bord et dans Finances › Bilan.</p></div></div>
+    <div class="card"><h3>Budgets perso (par mois)</h3><div class="f">${PCATS.map(c => `<div class="row" style="flex-wrap:nowrap"><span style="flex:1;min-width:0">${esc(c)}</span><input class="in" data-budget="${esc(c)}" inputmode="decimal" value="${esc(s.budgets[c] || '')}" placeholder="—" style="width:140px"></div>`).join('')}
+      <p class="hint" style="margin:0">Suivi dans Finances › Dépenses, avec les dépenses marquées « perso ».</p></div></div></div>`;
+  else if (tab === 'catalogue') body = `<div class="card"><h3>Catalogue de prestations <button class="btn sm" id="cat-add">${ic('plus')}Ajouter</button></h3><p class="hint" style="margin-top:-6px">Les jours estimés servent au calculateur de tarif (Finances › Tarifs).</p><div class="list" id="cat-list">${S.catalog.map(x => `<div class="li" data-cat="${x.id}" style="flex-wrap:wrap"><input class="in" data-k="label" value="${esc(x.label)}" style="flex:1;min-width:180px" aria-label="Prestation"><input class="in" data-k="days" inputmode="decimal" value="${esc(x.days ?? '')}" placeholder="jours" style="width:80px" aria-label="Jours estimés"><input class="in" data-k="price" inputmode="decimal" value="${esc(x.price)}" style="width:120px" aria-label="Prix"><button class="btn sm ghost" data-cat-rm aria-label="Retirer">${ic('x')}</button></div>`).join('')}</div></div>`;
+  else body = `<div class="card" style="max-width:760px"><h3>Données & sauvegarde</h3>
       <div class="sync" style="padding:0;margin-bottom:10px"></div>
       <p class="muted" style="margin-top:0">${MODE === 'cloud' ? 'Tes données sont enregistrées <b>dans ton compte Claude, en privé</b> : ouvre ce même lien sur ton téléphone ou ton ordinateur pour les retrouver. Exporte quand même une sauvegarde de temps en temps.' : 'Tes données restent <b>dans ce navigateur</b>, sur cet appareil. Exporte une sauvegarde régulièrement (et avant de vider ton navigateur) pour pouvoir la restaurer ou la transférer sur un autre appareil.'}</p>
+      <p class="small muted">Dernière sauvegarde : <b>${s.lastBackup ? fdate(s.lastBackup) : 'jamais'}</b></p>
       <div class="row"><button class="btn primary" data-act="export">${ic('down')}Exporter la sauvegarde</button><button class="btn" data-act="import">${ic('up')}Restaurer</button><button class="btn" data-act="csv">${ic('down')}CSV comptable</button></div>
       <div class="row" style="margin-top:16px"><button class="btn" data-act="demo">${ic('spark')}Charger des exemples</button><button class="btn danger" data-act="reset">${ic('trash')}Tout effacer</button></div>
-      <p class="hint" style="margin-bottom:0">Raccourcis : <b>⌘/Ctrl K</b> recherche · <b>N</b> nouveau.</p>
-    </div>
-  </div>`;
-  $$('#set-id [name], #set-bill [name]').forEach(i => i.addEventListener(i.type === 'checkbox' || i.tagName === 'SELECT' || i.type === 'color' ? 'change' : 'input', () => {
-    if (i.name.startsWith('p_')) s.prefix[i.name.slice(2)] = i.value.trim().toUpperCase() || i.name.slice(2).toUpperCase();
-    else s[i.name] = i.type === 'checkbox' ? i.checked : ['payDays', 'quoteDays', 'depositPct', 'taxRate', 'savePct'].includes(i.name) ? num(i.value) : i.value;
-    save(); renderNav('parametres');
+      <p class="hint" style="margin-bottom:0">Raccourcis : <b>⌘/Ctrl K</b> recherche · <b>N</b> nouveau.</p></div>`;
+  v.innerHTML = `<div class="head"><div><h2>Paramètres</h2><p>Tes informations, tes règles de facturation et tes objectifs.</p></div></div>
+  <div class="tabs" style="margin-bottom:16px">${SET_TABS.map(([k, l]) => `<button class="${tab === k ? 'on' : ''}" data-settab="${k}">${l}</button>`).join('')}</div>${body}`;
+  const NUMS = ['payDays', 'quoteDays', 'depositPct', 'taxRate', 'savePct', 'goalMonth', 'goalYear', 'savingsGoal'];
+  const refreshPreview = () => { const m = $('.mini-paper > div'); if (m) { m.innerHTML = paper(sampleDoc()); fitMini(); } };
+  $$('[data-s]').forEach(i => i.addEventListener(i.type === 'checkbox' || i.tagName === 'SELECT' || i.type === 'color' ? 'change' : 'input', () => {
+    const k = i.dataset.s; s[k] = i.type === 'checkbox' ? i.checked : NUMS.includes(k) ? num(i.value) : i.value;
+    save(); renderNav('parametres'); refreshPreview();
     if (i.type === 'checkbox' || i.tagName === 'SELECT') toast('Enregistré');
   }));
-  $('#logo-in').onchange = async e => {
+  $$('[data-prefix]').forEach(i => i.addEventListener('input', () => { s.prefix[i.dataset.prefix] = i.value.trim().toUpperCase() || i.dataset.prefix.slice(0, 3).toUpperCase(); save(); }));
+  $$('[name=docStyle]').forEach(r => r.onchange = () => { s.docStyle = r.value; save(); refreshPreview(); toast(`Style « ${DOC_STYLES[r.value]} »`); });
+  $$('[data-budget]').forEach(i => i.addEventListener('input', () => { const v = num(i.value); if (v > 0) s.budgets[i.dataset.budget] = v; else delete s.budgets[i.dataset.budget]; save(); }));
+  const li = $('#logo-in'); if (li) li.onchange = async e => {
     const f = e.target.files[0]; e.target.value = ''; if (!f) return;
     try {
       let logo = f.type === 'image/svg+xml' ? await readAsDataURL(f) : await shrinkImage(f, 480, .9, true);
@@ -1345,8 +1818,10 @@ routes.parametres = v => {
     } catch { toast('Image illisible', 'bad'); }
   };
   const rm = $('#logo-rm'); if (rm) rm.onclick = () => { s.logo = ''; save(); route(); };
-  $('#cat-add').onclick = () => { S.catalog.push({ id: uid(), label: 'Nouvelle prestation', price: 0 }); save(); route(); };
-  $$('#cat-list [data-cat]').forEach(r => { const x = S.catalog.find(c => c.id === r.dataset.cat); $$('[data-k]', r).forEach(i => i.oninput = () => { x[i.dataset.k] = i.dataset.k === 'price' ? num(i.value) : i.value; save(); }); $('[data-cat-rm]', r).onclick = () => { S.catalog = S.catalog.filter(c => c !== x); save(); route(); }; });
+  const ca = $('#cat-add'); if (ca) ca.onclick = () => { S.catalog.push({ id: uid(), label: 'Nouvelle prestation', price: 0 }); save(); route(); };
+  $$('#cat-list [data-cat]').forEach(r => { const x = S.catalog.find(c => c.id === r.dataset.cat); $$('[data-k]', r).forEach(i => i.oninput = () => { x[i.dataset.k] = i.dataset.k === 'label' ? i.value : num(i.value); save(); }); $('[data-cat-rm]', r).onclick = () => { undoable('Prestation retirée', () => { S.catalog = S.catalog.filter(c => c !== x); }); route(); }; });
+  requestAnimationFrame(fitMini);
+  setTimeout(() => { if (window.qrcode && s.waveLink) refreshPreview(); }, 1200);
 };
 
 /* ---------- data: export / import / csv / demo ---------- */
@@ -1362,7 +1837,7 @@ async function download(name, content, type) {
 function exportCSV() {
   const rows = [['Date', 'Type', 'Libellé', 'Catégorie / Moyen', 'Client', 'Projet', 'Montant']];
   allIncomes().forEach(i => rows.push([i.date, `Revenu (${SOURCES[i.source]})`, i.label, i.method || '', i.clientId ? cName(i.clientId) : '', project(i.projectId)?.name || '', i.amount]));
-  S.expenses.forEach(e => rows.push([e.date, 'Dépense', e.label, e.category, '', project(e.projectId)?.name || '', -num(e.amount)]));
+  S.expenses.forEach(e => rows.push([e.date, e.scope === 'perso' ? 'Dépense perso' : 'Dépense pro', e.label, e.category, '', project(e.projectId)?.name || '', -num(e.amount)]));
   rows.sort((a, b) => a === rows[0] ? -1 : b === rows[0] ? 1 : a[0].localeCompare(b[0]));
   const csv = '﻿' + rows.map(r => r.map(x => `"${String(x).replace(/"/g, '""')}"`).join(';')).join('\n');
   download(`dak-finances-${today()}.csv`, csv, 'text/csv;charset=utf-8').then(ok => ok && toast('Export CSV téléchargé'));
@@ -1401,6 +1876,32 @@ function seedDemo() {
   S.expenses.push({ id: uid(), label: 'Illustrateur freelance', amount: 120000, date: m(-1), category: 'Freelances / sous-traitance', projectId: p1.id });
   S.expenses.push({ id: uid(), label: 'Disque SSD externe', amount: 85000, date: m(-2), category: 'Matériel', projectId: '' });
   S.incomes.push({ id: uid(), label: 'Vente pack de mockups', amount: 45000, date: addDays(t, -6), method: 'Wave', clientId: '', source: 'autre' });
+  // client à l'étranger, facture en euros
+  const c4 = C('Claire Martin', 'Atelier Rive', '+33 6 00 00 00 04', 'claire@atelier-rive.fr'); client(c4).address = '12 rue des Arts, 75011 Paris, France';
+  const p5 = Pj('Direction artistique catalogue', c4, 'Direction artistique', 0, 'livre', addDays(t, -10)); p5.budget = Math.round(1200 * 655.957);
+  mk('facture', p5, addDays(t, -12), [['Direction artistique du catalogue printemps', 1, 1200]], { currency: 'EUR', rate: 655.957, dueDate: addDays(t, 18), payments: [{ id: uid(), date: addDays(t, -5), amount: 600, method: 'Virement', rate: 650 }] });
+  // avoir partiel sur une facture
+  const fav = mk('facture', p2, addDays(t, -25), [['Déclinaisons bannières web', 6, 20000]], { dueDate: addDays(t, -10) });
+  S.docs.push({ ...JSON.parse(JSON.stringify(fav)), id: uid(), kind: 'avoir', number: nextNumber('avoir'), subject: `Avoir sur facture ${fav.number}`, lines: [{ id: uid(), desc: 'Déclinaisons bannières web (2 formats annulés)', qty: 2, price: 20000 }], fromId: fav.id, date: addDays(t, -20), dueDate: addDays(t, -20), payments: [], reminders: [], terms: '', createdAt: Date.now() });
+  // relances sur la facture en retard
+  const lateInv = S.docs.find(d => d.kind === 'facture' && d.projectId === p2.id && d.lines.length === 3); if (lateInv) lateInv.reminders = [{ id: uid(), date: addDays(t, -18), level: 1, channel: 'WhatsApp' }, { id: uid(), date: addDays(t, -6), level: 2, channel: 'WhatsApp' }];
+  // temps passé
+  p1.time = [{ id: uid(), date: m(-1), min: 360, note: 'Recherches et pistes' }, { id: uid(), date: addDays(t, -9), min: 300, note: 'Logo final' }, { id: uid(), date: addDays(t, -3), min: 240, note: 'Charte' }];
+  p2.time = [{ id: uid(), date: m(-1), min: 600, note: 'Concept et key visual' }, { id: uid(), date: addDays(t, -12), min: 720, note: 'Déclinaisons' }, { id: uid(), date: addDays(t, -2), min: 300, note: 'Corrections' }];
+  p3.time = [{ id: uid(), date: m(-2), min: 900, note: '12 visuels' }];
+  p3.portfolio = 'a_publier';
+  // dépenses perso
+  S.expenses.push({ id: uid(), label: 'Loyer', amount: 150000, date: m(-5).slice(0, 8) + '01', category: 'Logement', scope: 'perso', recurring: true, projectId: '' });
+  S.expenses.push({ id: uid(), label: 'Courses du mois', amount: 85000, date: addDays(t, -4), category: 'Alimentation', scope: 'perso', projectId: '' });
+  S.expenses.push({ id: uid(), label: 'Électricité CIE', amount: 22000, date: addDays(t, -8), category: 'Factures (eau, électricité)', scope: 'perso', projectId: '' });
+  S.expenses.push({ id: uid(), label: 'Sortie anniversaire', amount: 40000, date: addDays(t, -2), category: 'Loisirs', scope: 'perso', projectId: '' });
+  const st = S.settings;
+  if (!num(st.goalMonth)) st.goalMonth = 400000;
+  if (!num(st.goalYear)) st.goalYear = 4800000;
+  if (!num(st.savingsGoal)) st.savingsGoal = 150000;
+  if (!Object.keys(st.budgets || {}).length) st.budgets = { Logement: 150000, Alimentation: 80000, Loisirs: 50000, 'Factures (eau, électricité)': 25000 };
+  if (st.cashBalance === '' || st.cashBalance == null) { st.cashBalance = 420000; st.cashDate = t; }
+  S.catalog.forEach(x => { if (x.days == null || x.days === '') x.days = { 'Création de logo': 3, 'Identité visuelle complète (logo, charte, papeterie)': 8, 'Direction artistique de campagne': 6, 'Visuel réseaux sociaux (unité)': .5, 'Affiche / flyer': 1, 'Déclinaison de format': .25, 'Série de corrections supplémentaire': .5 }[x.label] ?? ''; });
   S.incomes.push({ id: uid(), label: 'Salaire — Agence (exemple)', amount: 600000, date: (() => { const d = new Date(t + 'T00:00:00'); d.setDate(1); d.setMonth(d.getMonth() - 5); return iso(d).slice(0, 8) + '05'; })(), method: 'Virement', clientId: '', source: 'salaire', recurring: true });
   ensureRecurring(); save(); toast('Exemples chargés'); go('#tableau');
 }
@@ -1424,26 +1925,41 @@ function act(a, ds = {}) {
     case 'pay': return payModal(ds.id);
     case 'print': return printDoc(curId());
     case 'pdf': return pdfDoc(curId());
-    case 'dup-doc': { const src = doc(ds.id); const c = JSON.parse(JSON.stringify(src)); delete c.id; delete c.number; const n = newDoc(src.kind, { ...c, date: today(), dueDate: addDays(today(), src.kind === 'facture' ? num(S.settings.payDays) : num(S.settings.quoteDays)), status: 'brouillon', payments: [], fromId: '', createdAt: Date.now() }); n.lines.forEach(l => l.id = uid()); save(); toast('Document dupliqué'); return go(`#document-${n.id}`); }
-    case 'del-doc': ask('Supprimer ce document ?').then(y => { if (y) { S.docs = S.docs.filter(d => d.id !== ds.id); save(); toast('Document supprimé'); go('#documents'); } }); return;
+    case 'dup-doc': { const src = doc(ds.id); const c = JSON.parse(JSON.stringify(src)); delete c.id; delete c.number; delete c.issuedAt; c.reminders = []; const n = newDoc(src.kind, { ...c, date: today(), dueDate: addDays(today(), src.kind === 'facture' ? num(S.settings.payDays) : num(S.settings.quoteDays)), status: 'brouillon', payments: [], fromId: '', createdAt: Date.now() }); n.lines.forEach(l => l.id = uid()); save(); toast('Document dupliqué'); return go(`#document-${n.id}`); }
+    case 'emit': { const d = doc(ds.id); ask(`Émettre ${d.number} ? ${d.kind === 'avoir' ? "L'avoir" : 'La facture'} sera verrouillé${d.kind === 'avoir' ? '' : 'e'} : ni modification ni suppression, seulement un avoir pour corriger.`, { ok: 'Émettre', danger: false, title: 'Émettre le document' }).then(y => { if (!y) return; d.status = 'envoye'; if (!d.issuedAt) d.issuedAt = today(); save(); toast(`${d.number} émis${d.kind === 'avoir' ? '' : 'e'}`); route(); }); return; }
+    case 'unlock': { const d = doc(ds.id); ask('Repasser ce document en brouillon ? À faire seulement s\'il n\'a pas encore été envoyé au client.', { ok: 'Repasser en brouillon', danger: false, title: 'Déverrouiller' }).then(y => { if (!y) return; d.status = 'brouillon'; save(); route(); }); return; }
+    case 'avoir': { const f = doc(ds.id); const n = newDoc('avoir', { clientId: f.clientId, projectId: f.projectId, subject: `Avoir sur facture ${f.number}`, lines: f.lines.map(l => ({ ...l, id: uid() })), discount: f.discount, taxOn: f.taxOn, taxRate: f.taxRate, currency: docCur(f), rate: f.rate, fromId: f.id, dueDate: today() }); toast('Avoir créé : ajuste les montants pour un avoir partiel'); return go(`#document-${n.id}`); }
+    case 'del-doc': if (locked(doc(ds.id))) return ask('Un document émis ne peut pas être supprimé. Crée un avoir pour l\'annuler.', { ok: 'Compris', danger: false, title: 'Document verrouillé', cancel: false }); ask('Supprimer ce document ?').then(y => { if (y) { undoable('Document supprimé', () => { S.docs = S.docs.filter(d => d.id !== ds.id); }); go('#documents'); } }); return;
     case 'bill-revisions': { const p = project(ds.id); const extra = num(p.revUsed) - num(p.revIncluded); const price = (S.catalog.find(c => /correction/i.test(c.label)) || {}).price || 30000; const d = newDoc('facture', { clientId: p.clientId, projectId: p.id, subject: `${p.name} — corrections supplémentaires`, lines: [{ id: uid(), desc: 'Série de corrections supplémentaire', qty: extra, price }] }); return go(`#document-${d.id}`); }
-    case 'export': download(`dak-gestion-sauvegarde-${today()}.json`, JSON.stringify(S, null, 1), 'application/json').then(ok => ok && toast('Sauvegarde téléchargée')); return;
+    case 'export': download(`dak-gestion-sauvegarde-${today()}.json`, JSON.stringify(S, null, 1), 'application/json').then(ok => { if (!ok) return; S.settings.lastBackup = today(); save(); toast('Sauvegarde téléchargée'); if (/^#?(tableau)?$/.test(location.hash) || /parametres/.test(location.hash)) route(); }); return;
+    case 'snooze-backup': S.settings.backupSnooze = addDays(today(), 7); save(); return route();
+    case 'remind': return remindModal(ds.id);
+    case 'start-timer': startTimer(ds.id); return route();
+    case 'stop-timer': stopTimer(); return route();
+    case 'pf': { const pj = project(ds.id); if (pj) { pj.portfolio = ds.pf; save(); toast(ds.pf === 'publie' ? 'Marqué publié sur le portfolio' : ds.pf === 'a_publier' ? 'Ajouté à la liste « à publier »' : 'Retiré des suggestions portfolio'); route(); } return; }
+    case 'report': return pdfReport(ds.year);
+    case 'goals': UI.setTab = 'objectifs'; return go('#parametres');
     case 'import': return $('#file-import').click();
     case 'csv': return exportCSV();
     case 'demo': if (!S.docs.length) return seedDemo(); ask("Ajouter des données d'exemple à tes données actuelles ?", { ok: 'Ajouter', danger: false, title: 'Exemples' }).then(y => y && seedDemo()); return;
-    case 'reset': ask('Effacer TOUTES les données ? Pense à exporter une sauvegarde avant.', { ok: 'Tout effacer', title: 'Tout effacer' }).then(y => { if (!y) return; const th = S.settings.theme; S = defaults(); S.settings.theme = th; save(); toast('Données effacées'); go('#tableau'); }); return;
+    case 'reset': ask('Effacer TOUTES les données ? Pense à exporter une sauvegarde avant.', { ok: 'Tout effacer', title: 'Tout effacer' }).then(y => { if (!y) return; undoable('Données effacées', () => { const th = S.settings.theme; S = defaults(); S.settings.theme = th; }); go('#tableau'); }); return;
   }
 }
 document.addEventListener('click', e => {
+  const mv = e.target.closest('[data-move]');
+  if (mv) { e.preventDefault(); e.stopPropagation(); return moveModal(mv.dataset.move); }
   const a = e.target.closest('[data-act]');
   if (a) { e.preventDefault(); return act(a.dataset.act, a.dataset); }
   const tr = e.target.closest('tr[data-href]');
   if (tr && !e.target.closest('a,button')) return go(tr.dataset.href);
   const pv = e.target.closest('[data-pview]'); if (pv) { UI.pView = pv.dataset.pview; lsSet('dak-pview', UI.pView); return route(); }
+  const stb = e.target.closest('[data-settab]'); if (stb) { UI.setTab = stb.dataset.settab; return route(); }
   const dt = e.target.closest('[data-doctab]'); if (dt) { UI.docTab = dt.dataset.doctab; return route(); }
   const ft = e.target.closest('[data-fintab]'); if (ft) { UI.finTab = ft.dataset.fintab; return route(); }
   const fl = e.target.closest('[data-fin]'); if (fl) { UI.finTab = fl.dataset.fin; if (location.hash === '#finances') { e.preventDefault(); route(); } }
 });
+
+$('#toast').addEventListener('click', e => { if (!e.target.closest('.toast-undo') || !UNDO) return; S = normalize(JSON.parse(UNDO)); UNDO = null; save(); applyTheme(); toast('Suppression annulée'); route(); });
 
 /* ---------- search ---------- */
 const q = $('#q'), qr = $('#q-res');
@@ -1480,8 +1996,8 @@ async function boot() {
   if (window.claude && typeof window.claude.use === 'function') {
     $('#view').innerHTML = `<div class="empty"><div class="em-ic">${ic('clock', 'width:24px;height:24px')}</div><h4>Chargement de tes données…</h4></div>`;
     try {
-      const [db, user, dl] = await Promise.all([window.claude.use('db'), window.claude.use('user'), window.claude.use('downloads').catch(() => null)]);
-      DL = dl;
+      const [db, user, dl, smp] = await Promise.all([window.claude.use('db'), window.claude.use('user'), window.claude.use('downloads').catch(() => null), window.claude.use('sample').catch(() => null)]);
+      DL = dl; SAMPLE = smp;
       const uidv = user ? await user.id() : null;
       if (db && uidv) {
         const col = db.collection('data/users/' + uidv);
@@ -1500,9 +2016,10 @@ async function boot() {
     if (raw) { try { S = normalize(JSON.parse(raw)); } catch { /* ignore */ } }
   }
   ensureRecurring(); save();
-  applyTheme(); route();
+  applyTheme(); route(); renderTimer();
 }
 boot();
+window.addEventListener('load', () => { if (S.settings.waveLink && /^#document-/.test(location.hash)) route(); });
 </script>
 </body>
 </html>
