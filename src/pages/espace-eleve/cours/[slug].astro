@@ -28,6 +28,7 @@ const { data: prog } = await sb.from('lesson_progress').select('lesson').eq('use
 const done = new Set((prog || []).map((p) => p.lesson));
 const canWatch = hasAccess || !!lesson.free;
 const embed = canWatch && lesson.ready && lesson.video ? signedEmbed(lesson.video) : null;
+const localVideo = canWatch && lesson.ready && lesson.videoSrc ? lesson.videoSrc : null;
 const prev = lessons[idx - 1], next = lessons[idx + 1];
 const pct = Math.round((lessons.filter((l) => done.has(l.key)).length / lessons.length) * 100);
 const notes = canWatch ? courseNotes(c.slug) : null;
@@ -40,7 +41,9 @@ const buy = c.status === 'ouvert' && c.priceFcfa ? `/espace-eleve/acheter?item=c
     <div class="pp-main">
       <nav class="crumbs pcrumbs"><a href="/espace-eleve">Mes cours</a><span>›</span><span>{c.title}</span></nav>
       <div class="pvideo">
-        {embed ? (
+        {localVideo ? (
+          <video controls playsinline preload="metadata" poster={lesson.poster} src={localVideo} style="position:absolute;inset:0;width:100%;height:100%;background:#000"></video>
+        ) : embed ? (
           <iframe src={embed} title={lesson.title} loading="lazy" allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
         ) : (
           <div class="pv-empty">

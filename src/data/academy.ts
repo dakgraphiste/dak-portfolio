@@ -13,7 +13,7 @@ export const LEVEL_DOTS: Record<Level, number> = { 'Débutant': 1, 'Intermédiai
 export type Topic = 'Design' | 'Brand' | 'Publicité' | 'Retouche' | 'Packaging';
 export const TOPICS: Topic[] = ['Design', 'Brand', 'Publicité', 'Retouche', 'Packaging'];
 
-export type Lesson = { title: string; duration?: string; ready?: boolean; free?: boolean; video?: string; resources?: { label: string; url: string }[] };
+export type Lesson = { title: string; duration?: string; ready?: boolean; free?: boolean; video?: string; videoSrc?: string; poster?: string; resources?: { label: string; url: string }[] };
 export type Module = { title: string; lessons: Lesson[] };
 export type Course = {
   slug: string; title: string; topic: Topic; level: Level; format: 'En ligne' | 'Présentiel' | 'Atelier';
@@ -61,7 +61,9 @@ export const COURSES: Course[] = [
       { title: 'Recherches et pistes', lessons: L('Moodboard et références', 'Croquis et mots clés', 'Choisir les pistes à présenter') },
       { title: 'Le logo', lessons: L('Construire le symbole', 'Le logotype et la typographie', 'Déclinaisons et zones de protection') },
       { title: 'Le système graphique', lessons: L('Palette de couleurs', 'Typographies de marque', 'Éléments graphiques et iconographie') },
-      { title: 'La charte et la présentation', lessons: [{ title: 'Monter la charte', resources: [FICHE.charte] }, ...L('Mockups et mises en situation', 'Présenter au client et défendre ses choix')] },
+      { title: 'La charte et la présentation', lessons: [{ title: 'Monter la charte', resources: [FICHE.charte] }, ...L('Mockups et mises en situation', 'Présenter au client et défendre ses choix'),
+        { title: 'Étude de cas : Krok’up, du brief au logo', duration: '1 min 12', ready: true, free: true, videoSrc: '/videos/krokup-etude-de-cas.mp4', poster: '/videos/krokup-etude-de-cas.jpg',
+          resources: [{ label: 'Charte graphique Krok’up (PDF, 22 pages)', url: 'https://github.com/dakgraphiste/dak-portfolio/raw/main/course-materials/krokup/charte/krokup-charte-graphique.pdf' }] }] },
     ],
     status: 'bientot',
   },

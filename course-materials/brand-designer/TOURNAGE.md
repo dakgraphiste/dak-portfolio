@@ -367,6 +367,9 @@ Document pour Dak (non publié sur le site). Une vidéo par leçon, **6 à 10 mi
 ### Projet final · L'identité complète d'une marque
 - Vidéo de présentation du projet final (3 min) : montrer un exemple de rendu, lire la grille de notation, rappeler comment envoyer le projet.
 
+### 5-4 · Étude de cas : Krok'up, du brief au logo
+- **Déjà prêt** : le film de 72 s est en ligne (`/videos/krokup-etude-de-cas.mp4`), rien à tourner.
+
 ## Direction artistique de marque (Avancé)
 
 ### 1-1 · De l'insight à l'idée

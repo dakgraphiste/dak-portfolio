@@ -429,6 +429,35 @@ Prépare la présentation complète de ta marque d'exercice et présente-la (mê
 - On défend avec le brief, jamais avec son goût.
 - Les retours se notent, se reformulent, puis se traitent.
 
+## 5-4 · Étude de cas : Krok'up, du brief au logo
+
+### Objectifs
+- Revoir toute la méthode du cours sur un projet réel, en 72 secondes.
+- Repérer comment chaque étape nourrit la suivante.
+
+### L'essentiel
+Ce film résume l'identité de **Krok'up** de bout en bout. Regarde-le une première fois en entier, puis une seconde fois en notant ce que tu vois à chaque étape :
+1. **Le brief** : produit, cible, objectif.
+2. **La plateforme** : 4 valeurs, un ton, une mission.
+3. **La concurrence** : la carte de positionnement et la zone libre.
+4. **Le moodboard** : sensations, lettrages, palette.
+5. **Les mots clés** : comment le « p » devient un sourire.
+6. **Les pistes** : les critères qui font choisir la piste B.
+7. **Les déclinaisons** : principale, inversée, une couleur, négatif, puis la gamme.
+8. **La palette** et la règle 60-30-10.
+9. **Le langage** : les onomatopées comme signature.
+10. **En situation** : packaging, rayon, merch, réseaux, affichage.
+
+La charte graphique complète (22 pages) est en ressource sous la vidéo : compare-la avec le sommaire type de la leçon « Monter la charte ».
+
+### Exercice
+Fais le même film pour ta marque d'exercice, en version simple : 10 diapositives, une par étape, avec une phrase chacune. C'est la colonne vertébrale de ta présentation client.
+
+### À retenir
+- Chaque étape répond à la précédente : le brief guide tout.
+- Une identité, c'est un système, pas seulement un logo.
+- Montrer la marque en situation, c'est ce qui convainc.
+
 ## Projet final · L'identité complète d'une marque
 
 Crée l'identité complète d'une marque (Krok'up ou une marque fictive de ton choix) :
