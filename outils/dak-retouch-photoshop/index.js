@@ -4,6 +4,8 @@
  * plusieurs, et annulables en un seul Ctrl/Cmd+Z.
  */
 const { app, core, action, constants } = require("photoshop");
+const uxp = require("uxp");
+const fs = uxp.storage.localFileSystem;
 
 /* ------------------------------------------------------------------ */
 /* Palette « Vintage Or »                                              */
@@ -27,6 +29,10 @@ const GLOW_COLORS = {
   electrique: { core: "#ffffff", halo: "#8fd8ff", outer: "#2f6bff" },
 };
 let glowColor = "or";
+
+// Couleurs des effets (fumigènes, étincelles, traînées…).
+const FX_COLORS = { rouge: "#d8191f", orange: "#ff6a1a", or: "#e3b768", bleu: "#3d7bff", blanc: "#ffffff" };
+let fxColor = "rouge";
 
 /* ------------------------------------------------------------------ */
 /* Briques batchPlay                                                   */
@@ -588,6 +594,251 @@ R.rimLight = async (doc) => {
   return [l];
 };
 
+/* ------------------------------------------------------------------ */
+/* Effets                                                              */
+/* ------------------------------------------------------------------ */
+async function setColors(fg, bg) {
+  await bp({ _obj: "set", _target: [{ _ref: "color", _property: "foregroundColor" }], to: rgb(fg) });
+  await bp({ _obj: "set", _target: [{ _ref: "color", _property: "backgroundColor" }], to: rgb(bg) });
+}
+
+async function withColors(fg, bg, fn) {
+  let saved = null;
+  try { saved = [app.foregroundColor, app.backgroundColor]; } catch (e) { /* lecture impossible */ }
+  await setColors(fg, bg);
+  try { return await fn(); } finally {
+    if (saved) {
+      try { app.foregroundColor = saved[0]; app.backgroundColor = saved[1]; } catch (e) { /* on garde les couleurs */ }
+    }
+  }
+}
+
+async function fillColor(hex) {
+  await bp({ _obj: "fill", using: { _enum: "fillContents", _value: "color" }, color: rgb(hex), opacity: pct(100), mode: mode("normal") });
+}
+
+async function fillBlack() {
+  await bp({ _obj: "fill", using: { _enum: "fillContents", _value: "black" }, opacity: pct(100), mode: mode("normal") });
+}
+
+/** Sélection elliptique en fractions du document (peut déborder du cadre). */
+async function ellipse(doc, top, left, bottom, right, feather = 0) {
+  const w = doc.width, h = doc.height;
+  await bp({
+    _obj: "set",
+    _target: [{ _ref: "channel", _property: "selection" }],
+    to: { _obj: "ellipse", top: px(h * top), left: px(w * left), bottom: px(h * bottom), right: px(w * right) },
+    antiAlias: true,
+  });
+  if (feather) await bp({ _obj: "feather", radius: px(Math.min(1000, Math.round(feather * Math.min(w, h)))) });
+}
+
+/** Applique une courbe directement sur les pixels du calque actif. */
+async function curvePixels(points) {
+  await bp(curves({ composite: points }));
+}
+
+async function smokeLayer(doc, name, hex, { top = 0.42, opacity = 90 } = {}) {
+  await selectTop();
+  const l = await emptyLayer(doc, name);
+  await withColors(hex, "#000000", () => bp({ _obj: "clouds" }));
+  await curvePixels([[0, 0], [70, 0], [200, 210], [255, 255]]); // volutes plus contrastées
+  await l.applyGaussianBlur(scaled(doc, 6, 1, 40));
+  await ellipse(doc, top, -0.25, 1.45, 1.25, 0.22);
+  await maskFromSelection();
+  await deselect();
+  await setActive({ blend: "screen", opacity });
+  return l;
+}
+
+R.fumigene = async (doc) => [await smokeLayer(doc, "Fumigène", FX_COLORS[fxColor])];
+
+R.brume = async (doc) => [await smokeLayer(doc, "Brume au sol", "#e8eef2", { top: 0.6, opacity: 70 })];
+
+R.etincelles = async (doc) => {
+  await selectTop();
+  const l = await emptyLayer(doc, "Étincelles");
+  await bp({ _obj: "fill", using: { _enum: "fillContents", _value: "gray" }, opacity: pct(100), mode: mode("normal") });
+  await l.applyAddNoise(28, constants.NoiseDistribution.GAUSSIAN, true);
+  await curvePixels([[0, 0], [212, 0], [255, 255]]); // ne garde que de rares points
+  await l.applyMaximum(scaled(doc, 1.5, 1, 6));
+  await l.applyMotionBlur(35, scaled(doc, 45, 10, 400));
+  await curvePixels([[0, 0], [70, 255], [255, 255]]); // ravive les traînées
+  await setActive({ blend: "linearDodge" });
+  const tint = await solidColor(doc, "Couleur étincelles", FX_COLORS[fxColor], { blend: "multiply" });
+  await bp({ _obj: "groupEvent", _target: TARGET });
+  const layers = [l, tint];
+  await group(doc, layers, "Étincelles : masque les zones en trop");
+  return layers;
+};
+
+R.lightLeak = async (doc) => {
+  await selectTop();
+  const l = await emptyLayer(doc, "Light leak");
+  const c = FX_COLORS[fxColor];
+  await ellipse(doc, -0.25, -0.35, 0.45, 0.35);
+  await fillColor(c);
+  await ellipse(doc, 0.6, 0.7, 1.3, 1.35);
+  await fillColor("#ffb070");
+  await deselect();
+  await l.applyGaussianBlur(scaled(doc, 220, 40, 1000));
+  await setActive({ blend: "screen", opacity: 75 });
+  return [l];
+};
+
+R.trainee = async (doc) => {
+  await selectTop();
+  const l = await emptyLayer(doc, "Traînée lumineuse (Ctrl+T pour orienter)");
+  await ellipse(doc, 0.47, -0.1, 0.53, 1.1);
+  await fillColor(FX_COLORS[fxColor]);
+  await ellipse(doc, 0.493, 0.1, 0.507, 0.9);
+  await fillColor("#ffffff");
+  await deselect();
+  await l.applyMotionBlur(0, scaled(doc, 600, 100, 2000));
+  await l.applyGaussianBlur(scaled(doc, 6, 1, 40));
+  await setActive({ blend: "linearDodge" });
+  return [l];
+};
+
+R.filmRaye = async (doc) => {
+  const l = await grayLayer(doc, "Texture film rayé", "overlay");
+  await l.applyAddNoise(24, constants.NoiseDistribution.GAUSSIAN, true);
+  await l.applyMotionBlur(90, scaled(doc, 300, 60, 2000));
+  await curvePixels([[0, 0], [110, 60], [146, 196], [255, 255]]);
+  await setActive({ opacity: 45 });
+  return [l];
+};
+
+R.papierUse = async (doc) => {
+  const l = await grayLayer(doc, "Papier usé", "overlay");
+  await withColors("#9a9a9a", "#626262", () => bp({ _obj: "clouds" }));
+  await l.applyAddNoise(6, constants.NoiseDistribution.GAUSSIAN, true);
+  await setActive({ opacity: 40 });
+  return [l];
+};
+
+/* ------------------------------------------------------------------ */
+/* Textes : noms, équipes, titre                                       */
+/* ------------------------------------------------------------------ */
+const field = (id, fallback = "") => {
+  const el = document.getElementById(id);
+  const v = el && String(el.value || "").trim();
+  return v || fallback;
+};
+
+function solid(hex) {
+  const c = new app.SolidColor();
+  c.rgb.hexValue = hex.replace("#", "").toUpperCase();
+  return c;
+}
+
+/** Crée un calque texte de hauteur ~sizePx, centré sur (cx, cy), largeur max maxW. */
+async function text(doc, { name, contents, sizePx, cx, cy, maxW, font, hex = GOLD.champagne, tracking = 0, opacity = 100 }) {
+  await selectTop();
+  const layer = await doc.createTextLayer({
+    name,
+    contents,
+    fontName: font,
+    fontSize: Math.max(1, (sizePx * 72) / doc.resolution),
+    textColor: solid(hex),
+    position: { x: cx, y: cy },
+  });
+  try { if (tracking) layer.textItem.characterStyle.tracking = tracking; } catch (e) { /* version ancienne */ }
+  let b = layer.bounds;
+  const width = b.right - b.left;
+  if (maxW && width > maxW) {
+    const k = (maxW / width) * 100;
+    await layer.scale(k, k);
+    b = layer.bounds;
+  }
+  await layer.translate(cx - (b.left + b.right) / 2, cy - (b.top + b.bottom) / 2);
+  if (opacity !== 100) layer.opacity = opacity;
+  return layer;
+}
+
+const fontTitle = () => field("fontTitle", "Impact");
+const fontText = () => field("fontText", "Arial-BoldMT");
+
+/** Calque du joueur choisi par l'utilisateur (pour glisser le texte derrière lui). */
+function playerLayer(doc) {
+  const l = activeLayer(doc);
+  return l && !l.isBackgroundLayer && l.kind === constants.LayerKind.PIXEL ? l : null;
+}
+
+async function behind(layer, player) {
+  if (player && document.getElementById("behindPlayer").checked) {
+    await layer.move(player, constants.ElementPlacement.PLACEAFTER);
+  }
+}
+
+R.titreGeant = async (doc) => {
+  const player = playerLayer(doc);
+  const w = doc.width, h = doc.height;
+  const t = await text(doc, {
+    name: "Titre géant",
+    contents: field("txtTitle", field("txtTeamA", "MATCHDAY")).toUpperCase(),
+    sizePx: h * 0.24, cx: w / 2, cy: h * 0.3, maxW: w * 0.94, font: fontTitle(), tracking: -10,
+  });
+  await behind(t, player);
+  return [t];
+};
+
+R.numero = async (doc) => {
+  const player = playerLayer(doc);
+  const w = doc.width, h = doc.height;
+  const t = await text(doc, {
+    name: "Numéro géant",
+    contents: field("txtNumber", "10"),
+    sizePx: h * 0.45, cx: w * 0.5, cy: h * 0.42, maxW: w * 0.8, font: fontTitle(), opacity: 30,
+  });
+  await behind(t, player);
+  return [t];
+};
+
+R.nomJoueur = async (doc) => {
+  const w = doc.width, h = doc.height;
+  const layers = [];
+  const first = field("txtFirstName");
+  if (first) {
+    layers.push(await text(doc, { name: "Prénom", contents: first.toUpperCase(), sizePx: h * 0.024, cx: w / 2, cy: h * 0.755, maxW: w * 0.8, font: fontText(), tracking: 300, hex: GOLD.or }));
+  }
+  layers.push(await text(doc, { name: "Nom", contents: field("txtLastName", "NOM DU JOUEUR").toUpperCase(), sizePx: h * 0.07, cx: w / 2, cy: h * 0.8, maxW: w * 0.86, font: fontTitle() }));
+  await group(doc, layers, "Texte · Joueur");
+  return layers;
+};
+
+R.blocMatch = async (doc) => {
+  const w = doc.width, h = doc.height;
+  const layers = [];
+  layers.push(await text(doc, { name: "Surtitre", contents: field("txtKicker", "MATCHDAY").toUpperCase(), sizePx: h * 0.016, cx: w / 2, cy: h * 0.855, maxW: w * 0.6, font: fontText(), tracking: 600, hex: GOLD.or }));
+  const a = field("txtTeamA", "ÉQUIPE A").toUpperCase();
+  const b = field("txtTeamB", "ÉQUIPE B").toUpperCase();
+  layers.push(await text(doc, { name: "Affiche du match", contents: `${a}  V  ${b}`, sizePx: h * 0.05, cx: w / 2, cy: h * 0.895, maxW: w * 0.9, font: fontTitle() }));
+  const info = [field("txtDate"), field("txtTime"), field("txtVenue")].filter(Boolean).join("   •   ");
+  if (info) {
+    layers.push(await text(doc, { name: "Infos match", contents: info.toUpperCase(), sizePx: h * 0.017, cx: w / 2, cy: h * 0.935, maxW: w * 0.9, font: fontText(), tracking: 100 }));
+  }
+  await group(doc, layers, "Texte · Match");
+  return layers;
+};
+
+/* ------------------------------------------------------------------ */
+/* Bibliothèque d'assets (logos, fumigènes PNG, textures…)              */
+/* ------------------------------------------------------------------ */
+const ASSET_EXT = /\.(png|jpe?g|psd|psb|tiff?|webp|svg|ai|pdf)$/i;
+const LIGHT_ASSET = /(fumi|smoke|spark|etincel|flare|light|lueur|feu|fire|flame|leak|glow|bokeh|eclair|lightning)/i;
+
+async function placeAsset(doc, entry) {
+  await selectTop();
+  const token = await fs.createSessionToken(entry);
+  await bp({ _obj: "placeEvent", null: { _path: token, _kind: "local" }, linked: false });
+  const l = activeLayer(doc);
+  l.name = entry.name.replace(ASSET_EXT, "");
+  // Les éléments lumineux sur fond noir se fondent automatiquement.
+  if (LIGHT_ASSET.test(entry.name)) await setActive({ blend: "screen" });
+  return [l];
+}
+
 /* ---------- Recette complète ---------- */
 R.afficheSport = async (doc) => {
   const layers = [];
@@ -628,6 +879,17 @@ const LABELS = {
   contourLumineux: "Contour lumineux",
   contourEclair: "Contour éclair",
   rimLight: "Rim light",
+  fumigene: "Fumigène",
+  brume: "Brume au sol",
+  etincelles: "Étincelles",
+  lightLeak: "Light leak",
+  trainee: "Traînée lumineuse",
+  filmRaye: "Film rayé",
+  papierUse: "Papier usé",
+  titreGeant: "Titre géant",
+  numero: "Numéro géant",
+  nomJoueur: "Nom du joueur",
+  blocMatch: "Bloc match",
 };
 
 const TIPS = {
@@ -636,6 +898,10 @@ const TIPS = {
   dodgeBurnManuel: "Pinceau blanc pour éclaircir, noir pour assombrir, opacité 3 à 8 %.",
   contourEclair: "Ajoute un masque au groupe et efface où l'éclair ne doit pas passer.",
   contourLumineux: "Baisse l'intensité ou masque le bas du corps pour un rendu plus naturel.",
+  fumigene: "Ctrl+T pour placer, masque pour dégager le visage.",
+  trainee: "Ctrl+T pour l'orienter en diagonale.",
+  titreGeant: "Astuce : sélectionne le calque du joueur avant, le titre passe derrière lui.",
+  numero: "Astuce : sélectionne le calque du joueur avant, le numéro passe derrière lui.",
 };
 
 /* ------------------------------------------------------------------ */
@@ -651,13 +917,14 @@ function status(msg, isError = false) {
   statusEl.className = isError ? "error" : "";
 }
 
-async function run(key) {
+async function run(key, fn = null, labelOverride = null) {
   if (busy) return;
   if (!app.documents.length) {
     status("Ouvre une image d'abord.", true);
     return;
   }
-  const label = LABELS[key] || key;
+  const label = labelOverride || LABELS[key] || key;
+  const recipe = fn || R[key];
   busy = true;
   document.body.classList.add("busy");
   status(`${label}…`);
@@ -668,7 +935,7 @@ async function run(key) {
       let ok = false;
       try {
         await deselect();
-        await R[key](doc);
+        await recipe(doc);
         await deselect();
         ok = true;
       } finally {
@@ -687,12 +954,122 @@ async function run(key) {
   }
 }
 
-document.querySelectorAll("[data-glow]").forEach((el) => {
-  el.addEventListener("click", () => {
-    glowColor = el.dataset.glow;
-    document.querySelectorAll("[data-glow]").forEach((x) => x.classList.toggle("on", x === el));
-  });
+/* ---- Préférences (thème, onglet, champs texte) ---- */
+const store = {
+  get(k, d = null) { try { const v = localStorage.getItem("dak." + k); return v === null ? d : v; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem("dak." + k, v); } catch (e) { /* stockage indisponible */ } },
+};
+
+/* ---- Thème clair / nuit ---- */
+function hostTheme() {
+  try {
+    const t = document.theme.getCurrent();
+    return t === "light" || t === "lightest" ? "light" : "night";
+  } catch (e) { return "night"; }
+}
+
+function applyTheme() {
+  const pref = store.get("theme", "auto");
+  const theme = pref === "auto" ? hostTheme() : pref;
+  document.body.classList.toggle("light", theme === "light");
+  document.body.classList.toggle("night", theme !== "light");
+  const btn = document.getElementById("themeToggle");
+  btn.textContent = theme === "light" ? "☾" : "☀";
+  btn.title = pref === "auto" ? "Thème : auto (Photoshop)" : `Thème : ${theme === "light" ? "clair" : "nuit"}`;
+}
+
+document.getElementById("themeToggle").addEventListener("click", () => {
+  const current = document.body.classList.contains("light") ? "light" : "night";
+  store.set("theme", current === "light" ? "night" : "light");
+  applyTheme();
 });
+document.getElementById("themeToggle").addEventListener("dblclick", () => {
+  store.set("theme", "auto");
+  applyTheme();
+  status("Thème : suit Photoshop.");
+});
+try { document.theme.onUpdated.addListener(applyTheme); } catch (e) { /* hôte sans thème */ }
+applyTheme();
+
+/* ---- Onglets ---- */
+function showTab(name) {
+  document.querySelectorAll("[data-tab]").forEach((t) => t.classList.toggle("on", t.dataset.tab === name));
+  document.querySelectorAll("[data-pane]").forEach((p) => p.classList.toggle("on", p.dataset.pane === name));
+  store.set("tab", name);
+}
+document.querySelectorAll("[data-tab]").forEach((t) => t.addEventListener("click", () => showTab(t.dataset.tab)));
+showTab(store.get("tab", "retouche"));
+
+/* ---- Champs texte mémorisés ---- */
+document.querySelectorAll("input[data-keep]").forEach((el) => {
+  const saved = store.get("f." + el.id);
+  if (saved !== null) {
+    if (el.type === "checkbox") el.checked = saved === "1"; else el.value = saved;
+  }
+  el.addEventListener("change", () => store.set("f." + el.id, el.type === "checkbox" ? (el.checked ? "1" : "0") : el.value));
+});
+
+/* ---- Bibliothèque d'assets ---- */
+const assetList = document.getElementById("assetList");
+
+async function renderAssets(folder) {
+  assetList.innerHTML = "";
+  if (!folder) {
+    assetList.innerHTML = '<p class="hint">Aucun dossier. Range tes logos, fumigènes PNG, textures… dans un dossier puis choisis-le.</p>';
+    return;
+  }
+  document.getElementById("assetFolder").textContent = folder.name;
+  const entries = (await folder.getEntries()).filter((e) => e.isFile && ASSET_EXT.test(e.name));
+  entries.sort((a, b) => a.name.localeCompare(b.name));
+  if (!entries.length) {
+    assetList.innerHTML = '<p class="hint">Dossier vide (formats : PNG, JPG, PSD, SVG, AI, PDF).</p>';
+    return;
+  }
+  for (const entry of entries) {
+    const el = document.createElement("div");
+    el.className = "btn asset";
+    el.textContent = entry.name.replace(ASSET_EXT, "");
+    el.title = entry.name;
+    el.addEventListener("click", () => run("asset", (doc) => placeAsset(doc, entry), `Asset ${entry.name}`));
+    assetList.appendChild(el);
+  }
+}
+
+async function loadAssetFolder() {
+  const token = store.get("assetFolder");
+  if (!token) return renderAssets(null);
+  try { await renderAssets(await fs.getEntryForPersistentToken(token)); } catch (e) { renderAssets(null); }
+}
+
+document.getElementById("pickFolder").addEventListener("click", async () => {
+  try {
+    const folder = await fs.getFolder();
+    if (!folder) return;
+    store.set("assetFolder", await fs.createPersistentToken(folder));
+    await renderAssets(folder);
+  } catch (e) { status(`Erreur (dossier) : ${e.message || e}`, true); }
+});
+document.getElementById("refreshFolder").addEventListener("click", loadAssetFolder);
+document.getElementById("placeFile").addEventListener("click", async () => {
+  try {
+    const file = await fs.getFileForOpening({ types: ["png", "jpg", "jpeg", "psd", "svg", "ai", "pdf", "tif", "tiff", "webp"] });
+    if (file) run("asset", (doc) => placeAsset(doc, file), `Asset ${file.name}`);
+  } catch (e) { status(`Erreur (fichier) : ${e.message || e}`, true); }
+});
+loadAssetFolder();
+
+/* ---- Pastilles de couleur ---- */
+function swatches(attr, onPick) {
+  document.querySelectorAll(`[${attr}]`).forEach((el) => {
+    el.addEventListener("click", () => {
+      onPick(el.getAttribute(attr));
+      document.querySelectorAll(`[${attr}]`).forEach((x) => x.classList.toggle("on", x === el));
+    });
+  });
+}
+swatches("data-fx", (v) => { fxColor = v; });
+
+swatches("data-glow", (v) => { glowColor = v; });
 
 document.querySelectorAll("[data-action]").forEach((el) => {
   el.addEventListener("click", () => run(el.dataset.action));

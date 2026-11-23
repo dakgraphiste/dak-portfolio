@@ -1,6 +1,6 @@
 # Dak Retouch : panneau Photoshop
 
-Panneau de retouche « affiche sport » en un clic : looks signature (rouge Matchday, bleu glacé × orange, vintage or), netteté, peau, volume, contours lumineux et éclairs sur le personnage.
+Panneau de retouche « affiche sport » en un clic, organisé en 4 onglets (**Retouche · Effets · Texte · Assets**), thème **clair / nuit** (☀/☾, double-clic : suivre Photoshop) et grille qui s'adapte à la largeur du panneau.
 
 **Photoshop 2023 (v24.2) ou plus récent.**
 
@@ -29,8 +29,16 @@ Panneau de retouche « affiche sport » en un clic : looks signature (rouge Matc
 | Netteté & texture | Netteté pro, Clarté, HDR Sport, Grain argentique |
 | Peau | Séparation de fréquences, Peau douce (masque noir : peindre en blanc), Texture de peau, Reflets sueur |
 | Lumière & volume | Booster lumières, Ombres profondes, Ouvrir les ombres, Dodge & Burn auto, Calque D&B manuel, Contraste S |
-| Contours lumineux | Lueur contour, Éclair, Rim light, en Or, Crème, Feu ou Électrique |
 | Finitions | Vignette, Halo lumineux |
+| **Effets** : contours lumineux | Lueur contour, Éclair, Rim light, en Or, Crème, Feu ou Électrique |
+| **Effets** : ambiance | Fumigène, Brume au sol, Étincelles, Light leak, Traînée lumineuse, en Rouge, Orange, Or, Bleu ou Blanc |
+| **Effets** : textures | Grain argentique, Film rayé, Papier usé |
+| **Texte** | Nom du joueur (prénom + NOM), Numéro géant, Bloc match (équipes, date, heure, stade), Titre géant derrière le joueur |
+| **Assets** | Ta bibliothèque de PNG/PSD/SVG (logos, fumigènes, étincelles…) placés en un clic comme objets dynamiques |
+
+Les champs texte, les polices, l'onglet et le thème sont mémorisés d'une session à l'autre.
+
+**Polices** : indiquer le nom PostScript (ex. `Oswald-Bold`, `BebasNeue-Regular`). Si la police n'est pas installée, Photoshop la remplace.
 
 **Contours lumineux** : sélectionner d'abord le calque **détouré** du joueur ; sa silhouette sert de contour. Sur une photo non détourée, le plugin lance « Sélectionner le sujet ».
 

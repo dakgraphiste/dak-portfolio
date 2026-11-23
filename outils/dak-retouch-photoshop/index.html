@@ -2,96 +2,212 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="night">
   <header>
-    <div class="brand">DAK <span>RETOUCH</span></div>
-    <div class="tag">Sport · Vintage Or</div>
+    <div class="brand-wrap">
+      <div class="brand">DAK <span>RETOUCH</span></div>
+      <div class="tag">Sport · Vintage Or</div>
+    </div>
+    <div class="icon-btn" id="themeToggle" title="Thème (double-clic : suivre Photoshop)">☀</div>
   </header>
 
-  <section class="hero">
-    <div class="btn btn-hero" data-action="afficheSport">⚡ Affiche Sport : tout en 1 clic</div>
-    <p class="hint">Clarté, netteté, volume, Gold Legend, grain et vignette, rangés dans un groupe.</p>
-  </section>
+  <nav class="tabs">
+    <div class="tab on" data-tab="retouche">Retouche</div>
+    <div class="tab" data-tab="effets">Effets</div>
+    <div class="tab" data-tab="texte">Texte</div>
+    <div class="tab" data-tab="assets">Assets</div>
+  </nav>
 
-  <section>
-    <h2>Looks signature</h2>
-    <div class="grid">
-      <div class="btn gold" data-action="matchdayRouge">Matchday Rouge</div>
-      <div class="btn gold" data-action="bleuOrange">Bleu Glacé × Orange</div>
-      <div class="btn gold" data-action="goldLegend">Gold Legend</div>
-      <div class="btn gold" data-action="champion70s">Champion 70s</div>
-      <div class="btn gold" data-action="blackGold">Black &amp; Gold</div>
-      <div class="btn gold" data-action="trophyGlow">Trophy Glow</div>
-    </div>
-  </section>
+  <main>
+    <!-- ============ RETOUCHE ============ -->
+    <div class="pane on" data-pane="retouche">
+      <section class="hero">
+        <div class="btn btn-hero" data-action="afficheSport">⚡ Affiche Sport : tout en 1 clic</div>
+        <p class="hint">Clarté, netteté, volume, Gold Legend, grain et vignette, rangés dans un groupe.</p>
+      </section>
 
-  <section>
-    <h2>Netteté &amp; texture</h2>
-    <div class="grid">
-      <div class="btn" data-action="nettete">Netteté pro</div>
-      <div class="btn" data-action="clarte">Clarté</div>
-      <div class="btn" data-action="hdrSport">HDR Sport</div>
-      <div class="btn" data-action="grain">Grain argentique</div>
-    </div>
-  </section>
+      <section class="card">
+        <h2>Looks signature</h2>
+        <div class="grid">
+          <div class="btn gold" data-action="matchdayRouge">Matchday Rouge</div>
+          <div class="btn gold" data-action="bleuOrange">Bleu Glacé × Orange</div>
+          <div class="btn gold" data-action="goldLegend">Gold Legend</div>
+          <div class="btn gold" data-action="champion70s">Champion 70s</div>
+          <div class="btn gold" data-action="blackGold">Black &amp; Gold</div>
+          <div class="btn gold" data-action="trophyGlow">Trophy Glow</div>
+        </div>
+      </section>
 
-  <section>
-    <h2>Peau</h2>
-    <div class="grid">
-      <div class="btn" data-action="separationFrequences">Séparation fréquences</div>
-      <div class="btn" data-action="peauDouce">Peau douce</div>
-      <div class="btn" data-action="texturePeau">Texture de peau</div>
-      <div class="btn" data-action="refletsPeau">Reflets sueur</div>
-    </div>
-  </section>
+      <section class="card">
+        <h2>Netteté &amp; texture</h2>
+        <div class="grid">
+          <div class="btn" data-action="nettete">Netteté pro</div>
+          <div class="btn" data-action="clarte">Clarté</div>
+          <div class="btn" data-action="hdrSport">HDR Sport</div>
+          <div class="btn" data-action="grain">Grain argentique</div>
+        </div>
+      </section>
 
-  <section>
-    <h2>Lumière &amp; volume</h2>
-    <div class="grid">
-      <div class="btn" data-action="boostLumieres">Booster lumières</div>
-      <div class="btn" data-action="ombresProfondes">Ombres profondes</div>
-      <div class="btn" data-action="ouvrirOmbres">Ouvrir les ombres</div>
-      <div class="btn" data-action="dodgeBurnAuto">Dodge &amp; Burn auto</div>
-      <div class="btn" data-action="dodgeBurnManuel">Calque D&amp;B manuel</div>
-      <div class="btn" data-action="contrasteS">Contraste S</div>
-    </div>
-  </section>
+      <section class="card">
+        <h2>Peau</h2>
+        <div class="grid">
+          <div class="btn" data-action="separationFrequences">Séparation fréquences</div>
+          <div class="btn" data-action="peauDouce">Peau douce</div>
+          <div class="btn" data-action="texturePeau">Texture de peau</div>
+          <div class="btn" data-action="refletsPeau">Reflets sueur</div>
+        </div>
+      </section>
 
-  <section>
-    <h2>Contours lumineux (personnage)</h2>
-    <p class="hint first">Sélectionne le calque détouré du joueur (sinon : sélection auto du sujet).</p>
-    <div class="swatches">
-      <div class="sw on" data-glow="or" title="Or"><i style="background-color:#e3b768"></i>Or</div>
-      <div class="sw" data-glow="creme" title="Crème"><i style="background-color:#efdcb0"></i>Crème</div>
-      <div class="sw" data-glow="feu" title="Feu"><i style="background-color:#ff7a1a"></i>Feu</div>
-      <div class="sw" data-glow="electrique" title="Électrique"><i style="background-color:#8fd8ff"></i>Élec.</div>
-    </div>
-    <div class="grid">
-      <div class="btn gold" data-action="contourLumineux">Lueur contour</div>
-      <div class="btn gold" data-action="contourEclair">Éclair ⚡</div>
-      <div class="btn gold" data-action="rimLight">Rim light</div>
-    </div>
-  </section>
+      <section class="card">
+        <h2>Lumière &amp; volume</h2>
+        <div class="grid">
+          <div class="btn" data-action="boostLumieres">Booster lumières</div>
+          <div class="btn" data-action="ombresProfondes">Ombres profondes</div>
+          <div class="btn" data-action="ouvrirOmbres">Ouvrir les ombres</div>
+          <div class="btn" data-action="dodgeBurnAuto">Dodge &amp; Burn auto</div>
+          <div class="btn" data-action="dodgeBurnManuel">Calque D&amp;B manuel</div>
+          <div class="btn" data-action="contrasteS">Contraste S</div>
+        </div>
+      </section>
 
-  <section>
-    <h2>Finitions</h2>
-    <div class="grid">
-      <div class="btn" data-action="vignette">Vignette</div>
-      <div class="btn" data-action="glow">Halo lumineux</div>
+      <section class="card">
+        <h2>Finitions</h2>
+        <div class="grid">
+          <div class="btn" data-action="vignette">Vignette</div>
+          <div class="btn" data-action="glow">Halo lumineux</div>
+        </div>
+      </section>
     </div>
-  </section>
 
-  <section class="intensity">
-    <h2>Intensité du calque sélectionné</h2>
-    <div class="row">
+    <!-- ============ EFFETS ============ -->
+    <div class="pane" data-pane="effets">
+      <section class="card">
+        <h2>Contours lumineux (personnage)</h2>
+        <p class="hint first">Sélectionne le calque détouré du joueur (sinon : sélection auto du sujet).</p>
+        <div class="swatches">
+          <div class="sw on" data-glow="or"><i class="c-or"></i>Or</div>
+          <div class="sw" data-glow="creme"><i class="c-creme"></i>Crème</div>
+          <div class="sw" data-glow="feu"><i class="c-feu"></i>Feu</div>
+          <div class="sw" data-glow="electrique"><i class="c-elec"></i>Élec.</div>
+        </div>
+        <div class="grid">
+          <div class="btn gold" data-action="contourLumineux">Lueur contour</div>
+          <div class="btn gold" data-action="contourEclair">Éclair ⚡</div>
+          <div class="btn gold" data-action="rimLight">Rim light</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Ambiance &amp; atmosphère</h2>
+        <div class="swatches">
+          <div class="sw on" data-fx="rouge"><i class="c-rouge"></i>Rouge</div>
+          <div class="sw" data-fx="orange"><i class="c-feu"></i>Orange</div>
+          <div class="sw" data-fx="or"><i class="c-or"></i>Or</div>
+          <div class="sw" data-fx="bleu"><i class="c-bleu"></i>Bleu</div>
+          <div class="sw" data-fx="blanc"><i class="c-blanc"></i>Blanc</div>
+        </div>
+        <div class="grid">
+          <div class="btn gold" data-action="fumigene">Fumigène</div>
+          <div class="btn" data-action="brume">Brume au sol</div>
+          <div class="btn gold" data-action="etincelles">Étincelles</div>
+          <div class="btn" data-action="lightLeak">Light leak</div>
+          <div class="btn" data-action="trainee">Traînée lumineuse</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Textures</h2>
+        <div class="grid">
+          <div class="btn" data-action="grain">Grain argentique</div>
+          <div class="btn" data-action="filmRaye">Film rayé</div>
+          <div class="btn" data-action="papierUse">Papier usé</div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ============ TEXTE ============ -->
+    <div class="pane" data-pane="texte">
+      <section class="card">
+        <h2>Joueur</h2>
+        <div class="fields">
+          <label>Prénom<input id="txtFirstName" data-keep type="text" placeholder="Davy"></label>
+          <label>Nom<input id="txtLastName" data-keep type="text" placeholder="KOUASSI"></label>
+          <label class="small">N°<input id="txtNumber" data-keep type="text" placeholder="10"></label>
+        </div>
+        <div class="grid">
+          <div class="btn gold" data-action="nomJoueur">Nom du joueur</div>
+          <div class="btn" data-action="numero">Numéro géant</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Match</h2>
+        <div class="fields">
+          <label>Équipe A<input id="txtTeamA" data-keep type="text" placeholder="ASEC"></label>
+          <label>Équipe B<input id="txtTeamB" data-keep type="text" placeholder="AFRICA"></label>
+          <label>Surtitre<input id="txtKicker" data-keep type="text" placeholder="MATCHDAY"></label>
+          <label>Date<input id="txtDate" data-keep type="text" placeholder="DIM. 14 DÉC."></label>
+          <label>Heure<input id="txtTime" data-keep type="text" placeholder="17:00"></label>
+          <label>Stade<input id="txtVenue" data-keep type="text" placeholder="Stade FHB"></label>
+        </div>
+        <div class="grid">
+          <div class="btn gold" data-action="blocMatch">Bloc match</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Titre géant</h2>
+        <div class="fields">
+          <label class="wide">Texte<input id="txtTitle" data-keep type="text" placeholder="MATCHDAY"></label>
+        </div>
+        <label class="check"><input id="behindPlayer" data-keep type="checkbox" checked> Placer derrière le calque du joueur sélectionné</label>
+        <div class="grid">
+          <div class="btn gold" data-action="titreGeant">Titre géant</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Polices (nom PostScript)</h2>
+        <div class="fields">
+          <label>Titres<input id="fontTitle" data-keep type="text" placeholder="Impact"></label>
+          <label>Textes<input id="fontText" data-keep type="text" placeholder="Arial-BoldMT"></label>
+        </div>
+        <p class="hint">Ex. : Oswald-Bold, BebasNeue-Regular, Anton-Regular. Le nom exact s'affiche dans Photoshop, menu Texte.</p>
+      </section>
+    </div>
+
+    <!-- ============ ASSETS ============ -->
+    <div class="pane" data-pane="assets">
+      <section class="card">
+        <h2>Ma bibliothèque</h2>
+        <div class="folder-row">
+          <span id="assetFolder" class="folder-name">Aucun dossier</span>
+          <div class="icon-btn small" id="refreshFolder" title="Actualiser">↻</div>
+        </div>
+        <div class="grid">
+          <div class="btn" id="pickFolder">Choisir le dossier</div>
+          <div class="btn" id="placeFile">Importer un fichier</div>
+        </div>
+        <p class="hint">Logos, fumigènes, étincelles, textures… Les fichiers nommés fumi, smoke, spark, flare, light, feu ou glow passent en mode Écran automatiquement.</p>
+      </section>
+      <section class="card">
+        <h2>Éléments</h2>
+        <div class="grid" id="assetList"></div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="intensity">
+      <span class="label">Intensité</span>
       <input id="intensity" type="range" min="0" max="100" value="100">
       <span id="intensityValue">100 %</span>
     </div>
-  </section>
-
-  <footer id="status">Prêt.</footer>
+    <div id="status">Prêt.</div>
+  </footer>
 
   <script src="index.js"></script>
 </body>
