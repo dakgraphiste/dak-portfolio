@@ -25,6 +25,13 @@ export type Course = {
 export type Track = { slug: string; title: string; tagline: string; description: string; img: string; courses: string[]; career: string; priceFcfa?: number };
 
 const L = (...titles: string[]): Lesson[] => titles.map((title) => ({ title }));
+// fiches d'exercice téléchargeables (public/ressources)
+const FICHE = {
+  brief: { label: 'Fiche : questionnaire de brief (PDF)', url: '/ressources/questionnaire-brief.pdf' },
+  plateforme: { label: 'Fiche : plateforme de marque (PDF)', url: '/ressources/plateforme-de-marque.pdf' },
+  export: { label: 'Check-list : exporter et livrer (PDF)', url: '/ressources/checklist-export.pdf' },
+  charte: { label: 'Check-list : charte graphique (PDF)', url: '/ressources/checklist-charte.pdf' },
+};
 
 export const COURSES: Course[] = [
   {
@@ -38,7 +45,7 @@ export const COURSES: Course[] = [
       { title: 'Voir comme un designer', lessons: L('Ce qui fait un bon visuel', 'Les grandes règles de composition', 'Analyser des affiches qui marchent') },
       { title: 'Typographie', lessons: L('Familles et graisses', 'Associer deux polices', 'Hiérarchie et lisibilité') },
       { title: 'Couleur', lessons: L('Le cercle chromatique', 'Créer une palette', 'Contraste et accessibilité') },
-      { title: 'Prendre en main les outils', lessons: L('Photoshop : l’essentiel', 'Illustrator : l’essentiel', 'Exporter pour le web et l’impression') },
+      { title: 'Prendre en main les outils', lessons: [...L('Photoshop : l’essentiel', 'Illustrator : l’essentiel'), { title: 'Exporter pour le web et l’impression', resources: [FICHE.export] }] },
     ],
     status: 'bientot',
   },
@@ -50,11 +57,11 @@ export const COURSES: Course[] = [
     prerequisites: ['Connaître les bases d’Illustrator', 'Idéalement : avoir suivi « Les fondamentaux du design graphique »'], software: ['Illustrator', 'Photoshop'],
     project: 'L’identité complète d’une marque fictive, du logo à la charte de 20 pages.',
     modules: [
-      { title: 'Le brief et la stratégie', lessons: L('Lire un brief client', 'Plateforme de marque : mission, valeurs, ton', 'Étudier la concurrence') },
+      { title: 'Le brief et la stratégie', lessons: [{ title: 'Lire un brief client', resources: [FICHE.brief] }, { title: 'Plateforme de marque : mission, valeurs, ton', resources: [FICHE.plateforme] }, ...L('Étudier la concurrence')] },
       { title: 'Recherches et pistes', lessons: L('Moodboard et références', 'Croquis et mots clés', 'Choisir les pistes à présenter') },
       { title: 'Le logo', lessons: L('Construire le symbole', 'Le logotype et la typographie', 'Déclinaisons et zones de protection') },
       { title: 'Le système graphique', lessons: L('Palette de couleurs', 'Typographies de marque', 'Éléments graphiques et iconographie') },
-      { title: 'La charte et la présentation', lessons: L('Monter la charte', 'Mockups et mises en situation', 'Présenter au client et défendre ses choix') },
+      { title: 'La charte et la présentation', lessons: [{ title: 'Monter la charte', resources: [FICHE.charte] }, ...L('Mockups et mises en situation', 'Présenter au client et défendre ses choix')] },
     ],
     status: 'bientot',
   },

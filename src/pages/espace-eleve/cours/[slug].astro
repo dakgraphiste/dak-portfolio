@@ -7,6 +7,7 @@ import { currentUser } from '../../../lib/supabase';
 import { myEnrollments, unlockedCourses } from '../../../lib/access';
 import { privatePage, loginUrl, isAdmin } from '../../../lib/portal';
 import { signedEmbed } from '../../../lib/video';
+import { courseNotes } from '../../../lib/lessons';
 import { COURSES, allLessons, fcfa } from '../../../data/academy';
 
 privatePage(Astro);
@@ -29,6 +30,9 @@ const canWatch = hasAccess || !!lesson.free;
 const embed = canWatch && lesson.ready && lesson.video ? signedEmbed(lesson.video) : null;
 const prev = lessons[idx - 1], next = lessons[idx + 1];
 const pct = Math.round((lessons.filter((l) => done.has(l.key)).length / lessons.length) * 100);
+const notes = canWatch ? courseNotes(c.slug) : null;
+const lessonHtml = notes?.lessons.get(lesson.key) || '';
+const projectHtml = hasAccess && !next ? notes?.project || '' : '';
 const buy = c.status === 'ouvert' && c.priceFcfa ? `/espace-eleve/acheter?item=course:${c.slug}` : `/formations/${c.slug}`;
 ---
 <Portal title={c.title} user={user} admin={admin}>
@@ -62,6 +66,8 @@ const buy = c.status === 'ouvert' && c.priceFcfa ? `/espace-eleve/acheter?item=c
           {prev && <a class="btn btn-line" href={`/espace-eleve/cours/${c.slug}?lecon=${prev.key}`}>← Précédente</a>}
           {next && <a class="btn btn-line" href={`/espace-eleve/cours/${c.slug}?lecon=${next.key}`}>Suivante →</a>}
         </div>
+        {lessonHtml && <section class="pnotes"><span class="eyebrow">Support de cours</span><div set:html={lessonHtml} /></section>}
+        {projectHtml && <section class="pnotes pproject"><span class="eyebrow">Projet final</span><div set:html={projectHtml} /></section>}
         {canWatch && lesson.resources && lesson.resources.length > 0 && (
           <div class="pres"><b>Ressources</b>{lesson.resources.map((r) => <a href={r.url} target="_blank" rel="noopener noreferrer">⬇ {r.label}</a>)}</div>
         )}
