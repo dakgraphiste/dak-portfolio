@@ -1,0 +1,29 @@
+{
+  "id": "com.dakgraphiste.dakretouch",
+  "name": "Dak Retouch",
+  "version": "1.0.0",
+  "main": "index.html",
+  "manifestVersion": 5,
+  "host": {
+    "app": "PS",
+    "minVersion": "24.2.0"
+  },
+  "entrypoints": [
+    {
+      "type": "panel",
+      "id": "dakRetouchPanel",
+      "label": { "default": "Dak Retouch" },
+      "minimumSize": { "width": 240, "height": 320 },
+      "maximumSize": { "width": 2000, "height": 3000 },
+      "preferredDockedSize": { "width": 280, "height": 720 },
+      "preferredFloatingSize": { "width": 300, "height": 760 },
+      "icons": [
+        { "width": 23, "height": 23, "path": "icons/panel.png", "scale": [1, 2], "theme": ["all"], "species": ["chrome"] }
+      ]
+    }
+  ],
+  "icons": [
+    { "width": 24, "height": 24, "path": "icons/plugin.png", "scale": [1, 2], "theme": ["all"], "species": ["pluginList"] }
+  ],
+  "requiredPermissions": {}
+}
