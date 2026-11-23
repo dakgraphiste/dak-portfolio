@@ -6,6 +6,17 @@ Panneau de retouche « affiche sport » en un clic, organisé en 4 onglets (**Re
 
 ## Installation
 
+### Mac : paquet complet (recommandé)
+1. Décompresser `Dak-Retouch-Mac.zip` (double-clic).
+2. Dans le dossier **Dak Retouch**, faire **clic droit → Ouvrir** sur `Installer Dak Retouch.command`, puis confirmer **Ouvrir**. Le clic droit est nécessaire la première fois, car le script ne vient pas de l'App Store.
+3. Le script installe le plugin via Creative Cloud et copie les assets dans `Documents/Dak Retouch/assets`.
+4. Redémarrer Photoshop → **Plugins → Dak Retouch**.
+
+Si macOS bloque toujours : **Réglages Système → Confidentialité et sécurité → Ouvrir quand même**.
+Désinstaller : appli Creative Cloud → **Stock et Marketplace → Plug-ins** (ou **Gérer les plug-ins**) → Dak Retouch → Désinstaller.
+
+Reconstruire le paquet Mac : `bash outils/dak-retouch-photoshop/installeur-mac/construire.sh`
+
 ### Méthode 1 : double-clic
 1. Télécharger `Dak-Retouch.ccx`.
 2. Double-cliquer dessus : Creative Cloud propose de l'installer (accepter l'avertissement « plugin tiers »).
